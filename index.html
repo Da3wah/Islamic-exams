@@ -159,8 +159,7 @@
           <strong>${esc(course.name)}</strong>
           <span class="status">${esc(prettyStatus(course.status))}</span>
           ${course.description ? `<p>${esc(course.description)}</p>` : ''}
-          ${course.course_result ? `<p>نتيجة المساق المعلنة: <span class="score">${esc(course.course_result.percentage ?? course.course_result.total_score ?? '—')}</span>${course.course_result.percentage != null ? '%' : ''}</p>` : ''}
-          <button type="button" ${course.status === 'locked' ? 'disabled' : ''} onclick="portalOpenCourse(${Number(course.id)})">${course.status === 'locked' ? 'غير متاح حاليًا' : 'فتح المساق'}</button>
+          ${course.course_result ? `<p>نتيجة المساق المعلنة:</p><p>المجموع الكلي: <span class="score">${esc(course.course_result.total_score ?? '—')}</span> درجة</p><p>النسبة المئوية: <span class="score">${esc(course.course_result.percentage ?? '—')}%</span></p>` : ''}          <button type="button" ${course.status === 'locked' ? 'disabled' : ''} onclick="portalOpenCourse(${Number(course.id)})">${course.status === 'locked' ? 'غير متاح حاليًا' : 'فتح المساق'}</button>
         </article>`).join('')}</div>` : '<p class="muted">لا توجد مساقات في هذا القسم حتى الآن.</p>'}</section>`;
     }).join('');
   }
