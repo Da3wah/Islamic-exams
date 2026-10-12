@@ -97,11 +97,14 @@
       const result = activeResult || window.__questionTypesLastSubmit;
       const pending = Number(result?.pending_manual_count || 0);
       const score = view.querySelector('.score');
-      if (score && pending > 0) {
-        score.textContent = `تم التسليم بنجاح. توجد ${pending} إجابة مقالية بانتظار التصحيح اليدوي.`;
-      }
-      if (score && pending === 0 && result) {
-        score.textContent = `النتيجة: ${result.score ?? '—'} / ${result.total ?? '—'}`;
+           if (score && result) {
+        const scoreText = pending > 0
+          ? `تم التسليم بنجاح. توجد ${pending} إجابة مقالية بانتظار التصحيح اليدوي.`
+          : `النتيجة: ${result.score ?? '—'} / ${result.total ?? '—'}`;
+
+        if (score.textContent !== scoreText) {
+          score.textContent = scoreText;
+        }
       }
     };
 
