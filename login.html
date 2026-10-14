@@ -1,0 +1,599 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a1930">
+<title>تسجيل الدخول | مَرْصَد</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --night: #0a1930;
+  --night2: #102742;
+  --gold: #d0aa67;
+  --gold-light: #ecd8ad;
+  --cream: #f7f1e5;
+  --white: #fffdf8;
+  --muted: #687486;
+  --red: #a33a35;
+  --green: #286345;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "IBM Plex Sans Arabic", Tahoma, sans-serif;
+  color: var(--white);
+  background:
+    linear-gradient(135deg, rgba(5,16,31,.88), rgba(10,25,48,.78)),
+    url("https://raw.githubusercontent.com/tysoo/Islamic-exams/main/registration-bg.png")
+    center / cover fixed no-repeat,
+    var(--night);
+}
+
+button, input { font: inherit; }
+
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 17px 22px;
+  border-bottom: 1px solid #d0aa6740;
+  background: rgba(7,20,37,.72);
+}
+
+.header-inner {
+  width: min(1080px, 100%);
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.logo {
+  width: 57px;
+  height: 57px;
+  object-fit: contain;
+  border: 1px solid var(--gold);
+  border-radius: 13px;
+  padding: 4px;
+  background: #10233b;
+}
+
+.brand-name {
+  font-family: Alexandria, Tahoma, sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  color: #fff7e7;
+}
+
+.brand-sub {
+  display: block;
+  color: var(--gold-light);
+  font-size: 12px;
+}
+
+.home-link {
+  color: var(--gold-light);
+  font-size: 13px;
+  border: 1px solid #d0aa6755;
+  border-radius: 10px;
+  padding: 9px 14px;
+}
+
+main {
+  width: min(470px, calc(100% - 28px));
+  margin: auto;
+  padding: 36px 0;
+}
+
+.login-card {
+  padding: 30px;
+  border: 1px solid #d0aa6780;
+  border-radius: 21px;
+  background: rgba(8,24,44,.91);
+  box-shadow: 0 25px 75px #0005;
+  backdrop-filter: blur(12px);
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.heading .ornament {
+  color: var(--gold-light);
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+
+.heading h1 {
+  font-family: Alexandria, Tahoma, sans-serif;
+  font-size: 25px;
+  margin: 0 0 8px;
+  color: #fff5df;
+}
+
+.heading p {
+  color: #c9d3df;
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 0;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 5px;
+  border: 1px solid #d0aa6740;
+  background: #071629;
+  border-radius: 13px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 12px 7px;
+  color: #d2d9e2;
+  background: transparent;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #ecd8ad, #c49a50);
+  color: #14233a;
+}
+
+.form-title {
+  font-family: Alexandria, Tahoma, sans-serif;
+  font-size: 17px;
+  margin: 0 0 5px;
+  color: #fff5df;
+}
+
+.form-description {
+  font-size: 12px;
+  color: #c2ccda;
+  margin: 0 0 18px;
+  line-height: 1.9;
+}
+
+.field { margin: 15px 0; }
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 7px;
+  color: #f2e6cf;
+}
+
+.field input {
+  display: block;
+  width: 100%;
+  min-height: 47px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1px solid #d0aa6755;
+  background: #071629;
+  color: white;
+  outline: none;
+  direction: rtl;
+}
+
+.field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px #d0aa6718;
+}
+
+.field input::placeholder { color: #8e9aaa; }
+
+.password-wrap { position: relative; }
+
+.password-wrap input { padding-left: 67px; }
+
+.show-password {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--gold-light);
+  font-size: 11px;
+  padding: 5px;
+}
+
+.submit {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 11px;
+  margin-top: 9px;
+  background: linear-gradient(135deg, #ecd8ad, #c49a50);
+  color: #14233a;
+  font-weight: 800;
+  box-shadow: 0 8px 20px #0002;
+}
+
+.submit:hover { filter: brightness(1.05); }
+
+.submit:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.message {
+  display: none;
+  margin-top: 15px;
+  padding: 11px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.message.show { display: block; }
+
+.message.error {
+  color: #ffd9d5;
+  background: #8e29252b;
+  border: 1px solid #d56a604a;
+}
+
+.message.success {
+  color: #d5f5df;
+  background: #28634535;
+  border: 1px solid #6db78c55;
+}
+
+.security-note {
+  text-align: center;
+  color: #bac7d6;
+  font-size: 11px;
+  line-height: 1.9;
+  margin: 19px 0 0;
+}
+
+footer {
+  padding: 18px;
+  text-align: center;
+  font-size: 11px;
+  color: #c4cddb;
+  border-top: 1px solid #d0aa6725;
+  background: #07142688;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 480px) {
+  header { padding: 13px; }
+  .logo { width: 46px; height: 46px; }
+  .brand { gap: 9px; }
+  .brand-name { font-size: 19px; }
+  .brand-sub { font-size: 10px; }
+  .home-link { padding: 8px 9px; font-size: 11px; }
+  .login-card { padding: 23px 18px; }
+  .heading h1 { font-size: 22px; }
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="الصفحة الرئيسية">
+      <img class="logo"
+        src="https://raw.githubusercontent.com/tysoo/Islamic-exams/main/marsad-logo.png.jpg"
+        alt="شعار المنصة">
+      <span>
+        <span class="brand-name">مَرْصَد</span>
+        <span class="brand-sub">للنوازل العقدية</span>
+      </span>
+    </a>
+    <a class="home-link" href="index.html">الصفحة الرئيسية</a>
+  </div>
+</header>
+
+<main>
+  <section class="login-card">
+    <div class="heading">
+      <div class="ornament">✦</div>
+      <h1>مرحبًا بك</h1>
+      <p>سجّل الدخول لمتابعة رحلتك في طلب العلم.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="نوع الحساب">
+      <button class="tab active" id="studentTab"
+        type="button" role="tab" aria-selected="true">
+        بوابة الطالب
+      </button>
+      <button class="tab" id="adminTab"
+        type="button" role="tab" aria-selected="false">
+        بوابة الإدارة
+      </button>
+    </div>
+
+    <form id="studentForm">
+      <h2 class="form-title">دخول الطالب</h2>
+      <p class="form-description">
+        أدخل كود الطالب وكلمة المرور الخاصة بحسابك.
+      </p>
+
+      <div class="field">
+        <label for="studentCode">كود الطالب</label>
+        <input id="studentCode" name="studentCode"
+          autocomplete="username" required
+          placeholder="اكتب كود الطالب">
+      </div>
+
+      <div class="field">
+        <label for="studentPassword">كلمة المرور</label>
+        <div class="password-wrap">
+          <input id="studentPassword" name="studentPassword"
+            type="password" autocomplete="current-password"
+            required placeholder="اكتب كلمة المرور">
+          <button class="show-password" type="button"
+            data-toggle-password="studentPassword">إظهار</button>
+        </div>
+      </div>
+
+      <button class="submit" id="studentSubmit" type="submit">
+        تسجيل دخول الطالب
+      </button>
+    </form>
+
+    <form id="adminForm" class="hidden">
+      <h2 class="form-title">دخول الإدارة</h2>
+      <p class="form-description">
+        الدخول مخصص للحسابات التي لديها صلاحية الإدارة.
+      </p>
+
+      <div class="field">
+        <label for="adminEmail">البريد الإلكتروني</label>
+        <input id="adminEmail" name="adminEmail"
+          type="email" autocomplete="username"
+          required placeholder="name@example.com">
+      </div>
+
+      <div class="field">
+        <label for="adminPassword">كلمة المرور</label>
+        <div class="password-wrap">
+          <input id="adminPassword" name="adminPassword"
+            type="password" autocomplete="current-password"
+            required placeholder="اكتب كلمة المرور">
+          <button class="show-password" type="button"
+            data-toggle-password="adminPassword">إظهار</button>
+        </div>
+      </div>
+
+      <button class="submit" id="adminSubmit" type="submit">
+        تسجيل دخول الإدارة
+      </button>
+    </form>
+
+    <div id="message" class="message" role="status"
+      aria-live="polite"></div>
+
+    <p class="security-note">
+      بيانات الدخول خاصة بك. لا تشارك كلمة المرور مع أي شخص.
+    </p>
+  </section>
+</main>
+
+<footer>
+  مَرْصَد — رحلة في طلب العلم
+</footer>
+
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const SUPABASE_URL =
+    'https://pxgxnwxpwvvefroaqpfr.supabase.co';
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const $ = id => document.getElementById(id);
+
+  const studentTab = $('studentTab');
+  const adminTab = $('adminTab');
+  const studentForm = $('studentForm');
+  const adminForm = $('adminForm');
+  const messageBox = $('message');
+
+  function showMessage(text, type = 'error') {
+    messageBox.textContent = text;
+    messageBox.className = 'message show ' + type;
+  }
+
+  function clearMessage() {
+    messageBox.textContent = '';
+    messageBox.className = 'message';
+  }
+
+  function friendlyError(error) {
+    const text = error?.message || String(error || '');
+
+    if (/Invalid login credentials/i.test(text)) {
+      return 'بيانات الدخول غير صحيحة. راجع الكود أو البريد الإلكتروني وكلمة المرور.';
+    }
+
+    if (/Email not confirmed/i.test(text)) {
+      return 'البريد الإلكتروني غير مؤكّد. راجع إعداد الحساب لدى الإدارة.';
+    }
+
+    if (/Failed to fetch|NetworkError/i.test(text)) {
+      return 'تعذر الاتصال بالخادم. تحقق من الإنترنت وحاول مرة أخرى.';
+    }
+
+    return 'تعذر تسجيل الدخول. ' + text;
+  }
+
+  function switchTab(type) {
+    const isStudent = type === 'student';
+
+    studentForm.classList.toggle('hidden', !isStudent);
+    adminForm.classList.toggle('hidden', isStudent);
+
+    studentTab.classList.toggle('active', isStudent);
+    adminTab.classList.toggle('active', !isStudent);
+
+    studentTab.setAttribute('aria-selected', String(isStudent));
+    adminTab.setAttribute('aria-selected', String(!isStudent));
+
+    clearMessage();
+  }
+
+  studentTab.addEventListener('click', () => switchTab('student'));
+  adminTab.addEventListener('click', () => switchTab('admin'));
+
+  document.querySelectorAll('[data-toggle-password]').forEach(button => {
+    button.addEventListener('click', () => {
+      const input = $(button.dataset.togglePassword);
+      const showing = input.type === 'text';
+
+      input.type = showing ? 'password' : 'text';
+      button.textContent = showing ? 'إظهار' : 'إخفاء';
+    });
+  });
+
+  // دخول الطالب: نفس نظام الكود وكلمة المرور المستخدم في بوابة الطالب الحالية.
+  studentForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const button = $('studentSubmit');
+    const code = $('studentCode').value.trim();
+    const password = $('studentPassword').value;
+
+    if (!code || !password) return;
+
+    button.disabled = true;
+    button.textContent = 'جارٍ التحقق...';
+    clearMessage();
+
+    try {
+      const email = `student.${code.toLowerCase()}@login.invalid`;
+
+      const { error: loginError } =
+        await db.auth.signInWithPassword({ email, password });
+
+      if (loginError) throw loginError;
+
+      // لا نعتبر الدخول ناجحًا إلا إذا أمكن تحميل لوحة الطالب.
+      const { error: dashboardError } =
+        await db.rpc('get_student_dashboard');
+
+      if (dashboardError) {
+        await db.auth.signOut();
+        throw dashboardError;
+      }
+
+      showMessage('تم تسجيل الدخول بنجاح. جارٍ فتح بوابة الطالب...', 'success');
+
+      window.location.replace('student-portal.html');
+
+    } catch (error) {
+      showMessage(friendlyError(error), 'error');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'تسجيل دخول الطالب';
+    }
+  });
+
+  // دخول الإدارة: التحقق من الدور من جدول profiles قبل السماح بالانتقال.
+  adminForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const button = $('adminSubmit');
+    const email = $('adminEmail').value.trim();
+    const password = $('adminPassword').value;
+
+    if (!email || !password) return;
+
+    button.disabled = true;
+    button.textContent = 'جارٍ التحقق...';
+    clearMessage();
+
+    try {
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      const session = data.session;
+
+      if (!session) {
+        throw new Error('لم يتم إنشاء جلسة دخول صالحة.');
+      }
+
+      const { data: profile, error: profileError } = await db
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        await db.auth.signOut();
+        throw new Error('تعذر التحقق من صلاحية الإدارة: ' + profileError.message);
+      }
+
+      if (!profile || profile.role !== 'admin') {
+        await db.auth.signOut();
+        throw new Error('هذا الحساب لا يملك صلاحية الإدارة.');
+      }
+
+      showMessage('تم التحقق من صلاحية الإدارة. جارٍ فتح لوحة الإدارة...', 'success');
+
+      window.location.replace('admin-v2.html');
+
+    } catch (error) {
+      showMessage(friendlyError(error), 'error');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'تسجيل دخول الإدارة';
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
