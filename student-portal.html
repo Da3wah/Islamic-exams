@@ -395,11 +395,29 @@
     }
   });
 
-  $('logout-button').addEventListener('click', async () => {
+ $('logout-button').addEventListener('click', async () => {
+  const button = $('logout-button');
+  button.disabled = true;
+
+  try {
     const { error } = await client.auth.signOut();
-    showSignedOut();
-    message('login-message', error ? friendlyError(error) : 'تم تسجيل الخروج.');
-  });
+
+    if (error) {
+      throw error;
+    }
+
+    window.location.replace('index.html');
+
+  } catch (error) {
+    button.disabled = false;
+
+    message(
+      'app-message',
+      'تعذر تسجيل الخروج بالكامل: ' + friendlyError(error),
+      'error'
+    );
+  }
+});
 
   $('password-form').addEventListener('submit', async event => {
     event.preventDefault();
