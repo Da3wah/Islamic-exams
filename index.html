@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>بوابة الطالب</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="question-types-bridge.js"></script>
+  <script src="assignment-section-bridge.js"></script>
+<script src="marsad-branding.js"></script>
+  <style>
+    /* Basic functional layout only; visual design is intentionally deferred. */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 16px; line-height: 1.7; }
+    main { max-width: 960px; margin: 0 auto; }
+    section, .panel { border: 1px solid #bbb; padding: 16px; margin: 12px 0; }
+    input, textarea, button { font: inherit; padding: 8px; margin: 4px 0; max-width: 100%; box-sizing: border-box; }
+    input, textarea { width: 100%; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .course-list, .item-list { display: grid; gap: 8px; }
+    .course-card, .item-card { border: 1px solid #bbb; padding: 12px; }
+    .muted { color: #555; }
+    .error { color: #a00000; white-space: pre-wrap; }
+    .success { color: #17632b; white-space: pre-wrap; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .row button { margin-inline-end: 4px; }
+    .option { display: block; margin: 8px 0; }
+    .option input { width: auto; margin-inline-end: 6px; }
+    .hidden { display: none !important; }
+    .score { font-weight: bold; }
+    .status { display: inline-block; border: 1px solid #888; padding: 1px 8px; margin-inline-start: 6px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>بوابة الطالب</h1>
+  <p>تسجيل الدخول بالكود وكلمة المرور.</p>
+
+  <section id="login-section">
+    <h2>دخول الطالب</h2>
+    <form id="login-form">
+      <label for="student-code">كود الطالب</label>
+      <input id="student-code" name="student-code" autocomplete="username" required />
+      <label for="student-password">كلمة المرور</label>
+      <input id="student-password" name="student-password" type="password" autocomplete="current-password" required />
+      <button id="login-button" type="submit">دخول</button>
+    </form>
+    <p id="login-message" role="status" aria-live="polite"></p>
+  </section>
+
+  <section id="app-section" class="hidden">
+    <div class="row">
+      <h2 id="welcome-title">لوحة الطالب</h2>
+      <button type="button" id="logout-button">تسجيل الخروج</button>
+    </div>
+    <p id="app-message" role="status" aria-live="polite"></p>
+    <div id="view"></div>
+    <details>
+      <summary>تغيير كلمة المرور</summary>
+      <form id="password-form">
+        <label for="new-password">كلمة المرور الجديدة (8 أحرف على الأقل)</label>
+        <input id="new-password" type="password" minlength="8" autocomplete="new-password" required />
+        <label for="confirm-password">تأكيد كلمة المرور الجديدة</label>
+        <input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required />
+        <button type="submit">تغيير كلمة المرور</button>
+      </form>
+      <p id="password-message" role="status" aria-live="polite"></p>
+    </details>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const SUPABASE_URL = 'https://pxgxnwxpwvvefroaqpfr.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  const $ = (id) => document.getElementById(id);
+  const loginSection = $('login-section');
+  const appSection = $('app-section');
+  const view = $('view');
+  let dashboard = null;
+  let examParent = { type: 'dashboard' };
+  let activeExam = null;
+
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[ch]);
+  }
+
+  function message(id, text, kind = '') {
+    const node = $(id);
+    node.className = kind;
+    node.textContent = text || '';
+  }
+
+  function prettyStatus(status) {
+    return ({ current: 'المساق الحالي', completed: 'مساق مكتمل', locked: 'مساق قادم — مقفل' })[status] || 'غير محدد';
+  }
+
+  function normalizeOptions(raw) {
+    if (Array.isArray(raw)) {
+      return raw.map((item) => {
+        if (item && typeof item === 'object') {
+          const answer = item.text ?? item.label ?? item.value ?? item.answer ?? '';
+          const label = item.label ?? item.text ?? item.answer ?? item.value ?? '';
+          return { value: String(answer), label: String(label) };
+        }
+        return { value: String(item ?? ''), label: String(item ?? '') };
+      }).filter(x => x.label !== '');
+    }
+    if (raw && typeof raw === 'object') {
+      return Object.entries(raw).map(([key, item]) => {
+        if (item && typeof item === 'object') {
+          const answer = item.text ?? item.label ?? item.value ?? item.answer ?? '';
+          const label = item.label ?? item.text ?? item.answer ?? item.value ?? '';
+          return { value: String(answer), label: `${key}. ${String(label)}` };
+        }
+        return { value: String(item ?? ''), label: `${key}. ${String(item ?? '')}` };
+      }).filter(x => x.label !== '');
+    }
+    return [];
+  }
+
+  async function refreshDashboard({ render = true } = {}) {
+    const { data, error } = await client.rpc('get_student_dashboard');
+    if (error) throw error;
+    dashboard = data;
+    $('welcome-title').textContent = `مرحبًا ${dashboard?.student?.name || 'بالطالب'}`;
+    if (render) renderDashboard();
+  }
+
+  function showSignedIn() {
+    loginSection.classList.add('hidden');
+    appSection.classList.remove('hidden');
+  }
+
+  function showSignedOut() {
+    loginSection.classList.remove('hidden');
+    appSection.classList.add('hidden');
+    dashboard = null;
+    activeExam = null;
+    view.innerHTML = '';
+  }
+
+  function renderDashboard() {
+    const courses = dashboard?.courses || [];
+    const groups = [
+      { status: 'current', title: 'المساق الحالي' },
+      { status: 'completed', title: 'المساقات التي اجتزتها' },
+      { status: 'locked', title: 'المساقات القادمة' }
+    ];
+    view.innerHTML = groups.map(group => {
+      const items = courses.filter(course => course.status === group.status);
+      return `<section><h3>${group.title}</h3>${items.length ? `<div class="course-list">${items.map(course => `
+        <article class="course-card">
+          <strong>${esc(course.name)}</strong>
+          <span class="status">${esc(prettyStatus(course.status))}</span>
+          ${course.description ? `<p>${esc(course.description)}</p>` : ''}
+          ${course.course_result ? `<p>نتيجة المساق المعلنة:</p><p>المجموع الكلي: <span class="score">${esc(course.course_result.total_score ?? '—')}</span> درجة</p><p>النسبة المئوية: <span class="score">${esc(course.course_result.percentage ?? '—')}%</span></p>` : ''}          <button type="button" ${course.status === 'locked' ? 'disabled' : ''} onclick="portalOpenCourse(${Number(course.id)})">${course.status === 'locked' ? 'غير متاح حاليًا' : 'فتح المساق'}</button>
+        </article>`).join('')}</div>` : '<p class="muted">لا توجد مساقات في هذا القسم حتى الآن.</p>'}</section>`;
+    }).join('');
+  }
+
+  function openCourse(courseId) {
+    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
+    if (!course) return renderDashboard();
+    if (course.status === 'locked') {
+      message('app-message', 'هذا المساق قادم ولا يمكن الدخول إليه الآن.', 'error');
+      return;
+    }
+    message('app-message', '');
+    const weekly = course.weekly_exams || [];
+    const subjects = course.subjects || [];
+    view.innerHTML = `
+      <div class="row"><button type="button" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(course.name)}</h2></div>
+      ${course.description ? `<p>${esc(course.description)}</p>` : ''}
+      <section><h3>الامتحانات الأسبوعية للمساق</h3>
+        ${weekly.length ? `<div class="item-list">${weekly.map(exam => `
+          <article class="item-card"><strong>${esc(exam.title)}</strong>${exam.week_number != null ? `<p>الأسبوع: ${esc(exam.week_number)}</p>` : ''}
+          ${exam.result ? `<p>النتيجة: ${esc(exam.result.score)} / ${esc(exam.result.total)}</p>` : ''}
+          <button type="button" onclick="portalOpenExam(${Number(exam.id)}, 'course', ${Number(course.id)}, null)">فتح الامتحان / النتيجة</button></article>`).join('')}</div>` : '<p>لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</p>'}
+      </section>
+      <section><h3>مواد المساق</h3>
+        ${subjects.length ? `<div class="item-list">${subjects.map(subject => `
+          <article class="item-card"><strong>${esc(subject.name)}</strong>
+          ${subject.description ? `<p>${esc(subject.description)}</p>` : ''}
+          <button type="button" onclick="portalOpenSubject(${Number(course.id)}, ${Number(subject.id)})">فتح المادة</button></article>`).join('')}</div>` : '<p>لا توجد مواد مضافة لهذا المساق حتى الآن.</p>'}
+      </section>`;
+  }
+
+  function openSubject(courseId, subjectId) {
+    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
+    const subject = course?.subjects?.find(item => Number(item.id) === Number(subjectId));
+    if (!course || !subject || course.status === 'locked') return renderDashboard();
+    const assignments = subject.assignments || [];
+    const finalExam = subject.final_exam;
+    view.innerHTML = `
+      <div class="row"><button type="button" onclick="portalOpenCourse(${Number(course.id)})">رجوع للمساق</button><h2>${esc(subject.name)}</h2></div>
+      ${subject.description ? `<p>${esc(subject.description)}</p>` : ''}
+      <section><h3>تكاليف المادة</h3>
+        ${assignments.length ? `<div class="item-list">${assignments.map(assignment => `
+          <article class="item-card"><strong>${esc(assignment.title)}</strong>
+          ${assignment.description ? `<p>${esc(assignment.description)}</p>` : ''}
+          <p>الحالة: ${assignment.submission ? 'تم التسليم' : 'لم يتم التسليم'}</p>
+          ${assignment.submission?.grade != null ? `<p>الدرجة: ${esc(assignment.submission.grade)}</p>` : ''}
+          ${assignment.close_at ? `<p>آخر موعد: ${esc(new Date(assignment.close_at).toLocaleString('ar-EG'))}</p>` : ''}
+          <button type="button" onclick="portalOpenAssignment(${Number(course.id)}, ${Number(subject.id)}, ${Number(assignment.id)})">${assignment.submission ? 'عرض / تعديل التسليم' : 'حل التكليف وتسليمه'}</button></article>`).join('')}</div>` : '<p>لا توجد تكاليف لهذه المادة حتى الآن.</p>'}
+      </section>
+      <section><h3>امتحان نهاية المادة</h3>
+        ${finalExam ? `<article class="item-card"><strong>${esc(finalExam.title)}</strong>
+          ${finalExam.result ? `<p>النتيجة: ${esc(finalExam.result.score)} / ${esc(finalExam.result.total)}</p>` : ''}
+          <button type="button" onclick="portalOpenExam(${Number(finalExam.id)}, 'subject', ${Number(course.id)}, ${Number(subject.id)})">فتح الامتحان / النتيجة</button></article>` : '<p>لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</p>'}
+      </section>`;
+  }
+
+  function openAssignment(courseId, subjectId, assignmentId) {
+    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
+    const subject = course?.subjects?.find(item => Number(item.id) === Number(subjectId));
+    const assignment = subject?.assignments?.find(item => Number(item.id) === Number(assignmentId));
+    if (!course || !subject || !assignment || course.status !== 'current') {
+      message('app-message', 'لا يمكن تعديل هذا التكليف الآن.', 'error');
+      return;
+    }
+    const existingText = assignment.submission?.submission_text || '';
+    view.innerHTML = `
+      <div class="row"><button type="button" onclick="portalOpenSubject(${Number(course.id)}, ${Number(subject.id)})">رجوع للمادة</button><h2>${esc(assignment.title)}</h2></div>
+      ${assignment.description ? `<p>${esc(assignment.description)}</p>` : ''}
+      ${assignment.close_at ? `<p>آخر موعد للتسليم: ${esc(new Date(assignment.close_at).toLocaleString('ar-EG'))}</p>` : ''}
+      ${assignment.submission ? `<p>آخر تسليم: ${esc(assignment.submission.submitted_at ? new Date(assignment.submission.submitted_at).toLocaleString('ar-EG') : '—')}</p>` : ''}
+      ${assignment.submission?.grade != null ? `<p>الدرجة: ${esc(assignment.submission.grade)}</p>` : ''}
+      <form id="assignment-form">
+        <label for="assignment-answer">اكتبي إجابتك</label>
+        <textarea id="assignment-answer" rows="8" maxlength="20000" required>${esc(existingText)}</textarea>
+        <button type="submit">تسليم التكليف</button>
+      </form>
+      <p id="assignment-message" role="status" aria-live="polite"></p>`;
+    $('assignment-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const text = $('assignment-answer').value;
+      message('assignment-message', 'جارٍ حفظ التسليم…');
+      const { data, error } = await client.rpc('submit_student_assignment', {
+        p_assignment_id: Number(assignmentId),
+        p_submission_text: text
+      });
+      if (error) {
+        message('assignment-message', friendlyError(error), 'error');
+        return;
+      }
+      message('assignment-message', 'تم تسليم التكليف بنجاح.', 'success');
+      try {
+        await refreshDashboard();
+        openSubject(courseId, subjectId);
+      } catch (refreshError) {
+        message('app-message', friendlyError(refreshError), 'error');
+      }
+    });
+  }
+
+  async function openExam(examId, parentType, courseId, subjectId) {
+    examParent = parentType === 'subject'
+      ? { type: 'subject', courseId: Number(courseId), subjectId: Number(subjectId) }
+      : { type: 'course', courseId: Number(courseId) };
+    activeExam = null;
+    message('app-message', 'جارٍ تحميل الامتحان…');
+    view.innerHTML = '';
+    const { data, error } = await client.rpc('get_student_exam', { p_exam_id: Number(examId) });
+    if (error) {
+      message('app-message', friendlyError(error), 'error');
+      return;
+    }
+    activeExam = data;
+    message('app-message', '');
+    renderExam(data);
+  }
+
+  function renderExam(data) {
+    const exam = data.exam || {};
+    const state = data.state;
+    let content = `<div class="row"><button type="button" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title || 'الامتحان')}</h2></div>`;
+    if (state === 'submitted') {
+      content += `<section><h3>تم تسليم الامتحان</h3><p class="score">النتيجة: ${esc(data.result?.score ?? '—')} / ${esc(data.result?.total ?? '—')}</p><p>لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;
+      view.innerHTML = content;
+      return;
+    }
+    if (state === 'upcoming') {
+      content += `<p>الامتحان لم يفتح بعد.</p>`;
+      view.innerHTML = content;
+      return;
+    }
+    if (state === 'closed') {
+      content += `<p>انتهى موعد هذا الامتحان.</p>`;
+      view.innerHTML = content;
+      return;
+    }
+    if (state === 'course_completed') {
+      content += `<p>المساق مكتمل؛ لا يمكن إعادة الامتحان.</p>`;
+      view.innerHTML = content;
+      return;
+    }
+    const questions = data.questions || [];
+    if (!questions.length) {
+      content += `<p>لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</p>`;
+      view.innerHTML = content;
+      return;
+    }
+    content += `<form id="exam-form"><p>لن تظهر الإجابات الصحيحة إلا بعد انتهاء الامتحان، ولن يعرض النظام الإجابات الصحيحة بعد التسليم.</p>`;
+    content += questions.map((question, index) => {
+      const opts = normalizeOptions(question.options);
+      const body = opts.length
+        ? opts.map((option, i) => `<label class="option"><input type="radio" name="question-${Number(question.id)}" value="${esc(option.value)}" /> ${esc(option.label)}</label>`).join('')
+        : `<label for="answer-${Number(question.id)}">الإجابة</label><input id="answer-${Number(question.id)}" name="question-${Number(question.id)}" type="text" />`;
+      return `<section><h3>السؤال ${index + 1}</h3><p>${esc(question.question_text || '')}</p>${body}</section>`;
+    }).join('');
+    content += `<button type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>`;
+    view.innerHTML = content;
+    $('exam-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const submitButton = $('exam-form').querySelector('button[type="submit"]');
+      if (!confirm('هل تريدين تسليم الامتحان؟ لن تتمكني من إعادة تسليمه.')) return;
+      submitButton.disabled = true;
+      message('exam-message', 'جارٍ تصحيح الإجابات وحفظ النتيجة…');
+      const answers = questions.map(question => {
+        const opts = normalizeOptions(question.options);
+        let answer = '';
+        if (opts.length) {
+          answer = view.querySelector(`input[name="question-${Number(question.id)}"]:checked`)?.value ?? '';
+        } else {
+          answer = view.querySelector(`#answer-${Number(question.id)}`)?.value ?? '';
+        }
+        return { question_id: Number(question.id), answer };
+      }).filter(item => item.answer !== '');
+      const { data: result, error } = await client.rpc('submit_student_exam', {
+        p_exam_id: Number(exam.id),
+        p_answers: answers
+      });
+      if (error) {
+        submitButton.disabled = false;
+        message('exam-message', friendlyError(error), 'error');
+        return;
+      }
+      message('exam-message', 'تم التسليم بنجاح.', 'success');
+      renderExam({
+        state: 'submitted',
+        exam,
+        result
+      });
+      try { await refreshDashboard({ render: false }); } catch (_) { /* Keep the submitted result visible. */ }
+    });
+  }
+
+  function backFromExam() {
+    if (examParent.type === 'subject') openSubject(examParent.courseId, examParent.subjectId);
+    else if (examParent.type === 'course') openCourse(examParent.courseId);
+    else renderDashboard();
+  }
+
+  function friendlyError(error) {
+    const text = error?.message || String(error || 'حدث خطأ غير معروف');
+    if (/Invalid login credentials/i.test(text)) return 'الكود أو كلمة المرور غير صحيحة.';
+    if (/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(text)) return 'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';
+    if (/الامتحان لم يفتح بعد/i.test(text)) return 'الامتحان لم يفتح بعد.';
+    if (/انتهى وقت الامتحان|انتهى موعد/i.test(text)) return 'انتهى موعد الامتحان أو التكليف.';
+    return text;
+  }
+
+  $('login-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const code = $('student-code').value.trim();
+    const password = $('student-password').value;
+    if (!code || !password) return;
+    const button = $('login-button');
+    button.disabled = true;
+    message('login-message', 'جارٍ تسجيل الدخول…');
+    // Internal Auth convention for student-code logins.
+    const email = `student.${code.toLowerCase()}@login.invalid`;
+    const { error: loginError } = await client.auth.signInWithPassword({ email, password });
+    button.disabled = false;
+    if (loginError) {
+      message('login-message', friendlyError(loginError), 'error');
+      return;
+    }
+    try {
+      await refreshDashboard();
+      showSignedIn();
+      message('login-message', '');
+      message('app-message', '');
+    } catch (error) {
+      await client.auth.signOut();
+      showSignedOut();
+      message('login-message', friendlyError(error), 'error');
+    }
+  });
+
+  $('logout-button').addEventListener('click', async () => {
+    const { error } = await client.auth.signOut();
+    showSignedOut();
+    message('login-message', error ? friendlyError(error) : 'تم تسجيل الخروج.');
+  });
+
+  $('password-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const password = $('new-password').value;
+    const confirmPassword = $('confirm-password').value;
+    if (password.length < 8) {
+      message('password-message', 'كلمة المرور يجب ألا تقل عن 8 أحرف.', 'error');
+      return;
+    }
+    if (password !== confirmPassword) {
+      message('password-message', 'كلمتا المرور غير متطابقتين.', 'error');
+      return;
+    }
+    const { error } = await client.auth.updateUser({ password });
+    if (error) {
+      message('password-message', friendlyError(error), 'error');
+      return;
+    }
+    $('password-form').reset();
+    message('password-message', 'تم تغيير كلمة المرور.', 'success');
+  });
+
+  // Expose only navigation handlers needed by simple HTML buttons.
+  window.portalOpenCourse = openCourse;
+  window.portalRenderDashboard = renderDashboard;
+  window.portalOpenSubject = openSubject;
+  window.portalOpenAssignment = openAssignment;
+  window.portalOpenExam = openExam;
+  window.portalBackFromExam = backFromExam;
+
+  // Restore an existing session after a refresh, if one is present.
+  (async () => {
+    const { data } = await client.auth.getSession();
+    if (!data?.session) return;
+    try {
+      await refreshDashboard();
+      showSignedIn();
+    } catch (_) {
+      await client.auth.signOut();
+      showSignedOut();
+    }
+  })();
+})();
+</script>
+</body>
+</html>
