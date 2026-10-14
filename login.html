@@ -109,9 +109,22 @@ header {
 }
 
 main {
-  width: min(470px, calc(100% - 28px));
-  margin: auto;
-  padding: 36px 0;
+  width: min(410px, calc(100% - 28px));
+  margin: auto 7% auto auto;
+  padding: 18px 0;
+}
+
+.login-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.login-brand img {
+  width: 125px;
+  height: 125px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 16px rgba(0,0,0,.3));
 }
 
 .login-card {
@@ -297,6 +310,10 @@ footer {
 .hidden { display: none !important; }
 
 @media (max-width: 480px) {
+    main {
+    width: calc(100% - 28px);
+    margin: auto;
+  }
   header { padding: 13px; }
   .logo { width: 46px; height: 46px; }
   .brand { gap: 9px; }
@@ -310,24 +327,13 @@ footer {
 </head>
 
 <body>
-<div class="page">
+<div class="page"
+<main><div class="login-brand">
+  <img
+    src="https://raw.githubusercontent.com/tysoo/Islamic-exams/main/marsad-logo.png.jpg"
+    alt="شعار المرصد">
+</div>
 
-<header>
-  <div class="header-inner">
-    <a class="brand" href="index.html" aria-label="الصفحة الرئيسية">
-      <img class="logo"
-        src="https://raw.githubusercontent.com/tysoo/Islamic-exams/main/marsad-logo.png.jpg"
-        alt="شعار المنصة">
-      <span>
-        <span class="brand-name">مَرْصَد</span>
-        <span class="brand-sub">للنوازل العقدية</span>
-      </span>
-    </a>
-    <a class="home-link" href="index.html">الصفحة الرئيسية</a>
-  </div>
-</header>
-
-<main>
   <section class="login-card">
     <div class="heading">
       <div class="ornament">✦</div>
