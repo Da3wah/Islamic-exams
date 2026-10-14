@@ -58,7 +58,22 @@ $('examForm').addEventListener('submit',async e=>{e.preventDefault();try{await a
 $('questionForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const options=$('questionOptions').value.split('|').map(x=>x.trim()).filter(Boolean),correct=$('questionCorrect').value.trim();if(options.length<2)throw Error('أدخلي خيارين على الأقل، وافصلي بينهما بعلامة |.');if(!options.includes(correct))throw Error('الإجابة الصحيحة يجب أن تطابق أحد الخيارات حرفيًا.');const {error}=await db.from('questions').insert({exam_id:Number($('questionExam').value),question_text:$('questionText').value.trim(),options,correct_answer:correct});if(error)throw error;msg('questionMsg','تمت إضافة السؤال.','success');$('questionForm').reset()}catch(x){msg('questionMsg','تعذر إضافة السؤال: '+x.message,'error')}});
 $('assignmentForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const {error}=await db.from('assignments').insert({title:$('assignmentTitle').value.trim(),description:$('assignmentDescription').value.trim()||null,course_id:Number($('assignmentCourse').value),course_subject_id:Number($('assignmentSubject').value),open_at:$('assignmentOpen').value?new Date($('assignmentOpen').value).toISOString():null,close_at:$('assignmentClose').value?new Date($('assignmentClose').value).toISOString():null});if(error)throw error;msg('assignmentMsg','تم إنشاء الواجب.','success');$('assignmentForm').reset();await loadAssignments()}catch(x){msg('assignmentMsg','تعذر إنشاء الواجب: '+x.message,'error')}});
 document.addEventListener('click',async e=>{const c=e.target.closest('[data-toggle-course]');const s=e.target.closest('[data-toggle-subject]');const q=e.target.closest('[data-count-questions]');try{if(c){await adminCheck();const {error}=await db.from('courses').update({active:c.dataset.active!=='true'}).eq('id',Number(c.dataset.toggleCourse));if(error)throw error;await loadCourses()}if(s){await adminCheck();const {error}=await db.from('course_subjects').update({active:s.dataset.active!=='true'}).eq('id',Number(s.dataset.toggleSubject));if(error)throw error;await loadSubjects()}if(q){await adminCheck();const {count,error}=await db.from('questions').select('id',{count:'exact',head:true}).eq('exam_id',Number(q.dataset.countQuestions));if(error)throw error;alert('عدد الأسئلة في هذا الاختبار: '+count)}}catch(x){alert('تعذر تنفيذ العملية: '+x.message)}});
-$('logout').addEventListener('click',async()=>{await db.auth.signOut();$('app').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value=''});
-(async()=>{try{const {data}=await db.auth.getSession();if(data.session){await verifyAdmin(data.session);$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');await refreshAll()}}catch(_){await db.auth.signOut()}})();
+$('logout').addEventListener('click', async () => {
+  try {
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+      throw error;
+    }
+
+    window.location.replace('index.html');
+
+  } catch (error) {
+    alert(
+      'تعذر إنهاء جلسة الدخول بالكامل: ' +
+      (error.message || String(error))
+    );
+  }
+});(async()=>{try{const {data}=await db.auth.getSession();if(data.session){await verifyAdmin(data.session);$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');await refreshAll()}}catch(_){await db.auth.signOut()}})();
 })();
 </script></body></html>
