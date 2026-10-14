@@ -225,7 +225,15 @@
                 usernameInput.placeholder = "اسم الطالب أو رقم القيد";
             }
         }
+const requestedRole = new URLSearchParams(
+    window.location.search
+).get('role');
 
+if (requestedRole === 'student') {
+    switchTab('student');
+} else {
+    switchTab('admin');
+}
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
