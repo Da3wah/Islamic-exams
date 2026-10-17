@@ -209,8 +209,8 @@ body.exam-editor-route.exam-editor-add-route #questionFormCard{display:none!impo
 </main></div>
 <script>
 (()=>{'use strict';
-const URL='https://pxgxnwxpwvvefroaqpfr.supabase.co',KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
-const db=window.supabase.createClient(URL,KEY),$=id=>document.getElementById(id);let cache={courses:[],subjects:[],exams:[],students:[]};let subjectReturnCourseId=null;
+const SUPABASE_URL='https://pxgxnwxpwvvefroaqpfr.supabase.co',KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+const db=window.supabase.createClient(SUPABASE_URL,KEY),$=id=>document.getElementById(id);let cache={courses:[],subjects:[],exams:[],students:[]};let subjectReturnCourseId=null;
 const examRoute=new URLSearchParams(location.search);let examAction=examRoute.get('examAction'),examRouteId=examRoute.get('id');let isExamEditorRoute=['add','edit'].includes(examAction);if(isExamEditorRoute){document.body.classList.add('exam-editor-route');document.body.classList.toggle('exam-editor-add-route',examAction==='add');}
 /* تبقى نماذج الاختبار داخل قسم الاختبارات، مخفية في القائمة، حتى يمكن فتحها كواجهة مستقلة دون إعادة تحميل الصفحة أو فقدان ارتباط الأزرار. */
 const examSection=document.getElementById('exams');if(examSection){examSection.querySelectorAll('*').forEach(node=>{if(node.children.length===0&&/تصحيح الإجابات المقالية/.test(node.textContent||'')){let block=node;while(block.parentElement&&block.parentElement!==examSection&&!block.parentElement.classList.contains('card'))block=block.parentElement;if(block!==examSection)block.remove();}});}
@@ -367,6 +367,13 @@ $('logout').addEventListener('click', async () => {
 /* بوابة الاختبارات: قائمة منفصلة، ومحرر مستقل عند إضافة اختبار جديد */
 body:not(.exam-editor-add-route) #qt-admin-editor{display:none!important}
 body.exam-editor-add-route #qt-admin-editor{display:block!important;max-width:100%;margin:0 0 20px;padding:22px;background:#fffdf8;color:#17263d;border:1px solid #e4d9c5;border-radius:16px;box-shadow:0 8px 24px rgba(8,25,47,.06)}
+/* صفحة الإضافة تستخدم نموذجًا موحدًا لبيانات الاختبار والأسئلة؛ أخفِ النموذج القديم المكرر فقط في هذا المسار. */
+body.exam-editor-add-route #examFormCard{display:none!important}
+body.exam-editor-add-route #questionFormCard{display:none!important}
+body.exam-editor-add-route #qt-admin-editor .qt-new-exam-grid{display:grid!important}
+body.exam-editor-add-route #qt-admin-editor #qt-add-row,
+body.exam-editor-add-route #qt-admin-editor #qt-create-exam-with-questions{display:inline-flex!important}
+body.exam-editor-add-route #qt-admin-editor #qt-question-rows{display:table-row-group!important}
 body.exam-editor-add-route #qt-admin-editor> :nth-child(4),
 body.exam-editor-add-route #qt-admin-editor> :nth-child(5),
 body.exam-editor-add-route #qt-admin-editor> :nth-child(6),
