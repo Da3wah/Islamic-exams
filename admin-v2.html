@@ -4,11 +4,11 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>إدارة منصة الاختبارات الإسلامية</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="question-types-bridge.js"></script>
-  <script src="assignment-section-bridge.js"></script>
-  <script src="course-result-announcement-bridge.js"></script>
+  <script src="question-types-bridge.js"></script>
+  <script src="assignment-section-bridge.js"></script>
+  <script src="course-result-announcement-bridge.js"></script>
 <script src="marsad-branding.js"></script>
-  <style>
+  <style>
 :root{--g:#245b48;--dark:#183d31;--bg:#f4f6f8;--line:#e1e7e3;--muted:#68746f;--red:#a33a35}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#202b28;font-family:Tahoma,Arial,sans-serif;line-height:1.65}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.6;cursor:wait}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 8px 28px #18382b0b}.login .card{width:min(100%,440px);padding:30px}.login h1{font-size:24px;margin:4px 0}.muted,.sub{color:var(--muted);font-size:13px}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:bold}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #d7dfda;border-radius:10px;background:#fff;min-width:0}.field textarea{min-height:76px;resize:vertical}.btn{border:0;border-radius:10px;padding:10px 15px;background:var(--g);color:#fff;font-weight:bold}.btn.secondary{background:#eef2ef;color:#202b28;border:1px solid var(--line)}.btn.danger{background:#fff0ef;color:var(--red);border:1px solid #f0d1cf}.msg{white-space:pre-wrap;font-size:13px;min-height:18px}.error{color:var(--red)}.success{color:#21633b}.shell{min-height:100vh;display:grid;grid-template-columns:230px 1fr}aside{background:var(--dark);color:#fff;padding:20px 13px}.brand{padding:8px 10px 18px;border-bottom:1px solid #ffffff25;margin-bottom:15px;font-weight:bold}.brand small{display:block;color:#c8d8d0;font-weight:normal}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#dce8e1;text-align:right;padding:10px;border-radius:10px}.nav button.active,.nav button:hover{background:#ffffff18;color:white}main{padding:24px;min-width:0}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.top h1{margin:3px 0;font-size:25px}.eyebrow{font-size:12px;color:var(--g);font-weight:bold}.hero{background:linear-gradient(115deg,#214f3e,#2f6a51);color:#fff;border-radius:18px;padding:22px;margin-bottom:16px}.hero h2{margin:4px 0}.hero p{margin:0;color:#d7e7dd}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:16px 0}.stat{padding:15px}.stat small{color:var(--muted)}.stat strong{font-size:26px;display:block;margin-top:5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.quickgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick{border:1px solid var(--line);background:#fff;text-align:right;padding:13px;border-radius:12px}.quick b{display:block;margin-top:5px}.page{display:none}.page.active{display:block}.pagehead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.pagehead h2{margin:0;font-size:20px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.notice{border:1px dashed #cdd9d1;border-radius:12px;padding:15px;background:#fafcfb;color:var(--muted);margin:12px 0}.notice b{display:block;color:#202b28;margin-bottom:4px}.tag{display:inline-block;border-radius:99px;background:#eef3ef;color:var(--g);padding:3px 9px;font-size:12px}.listbox{margin-top:14px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}table{border-collapse:collapse;width:100%;min-width:600px}th,td{text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}th{background:#f6f8f6;color:#43544b}tr:last-child td{border-bottom:0}.empty{padding:18px;color:var(--muted);text-align:center}.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.inline select{padding:8px;border:1px solid var(--line);border-radius:9px;max-width:100%}.divider{border:0;border-top:1px solid var(--line);margin:18px 0}
 @media(max-width:850px){.shell{grid-template-columns:1fr}aside{padding:10px}.brand{padding:4px 8px 10px;margin-bottom:8px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;padding:8px}main{padding:14px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.top h1{font-size:21px}}@media(max-width:520px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.pagehead{align-items:flex-start}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:22px}.quickgrid{grid-template-columns:1fr 1fr}}
 </style>
@@ -16,118 +16,118 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
 
 :root{
-  --g:#D4AF37;
-  --dark:#070E17;
-  --bg:#0B1220;
-  --line:rgba(245,230,211,.16);
-  --muted:#A9B6C7;
-  --red:#f0a09b;
+  --g:#D4AF37;
+  --dark:#070E17;
+  --bg:#0B1220;
+  --line:rgba(245,230,211,.16);
+  --muted:#A9B6C7;
+  --red:#f0a09b;
 }
 *{box-sizing:border-box}
 body{
-  background:#F5EBDD!important;
-  color:#F5E6D3!important;
-  font-family:'Cairo',Tahoma,Arial,sans-serif!important;
+  background:#F5EBDD!important;
+  color:#F5E6D3!important;
+  font-family:'Cairo',Tahoma,Arial,sans-serif!important;
 }
 aside{
-  background:#070E17!important;
-  color:#F5E6D3!important;
-  border-left:1px solid rgba(212,175,55,.24);
+  background:#070E17!important;
+  color:#F5E6D3!important;
+  border-left:1px solid rgba(212,175,55,.24);
 }
 .brand{
-  color:#D4AF37!important;
-  border-bottom-color:rgba(212,175,55,.25)!important;
-  font-family:'Cairo',sans-serif!important;
+  color:#D4AF37!important;
+  border-bottom-color:rgba(212,175,55,.25)!important;
+  font-family:'Cairo',sans-serif!important;
 }
 .brand small{color:#C8B8A5!important}
 .nav button{color:#C8B8A5!important;transition:background .2s,color .2s}
 .nav button.active,.nav button:hover{
-  background:rgba(212,175,55,.13)!important;
-  color:#FAF0E6!important;
-  border:1px solid rgba(212,175,55,.28)!important;
+  background:rgba(212,175,55,.13)!important;
+  color:#FAF0E6!important;
+  border:1px solid rgba(212,175,55,.28)!important;
 }
 main{background:#F5EBDD!important}
 .top{
-  background:#101B2B;
-  border:1px solid rgba(212,175,55,.18);
-  border-radius:16px;
-  padding:15px 18px;
+  background:#101B2B;
+  border:1px solid rgba(212,175,55,.18);
+  border-radius:16px;
+  padding:15px 18px;
 }
 .top h1{color:#FAF0E6!important;font-family:'Cairo',sans-serif!important}
 .eyebrow{color:#D4AF37!important}
 .sub,.muted,.stat small{color:#A9B6C7!important}
 .card{
-  background:#111D2D!important;
-  color:#F5E6D3!important;
-  border:1px solid rgba(245,230,211,.13)!important;
-  box-shadow:0 8px 28px rgba(0,0,0,.18)!important;
+  background:#111D2D!important;
+  color:#F5E6D3!important;
+  border:1px solid rgba(245,230,211,.13)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.18)!important;
 }
 .hero{
-  background:linear-gradient(115deg,#111D2D 0%,#17283D 72%,#243247 100%)!important;
-  color:#FAF0E6!important;
-  border:1px solid rgba(212,175,55,.32);
-  box-shadow:0 12px 32px rgba(0,0,0,.18);
+  background:linear-gradient(115deg,#111D2D 0%,#17283D 72%,#243247 100%)!important;
+  color:#FAF0E6!important;
+  border:1px solid rgba(212,175,55,.32);
+  box-shadow:0 12px 32px rgba(0,0,0,.18);
 }
 .hero h2{color:#FAF0E6!important}
 .hero p{color:#D5DCE5!important}
 .tag{
-  background:rgba(212,175,55,.14)!important;
-  color:#E6C75A!important;
-  border:1px solid rgba(212,175,55,.25);
+  background:rgba(212,175,55,.14)!important;
+  color:#E6C75A!important;
+  border:1px solid rgba(212,175,55,.25);
 }
 .stat strong{color:#F5E6D3!important}
 .quick{
-  background:#0C1625!important;
-  color:#F5E6D3!important;
-  border:1px solid rgba(245,230,211,.14)!important;
-  transition:transform .15s,border-color .15s,background .15s;
+  background:#0C1625!important;
+  color:#F5E6D3!important;
+  border:1px solid rgba(245,230,211,.14)!important;
+  transition:transform .15s,border-color .15s,background .15s;
 }
 .quick:hover{
-  background:#152438!important;
-  border-color:rgba(212,175,55,.48)!important;
-  transform:translateY(-1px);
+  background:#152438!important;
+  border-color:rgba(212,175,55,.48)!important;
+  transform:translateY(-1px);
 }
 .btn{
-  background:#D4AF37!important;
-  color:#101722!important;
-  border:1px solid #D4AF37!important;
-  font-family:'Cairo',sans-serif!important;
+  background:#D4AF37!important;
+  color:#101722!important;
+  border:1px solid #D4AF37!important;
+  font-family:'Cairo',sans-serif!important;
 }
 .btn:hover{filter:brightness(1.06)}
 .btn.secondary{
-  background:#182638!important;
-  color:#F5E6D3!important;
-  border:1px solid rgba(245,230,211,.2)!important;
+  background:#182638!important;
+  color:#F5E6D3!important;
+  border:1px solid rgba(245,230,211,.2)!important;
 }
 .btn.danger{
-  background:#3A2025!important;
-  color:#ffd6d2!important;
-  border:1px solid #754148!important;
+  background:#3A2025!important;
+  color:#ffd6d2!important;
+  border:1px solid #754148!important;
 }
 .field label{color:#E8D8C8!important}
 .field input,.field select,.field textarea,.inline select{
-  background:#0B1625!important;
-  color:#F5E6D3!important;
-  border:1px solid rgba(245,230,211,.2)!important;
-  color-scheme:dark;
+  background:#0B1625!important;
+  color:#F5E6D3!important;
+  border:1px solid rgba(245,230,211,.2)!important;
+  color-scheme:dark;
 }
 .field input::placeholder,.field textarea::placeholder{color:#8290A3!important}
 .field input:focus,.field select:focus,.field textarea:focus{
-  outline:2px solid rgba(212,175,55,.25);
-  border-color:#D4AF37!important;
+  outline:2px solid rgba(212,175,55,.25);
+  border-color:#D4AF37!important;
 }
 .notice{
-  background:#111D2D!important;
-  color:#A9B6C7!important;
-  border-color:rgba(212,175,55,.3)!important;
+  background:#111D2D!important;
+  color:#A9B6C7!important;
+  border-color:rgba(212,175,55,.3)!important;
 }
 .notice b{color:#F5E6D3!important}
 .tablewrap{background:#0D1827!important;border-color:rgba(245,230,211,.14)!important}
 table{color:#F5E6D3!important}
 th{
-  background:#172538!important;
-  color:#E6C75A!important;
-  border-bottom-color:rgba(212,175,55,.2)!important;
+  background:#172538!important;
+  color:#E6C75A!important;
+  border-bottom-color:rgba(212,175,55,.2)!important;
 }
 td{border-bottom-color:rgba(245,230,211,.1)!important}
 tr:hover td{background:rgba(212,175,55,.035)}
@@ -140,11 +140,12 @@ tr:hover td{background:rgba(212,175,55,.035)}
 .login h1{color:#FAF0E6!important}
 .login .sub{color:#A9B6C7!important}
 @media(max-width:850px){
-  aside{border-left:0;border-bottom:1px solid rgba(212,175,55,.24)}
-  .top{padding:12px}
+  aside{border-left:0;border-bottom:1px solid rgba(212,175,55,.24)}
+  .top{padding:12px}
 }
 </style>
 <style id="management-view-styles">
+/* إدارة الأقسام: قوائم أولاً ونماذج مستقلة */
 .management-form-view{display:none!important}
 .management-form-view.open{display:block!important}
 .list-view.hidden-view{display:none!important}
@@ -157,6 +158,7 @@ tr:hover td{background:rgba(212,175,55,.035)}
 </style>
 
 <style id="exam-editor-route-styles">
+/* صفحة قائمة الاختبارات تعرض القائمة فقط؛ النماذج تظهر عبر رابط صفحة الإضافة/التعديل المستقل */
 body:not(.exam-editor-route) #exams #examFormCard,
 body:not(.exam-editor-route) #exams #questionFormCard,
 body:not(.exam-editor-route) #exams>hr{display:none!important}
@@ -172,100 +174,49 @@ body.exam-editor-route #questionFormCard{display:block!important;margin-top:16px
 body.exam-editor-route.exam-editor-add-route #questionFormCard{display:none!important}
 @media(max-width:600px){body.exam-editor-route #app>main{padding:12px}}
 </style>
-</head>
-<body>
-<section id="loginScreen" class="login hidden"><div class="card"><div class="eyebrow">مساحة الإدارة</div><h1>منصة الاختبارات الإسلامية</h1><p class="sub">سجّلي الدخول بحساب إدارة معتمد.</p><form id="loginForm"><div class="field"><label for="email">البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required></div><button class="btn" id="loginBtn">تسجيل الدخول</button></form><p id="loginMsg" class="msg"></p><p class="sub">لا يوجد تسجيل ذاتي. الدخول لحسابات الإدارة المصرّح لها فقط.</p></div></section>
 
-<div id="app" class="shell hidden">
-<aside><div class="brand">✦ منصة الاختبارات الإسلامية<small>لوحة الإدارة</small></div><nav class="nav" id="nav"><button class="active" data-page="home">⌂ الرئيسية</button><button data-page="students">♙ الطلاب</button><button data-page="courses">▤ المساقات</button><button data-page="exams">☷ الاختبارات</button><button data-page="assignments">✎ الواجبات</button><button data-page="results">▥ النتائج</button><button data-page="teachers">♧ المعلمون</button></nav></aside>
-<main>
-<header class="top"><div><div class="eyebrow">مساحة العمل</div><h1 id="title">الرئيسية</h1><div id="subtitle" class="sub">نظرة عامة على المنصة.</div></div><button id="logout" class="btn secondary">تسجيل الخروج ↪</button></header>
-
-<!-- قسم الاختبارات المعدل بناءً على طلبك -->
-<section id="exams" class="page">
-  <!-- 1. قائمة الاختبارات -->
-  <div id="examsListView">
-    <div class="pagehead">
-      <div>
-        <h2>الاختبارات والأسئلة</h2>
-        <p class="sub">قائمة الاختبارات الحالية وإدارتها وتفعيلها.</p>
-      </div>
-      <div class="row-actions">
-        <button class="btn" id="addExamRoute">＋ إضافة اختبار</button>
-      </div>
-    </div>
-    <div class="card listbox">
-      <div class="pagehead">
-        <h3>الاختبارات الحالية</h3>
-        <button class="btn secondary" data-refresh="exams">تحديث</button>
-      </div>
-      <div id="examsTable" class="tablewrap">
-        <div class="empty">لا توجد بيانات معروضة.</div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- 2. نموذج إضافة أو تعديل الاختبار -->
-  <div id="examFormCard" class="card management-form-view">
-    <div class="pagehead">
-      <h3 id="examFormHeading">إضافة اختبار جديد</h3>
-      <button type="button" class="btn secondary" id="backToExamsList">← العودة إلى قائمة الاختبارات</button>
-    </div>
-    <form id="examForm">
-      <input type="hidden" id="examEditId">
-      <div class="formgrid">
-        <div class="field"><label for="examTitle">عنوان الاختبار</label><input id="examTitle" required maxlength="200"></div>
-        <div class="field"><label for="examType">نوع الاختبار</label><select id="examType"><option value="Weekly">أسبوعي</option><option value="Final">نهائي</option></select></div>
-        <div class="field"><label for="examCourse">المساق</label><select id="examCourse" required></select></div>
-        <div class="field"><label for="examSubject">المادة (للاختبار النهائي)</label><select id="examSubject"><option value="">لا توجد مادة محددة / اختبار أسبوعي</option></select></div>
-        <div class="field"><label for="examWeek">رقم الأسبوع (للأسبوعي)</label><input id="examWeek" type="number" min="1" placeholder="مثال: 1"></div>
-        <div class="field"><label for="examOpen">موعد الفتح (اختياري)</label><input id="examOpen" type="datetime-local"></div>
-        <div class="field"><label for="examClose">موعد الإغلاق (اختياري)</label><input id="examClose" type="datetime-local"></div>
-      </div>
-      <div class="actions">
-        <button class="btn" type="submit" id="saveExamBtn">حفظ الانتقال للأسئلة / حفظ الاختبار</button>
-      </div>
-      <p id="examMsg" class="msg"></p>
-    </form>
-  </div>
-
-  <!-- 3. نموذج الأسئلة (يظهر عند التعديل أو بعد إنشاء الاختبار) -->
-  <div id="questionFormCard" class="card management-form-view" style="margin-top:16px;">
-    <div class="pagehead">
-      <h3>إضافة سؤال للاختبار</h3>
-    </div>
-    <p class="sub">أضيفي أسئلة الاختبار من هنا. افصلي الخيارات بعلامة |، واكتبي الإجابة الصحيحة تماماً كما تظهر بين الخيارات.</p>
-    <div id="existingQuestions" class="notice hidden"><b>الأسئلة المحفوظة</b><div id="existingQuestionsList"></div></div>
-    <form id="questionForm">
-      <input type="hidden" id="questionExamId">
-      <div class="formgrid">
-        <div class="field full"><label for="questionText">نص السؤال</label><textarea id="questionText" required></textarea></div>
-        <div class="field full"><label for="questionOptions">الخيارات</label><input id="questionOptions" required placeholder="الخيار الأول | الخيار الثاني | الخيار الثالث"></div>
-        <div class="field"><label for="questionCorrect">الإجابة الصحيحة</label><input id="questionCorrect" required></div>
-      </div>
-      <div class="actions">
-        <button class="btn" type="submit">إضافة السؤال</button>
-      </div>
-      <p id="questionMsg" class="msg"></p>
-    </form>
-  </div>
+<style id="admin-transition-styles">
+/* شاشة انتقال المرصد أثناء التحقق من جلسة الإدارة */
+#adminTransition{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:24px;background:#070E17;color:#F5E6D3;text-align:center;font-family:'Cairo',Tahoma,Arial,sans-serif}
+#adminTransition .transition-card{width:min(100%,440px);padding:30px 24px;border:1px solid rgba(212,175,55,.35);border-radius:20px;background:#111D2D;box-shadow:0 18px 55px rgba(0,0,0,.3)}
+#adminTransition .transition-mark{color:#D4AF37;font-size:32px;margin-bottom:8px}
+#adminTransition h2{margin:0 0 8px;color:#FAF0E6;font-size:23px}
+#adminTransition p{margin:0;color:#A9B6C7;font-size:14px}
+#adminTransition .transition-spinner{width:28px;height:28px;margin:20px auto 0;border:3px solid rgba(212,175,55,.22);border-top-color:#D4AF37;border-radius:50%;animation:adminTransitionSpin .8s linear infinite}
+@keyframes adminTransitionSpin{to{transform:rotate(360deg)}}
+#adminTransition[hidden]{display:none!important}
+</style>
+</head><body>
+<section id="adminTransition" role="status" aria-live="polite">
+  <div class="transition-card">
+    <div class="transition-mark">✦</div>
+    <h2>المرصد</h2>
+    <p>جارٍ التحقق من الجلسة وتجهيز مساحة الإدارة…</p>
+    <div class="transition-spinner" aria-hidden="true"></div>
+  </div>
 </section>
-
-<!-- باقي الأقسام الأساسية الأخرى (الطلاب، المساقات، الواجبات، النتائج، المعلمون) -->
-<section id="home" class="page active">...</section>
-<section id="students" class="page">...</section>
-<section id="courses" class="page">...</section>
-<section id="subjects" class="page">...</section>
-<section id="assignments" class="page">...</section>
-<section id="results" class="page">...</section>
-<section id="teachers" class="page">...</section>
-
-</main>
-</div>
+<section id="loginScreen" class="login hidden"><div class="card"><div class="eyebrow">مساحة الإدارة</div><h1>منصة الاختبارات الإسلامية</h1><p class="sub">سجّلي الدخول بحساب إدارة معتمد.</p><form id="loginForm"><div class="field"><label for="email">البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" required></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required></div><button class="btn" id="loginBtn">تسجيل الدخول</button></form><p id="loginMsg" class="msg"></p><p class="sub">لا يوجد تسجيل ذاتي. الدخول لحسابات الإدارة المصرّح لها فقط.</p></div></section>
+<div id="app" class="shell hidden"><aside><div class="brand">✦ منصة الاختبارات الإسلامية<small>لوحة الإدارة</small></div><nav class="nav" id="nav"><button class="active" data-page="home">⌂ الرئيسية</button><button data-page="students">♙ الطلاب</button><button data-page="courses">▤ المساقات</button><button data-page="exams">☷ الاختبارات</button><button data-page="assignments">✎ الواجبات</button><button data-page="results">▥ النتائج</button><button data-page="teachers">♧ المعلمون</button></nav></aside>
+<main><header class="top"><div><div class="eyebrow">مساحة العمل</div><h1 id="title">الرئيسية</h1><div id="subtitle" class="sub">نظرة عامة على المنصة.</div></div><button id="logout" class="btn secondary">تسجيل الخروج ↪</button></header>
+<section id="home" class="page active"><div class="hero"><span class="tag">لوحة التحكم</span><h2>أهلًا بكِ في إدارة المنصة</h2><p>أضيفي البيانات من هنا بدلًا من إدخالها يدويًا في قاعدة البيانات.</p></div><div class="stats"><div class="card stat">الطلاب<strong id="statStudents">—</strong><small>حسابات الطلاب المسجلة</small></div><div class="card stat">المساقات<strong id="statCourses">—</strong><small>المساقات</small></div><div class="card stat">المواد<strong id="statSubjects">—</strong><small>مواد المساقات</small></div><div class="card stat">الاختبارات<strong id="statExams">—</strong><small>الاختبارات</small></div></div><div class="grid"><div class="card"><h3>اختصارات</h3><div class="quickgrid"><button class="quick" data-go="students">＋<b>إضافة طالب</b><span class="sub">إنشاء حساب وكود دخول</span></button><button class="quick" data-go="courses">▤<b>إنشاء مساق</b><span class="sub">إضافة مساق جديد</span></button><button class="quick" data-go="courses">▧<b>إدارة مواد المساقات</b><span class="sub">إضافة المواد وتعديلها من تفاصيل المساق</span></button><button class="quick" data-go="exams">☷<b>إنشاء اختبار</b><span class="sub">أسبوعي أو نهائي</span></button></div></div><div class="card"><h3>مهم قبل الاستخدام</h3><p class="sub">الإضافة والتعديل يعتمدان على صلاحيات Supabase الحالية. إنشاء حساب طالب يستخدم وظيفة الخادم الآمنة <code>create-student</code>. إنشاء حسابات المعلمين يحتاج وظيفة خادم منفصلة، لذلك لن ننشئ حسابات Auth من المتصفح.</p><button class="btn secondary" id="refreshAll">تحديث البيانات</button><p id="homeMsg" class="msg"></p></div></div></section>
+<section id="students" class="page"><div id="studentsListView"><div class="pagehead"><div><h2>الطلاب</h2><p class="sub">قائمة الطلاب وأكواد دخولهم والمساقات الملتحقين بها حاليًا.</p></div><div class="actions" style="margin-top:0"><button class="btn" id="showAddStudent">＋ إضافة طالب</button><button class="btn secondary" id="showImportStudents">⇧ رفع ملف الطلاب</button></div></div><div class="card listbox"><div class="pagehead"><h3>قائمة الطلاب</h3><button class="btn secondary" data-refresh="students">تحديث القائمة</button></div><div id="studentsTable" class="tablewrap"><div class="empty">جارٍ تحميل الطلاب عند فتح الصفحة.</div></div></div></div><div id="studentEditorView" class="hidden"><div class="pagehead"><div><h2>إضافة طالب جديد</h2><p class="sub">أدخلي بيانات الطالب، وبعد الحفظ ستعودين تلقائيًا إلى قائمة الطلاب.</p></div><button class="btn secondary" id="cancelAddStudent">← العودة إلى قائمة الطلاب</button></div><div class="card"><form id="studentForm"><div class="formgrid"><div class="field"><label for="studentName">اسم الطالب</label><input id="studentName" maxlength="150" required></div><div class="field"><label for="studentCode">كود الدخول</label><input id="studentCode" maxlength="50" placeholder="مثال: 001" required></div><div class="field"><label for="studentPassword">كلمة المرور الأولية</label><input id="studentPassword" type="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label for="studentCourse">المساق الحالي (اختياري)</label><select id="studentCourse"><option value="">بدون مساق الآن</option></select></div></div><div class="actions"><button class="btn" id="createStudentBtn">حفظ وإضافة الطالب</button><button class="btn secondary" type="reset">مسح الحقول</button></div><p id="studentMsg" class="msg"></p></form></div></div><div id="studentImportView" class="hidden"><div class="pagehead"><div><h2>رفع ملف الطلاب</h2><p class="sub">ارفعي ملف CSV يحتوي على أسماء الطلاب وأكوادهم، وسيُنشأ لكل طالب حساب وكلمة مرور أولية.</p></div><button class="btn secondary" id="cancelImportStudents">← العودة إلى قائمة الطلاب</button></div><div class="card"><div class="notice"><b>تنسيق الملف</b> احفظي ملف Excel بصيغة CSV UTF-8. اجعلي الصف الأول عناوين الأعمدة: <code>name,code,course</code>. الاسم مطلوب، والكود اختياري؛ إذا تُرك فارغًا سيُنشأ كود تلقائي. وعمود المساق اختياري ويجب أن يطابق اسم مساق موجودًا.</div><div class="field"><label for="studentsCsvFile">ملف الطلاب (CSV)</label><input id="studentsCsvFile" type="file" accept=".csv,text/csv"></div><div class="actions"><button class="btn" id="importStudentsBtn">استيراد الطلاب وإنشاء الحسابات</button></div><p id="importStudentsMsg" class="msg"></p><div id="importCredentialsWrap" class="hidden"><h3>بيانات الدخول الناتجة</h3><p class="sub">احتفظي بهذا الملف في مكان آمن ووزّعي بيانات كل طالب عليه بشكل خاص.</p><div id="importCredentialsTable" class="tablewrap"></div><div class="actions"><button class="btn secondary" id="downloadCredentials">تنزيل ملف بيانات الدخول</button></div></div></div></div></section>
+<section id="courses" class="page"><div class="pagehead"><div><h2>إدارة المساقات</h2><p class="sub">قائمة المساقات وبطاقاتها وبياناتها.</p></div><button class="btn" data-open-form="courseFormCard">＋ إضافة مساق</button></div><div id="courseFormCard" class="card management-form-view"><div class="pagehead"><h3 id="courseFormHeading">إضافة مساق</h3><button type="button" class="btn secondary" data-cancel-form="courseFormCard">العودة للقائمة</button></div><form id="courseForm"><input type="hidden" id="courseEditId"><div class="formgrid"><div class="field"><label for="courseName">اسم المساق</label><input id="courseName" required maxlength="180"></div><div class="field"><label for="courseActive">الحالة</label><select id="courseActive"><option value="true">نشط</option><option value="false">غير نشط</option></select></div><div class="field full"><label for="courseDescription">نبذة عن المساق (اختياري)</label><textarea id="courseDescription"></textarea></div><div class="field full"><label for="courseImageFile">صورة المساق</label><input id="courseImageFile" type="file" accept="image/*"><div id="courseImagePreview" class="course-image-preview">معاينة صورة المساق</div><p class="sub">رفع الصورة يحتاج إعداد مساحة تخزين صور المساقات في Supabase وربط رابطها بحقل الصورة.</p></div></div><div class="actions"><button class="btn">حفظ المساق</button></div><p id="courseMsg" class="msg"></p></form></div><div id="coursesListView" class="card listbox list-view"><div class="pagehead"><h3>المساقات الحالية</h3><button class="btn secondary" data-refresh="courses">تحديث</button></div><div id="coursesTable" class="course-cards"><div class="empty">لا توجد بيانات معروضة.</div></div></div><div id="courseDetailsView" class="card management-form-view"><div class="pagehead"><h3 id="courseDetailsTitle">تفاصيل المساق</h3><button type="button" class="btn secondary" id="closeCourseDetails">العودة للمساقات</button></div><div id="courseDetailsContent"></div></div></section>
+<section id="subjects" class="page"><div class="pagehead"><div><h2>مواد المساقات</h2><p class="sub">قائمة المواد وحالتها والمساق التابع لها.</p></div><button class="btn" data-open-form="subjectFormCard">＋ إضافة مادة جديدة</button></div><div id="subjectFormCard" class="card management-form-view"><div class="pagehead"><h3 id="subjectFormHeading">إضافة مادة جديدة</h3><button type="button" class="btn secondary" data-cancel-form="subjectFormCard">العودة للقائمة</button></div><form id="subjectForm"><input type="hidden" id="subjectEditId"><div class="formgrid"><div class="field"><label for="subjectCourse">المساق</label><select id="subjectCourse" required></select></div><div class="field"><label for="subjectName">اسم المادة</label><input id="subjectName" required maxlength="180" placeholder="العقيدة، التفسير، الحديث..."></div><div class="field"><label for="subjectOrder">ترتيب العرض</label><input id="subjectOrder" type="number" min="0" value="0"></div><div class="field"><label for="subjectActive">الحالة</label><select id="subjectActive"><option value="true">نشطة</option><option value="false">مكتملة / غير نشطة</option></select></div><div class="field full"><label for="subjectDescription">وصف المادة (اختياري)</label><textarea id="subjectDescription"></textarea></div></div><div class="actions"><button class="btn">حفظ المادة</button></div><p id="subjectMsg" class="msg"></p></form></div><div id="subjectsListView" class="card listbox list-view"><div class="pagehead"><h3>المواد الحالية</h3><button class="btn secondary" data-refresh="subjects">تحديث</button></div><div id="subjectsTable" class="tablewrap"><div class="empty">لا توجد بيانات معروضة.</div></div></div></section>
+<section id="exams" class="page"><div class="pagehead"><div><h2>الاختبارات والأسئلة</h2><p class="sub">قائمة الاختبارات وتفاصيلها.</p></div><div class="row-actions"><button class="btn" id="addExamRoute">＋ إضافة اختبار</button></div></div><div id="examFormCard" class="card management-form-view"><div class="pagehead"><h3 id="examFormHeading">إضافة اختبار</h3><button type="button" class="btn secondary" id="backToExamsList">← العودة إلى قائمة الاختبارات</button></div><form id="examForm"><input type="hidden" id="examEditId"><div class="formgrid"><div class="field"><label for="examTitle">عنوان الاختبار</label><input id="examTitle" required maxlength="200"></div><div class="field"><label for="examType">نوع الاختبار</label><select id="examType"><option value="Weekly">أسبوعي</option><option value="Final">نهائي</option></select></div><div class="field"><label for="examCourse">المساق</label><select id="examCourse" required></select></div><div class="field"><label for="examSubject">المادة (للاختبار النهائي)</label><select id="examSubject"><option value="">لا توجد مادة محددة / اختبار أسبوعي</option></select></div><div class="field"><label for="examWeek">رقم الأسبوع (للأسبوعي)</label><input id="examWeek" type="number" min="1" placeholder="مثال: 1"></div><div class="field"><label for="examOpen">موعد الفتح (اختياري)</label><input id="examOpen" type="datetime-local"></div><div class="field"><label for="examClose">موعد الإغلاق (اختياري)</label><input id="examClose" type="datetime-local"></div></div><div class="actions"><button class="btn" type="submit">حفظ بيانات الاختبار</button></div><p id="examMsg" class="msg"></p></form></div><div id="examsListView" class="card listbox list-view"><div class="pagehead"><h3>الاختبارات الحالية</h3><button class="btn secondary" data-refresh="exams">تحديث</button></div><div id="examsTable" class="tablewrap"><div class="empty">لا توجد بيانات معروضة.</div></div></div><hr class="divider"><div id="questionFormCard" class="card management-form-view"><div class="pagehead"><h3>إضافة سؤال لاختبار</h3><button type="button" class="btn secondary" id="backToExamsListFromQuestions">← العودة إلى قائمة الاختبارات</button></div><p class="sub">أضيفي أسئلة الاختبار من هذه الصفحة. افصلي الخيارات بعلامة |، واكتبي الإجابة الصحيحة كما تظهر بين الخيارات.</p><div id="existingQuestions" class="notice hidden"><b>الأسئلة المحفوظة</b><div id="existingQuestionsList"></div></div><form id="questionForm"><div class="formgrid"><div class="field"><label for="questionExam">الاختبار</label><select id="questionExam" required></select></div><div class="field full"><label for="questionText">نص السؤال</label><textarea id="questionText" required></textarea></div><div class="field full"><label for="questionOptions">الخيارات</label><input id="questionOptions" required placeholder="الخيار الأول | الخيار الثاني | الخيار الثالث"></div><div class="field"><label for="questionCorrect">الإجابة الصحيحة</label><input id="questionCorrect" required></div></div><div class="actions"><button class="btn" type="submit">إضافة السؤال</button></div><p id="questionMsg" class="msg"></p></form></div></section>
+<section id="assignments" class="page"><div class="pagehead"><div><h2>التكاليف والواجبات</h2><p class="sub">قائمة التكاليف وبياناتها.</p></div><button class="btn" data-open-form="assignmentFormCard">＋ إضافة تكليف</button></div><div id="assignmentFormCard" class="card management-form-view"><div class="pagehead"><h3 id="assignmentFormHeading">إضافة تكليف</h3><button type="button" class="btn secondary" data-cancel-form="assignmentFormCard">العودة للقائمة</button></div><form id="assignmentForm"><input type="hidden" id="assignmentEditId"><div class="formgrid"><div class="field"><label for="assignmentTitle">عنوان الواجب</label><input id="assignmentTitle" required maxlength="200"></div><div class="field"><label for="assignmentCourse">المساق</label><select id="assignmentCourse" required></select></div><div class="field"><label for="assignmentSubject">المادة</label><select id="assignmentSubject" required></select></div><div class="field"><label for="assignmentOpen">موعد الفتح (اختياري)</label><input id="assignmentOpen" type="datetime-local"></div><div class="field"><label for="assignmentClose">موعد الإغلاق (اختياري)</label><input id="assignmentClose" type="datetime-local"></div><div class="field full"><label for="assignmentDescription">سؤال التكليف / التعليمات</label><textarea id="assignmentDescription" required placeholder="اكتبي نص سؤال التكليف هنا"></textarea></div></div><div class="actions"><button class="btn">إنشاء الواجب</button></div><p id="assignmentMsg" class="msg"></p></form></div><div id="assignmentsListView" class="card listbox list-view"><div class="pagehead"><h3>التكاليف الحالية</h3><button class="btn secondary" data-refresh="assignments">تحديث</button></div><div id="assignmentsTable" class="tablewrap"><div class="empty">لا توجد بيانات معروضة.</div></div></div></section>
+<section id="results" class="page"><div class="pagehead"><div><h2>النتائج والدرجات</h2><p class="sub">عرض نتائج الاختبارات ونتائج المساقات المسجلة.</p></div></div><div class="card"><div class="pagehead"><h3>نتائج الاختبارات</h3><button class="btn secondary" data-refresh="examResults">تحديث</button></div><div id="examResultsTable" class="tablewrap"><div class="empty">اضغطي تحديث لعرض النتائج.</div></div></div><div class="card listbox"><div class="pagehead"><h3>نتائج المساقات</h3><button class="btn secondary" data-refresh="courseResults">تحديث</button></div><div id="courseResultsTable" class="tablewrap"><div class="empty">اضغطي تحديث لعرض النتائج.</div></div></div></section>
+<section id="teachers" class="page"><div class="pagehead"><div><h2>المعلمون</h2><p class="sub">عرض التعيينات الحالية للمعلمين.</p></div><span class="tag">حسابات المعلمين</span></div><div class="notice"><b>إنشاء حساب معلم جديد</b>إنشاء حساب دخول يتطلب وظيفة خادم آمنة مثل create-teacher. لن ننشئ مستخدم Auth من المتصفح لأن ذلك قد يعرّض صلاحيات المنصة للخطر. يمكن عرض التعيينات الموجودة أدناه.</div><div class="card"><div class="pagehead"><h3>تعيينات المعلمين بالمساقات</h3><button class="btn secondary" data-refresh="teachers">تحديث</button></div><div id="teachersTable" class="tablewrap"><div class="empty">اضغطي تحديث لعرض التعيينات.</div></div></div></section>
+</main></div>
 <script>
-// ملاحظة: الأكواد البرمجية هنا تتضمن منطق التبديل بين القائمة وصفحة الإضافة، وزر التفعيل/التعطيل السريع، وزر التعديل.
-</script>
-</body>
-</html>
+(()=>{'use strict';
+const URL='https://pxgxnwxpwvvefroaqpfr.supabase.co',KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+const db=window.supabase.createClient(URL,KEY),$=id=>document.getElementById(id);let cache={courses:[],subjects:[],exams:[],students:[]};
+const examRoute=new URLSearchParams(location.search);let examAction=examRoute.get('examAction'),examRouteId=examRoute.get('id');let isExamEditorRoute=['add','edit'].includes(examAction);if(isExamEditorRoute){document.body.classList.add('exam-editor-route');document.body.classList.toggle('exam-editor-add-route',examAction==='add');}
+/* تبقى نماذج الاختبار داخل قسم الاختبارات، مخفية في القائمة، حتى يمكن فتحها كواجهة مستقلة دون إعادة تحميل الصفحة أو فقدان ارتباط الأزرار. */
+const examSection=document.getElementById('exams');if(examSection){examSection.querySelectorAll('*').forEach(node=>{if(node.children.length===0&&/تصحيح الإجابات المقالية/.test(node.textContent||'')){let block=node;while(block.parentElement&&block.parentElement!==examSection&&!block.parentElement.classList.contains('card'))block=block.parentElement;if(block!==examSection)block.remove();}});}
+function returnToExamList(){isExamEditorRoute=false;examAction=null;examRouteId=null;document.body.classList.remove('exam-editor-route','exam-editor-add-route');$('examFormCard').classList.remove('open');$('questionFormCard').classList.remove('open');$('questionFormCard').style.display='';$('examsListView').classList.remove('hidden-view');const u=new URL(location.href);u.search='';u.hash='';try{if(location.protocol!=='file:')history.pushState(null,'',u.href)}catch(_){}go('exams');}
+async function openExamRoute(action,id){try{isExamEditorRoute=true;examAction=action;examRouteId=id?String(id):null;document.body.classList.add('exam-editor-route');document.body.classList.toggle('exam-editor-add-route',action==='add');const u=new URL(location.href);u.searchParams.set('examAction',action);if(id)u.searchParams.set('id',String(id));else u.searchParams.delete('id');try{if(location.protocol!=='file:')history.pushState(null,'',u.href)}catch(_){}await loadCourses();await loadSubjects();await loadExams();await initializeExamEditorRoute();}catch(err){alert('تعذر فتح صفحة الاختبار: '+(err.message||String(err)));}}
+const meta={home:['الرئيسية','نظرة عامة على المنصة وإدارتها.'],students:['الطلاب','قائمة الطلاب وأكواد الدخول والمساقات الحالية، مع إضافة فردية أو استيراد ملف.'],courses:['المساقات','إنشاء المساقات وتنظيمها.'],subjects:['مواد المساقات','تنظيم مواد كل مساق.'],exams:['الاختبارات','إنشاء الاختبارات والأسئلة.'],assignments:['الواجبات','إضافة الواجبات ومتابعتها.'],results:['النتائج','متابعة الدرجات ونتائج المساقات.'],teachers:['المعلمون','عرض تعيينات المعلمين.']};
+function msg(id,text,kind=''){const el=$(id);if(el){el.textContent=text||'';el.className='msg '+kind}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function go(p){if(p==='students'&&$('studentsListView'))showStudentsList();document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));$('title').textContent=meta[p][0];$('subtitle').textContent
