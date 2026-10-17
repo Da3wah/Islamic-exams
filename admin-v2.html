@@ -362,4 +362,62 @@ $('logout').addEventListener('click', async () => {
   }
 })();
 })();
-</script></body></html>
+</script>
+<style id="exam-list-and-dedicated-editor-fix">
+/* بوابة الاختبارات: قائمة منفصلة، ومحرر مستقل عند إضافة اختبار جديد */
+body:not(.exam-editor-add-route) #qt-admin-editor{display:none!important}
+body.exam-editor-add-route #qt-admin-editor{display:block!important;max-width:100%;margin:0 0 20px;padding:22px;background:#fffdf8;color:#17263d;border:1px solid #e4d9c5;border-radius:16px;box-shadow:0 8px 24px rgba(8,25,47,.06)}
+body.exam-editor-add-route #qt-admin-editor> :nth-child(4),
+body.exam-editor-add-route #qt-admin-editor> :nth-child(5),
+body.exam-editor-add-route #qt-admin-editor> :nth-child(6),
+body.exam-editor-add-route #qt-admin-editor> :nth-child(n+10){display:none!important}
+body.exam-editor-add-route #qt-admin-editor .qt-new-exam-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+body.exam-editor-add-route #qt-admin-editor .qt-new-exam-grid input,
+body.exam-editor-add-route #qt-admin-editor .qt-new-exam-grid select,
+body.exam-editor-add-route #qt-admin-editor .qt-table textarea,
+body.exam-editor-add-route #qt-admin-editor .qt-table input,
+body.exam-editor-add-route #qt-admin-editor .qt-table select{background:#fff;color:#17263d;border-color:#d9cfbd}
+body.exam-editor-add-route #qt-admin-editor .qt-note{color:#687486}
+body.exam-editor-add-route #qt-admin-editor .qt-table{min-width:900px}
+body.exam-editor-add-route #qt-admin-editor .qt-toolbar{gap:10px}
+body.exam-editor-add-route #qt-admin-editor #qt-question-rows tr{background:#fff}
+@media(max-width:700px){body.exam-editor-add-route #qt-admin-editor .qt-new-exam-grid{grid-template-columns:1fr}}
+</style>
+<script id="exam-editor-navigation-fix">
+(function(){
+  function setupExamEditorRoute(){
+    const root=document.getElementById('qt-admin-editor');
+    if(!root||root.dataset.routeWired==='true')return;
+    root.dataset.routeWired='true';
+    if(document.body.classList.contains('exam-editor-add-route')){
+      const head=root.querySelector(':scope > .pagehead');
+      if(head&&!document.getElementById('qt-back-to-exam-list')){
+        const back=document.createElement('button');
+        back.type='button';back.id='qt-back-to-exam-list';back.className='btn secondary';
+        back.textContent='← العودة إلى قائمة الاختبارات';
+        back.addEventListener('click',()=>window.location.replace(window.location.pathname));
+        head.appendChild(back);
+      }
+    }
+    const message=root.querySelector('#qt-question-message');
+    if(message){
+      let leaving=false;
+      const observer=new MutationObserver(()=>{
+        if(leaving)return;
+        if(/تم إنشاء الاختبار وحفظ\s+\d+\s+سؤالًا بنجاح/.test(message.textContent||'')){
+          leaving=true;
+          window.location.replace(window.location.pathname);
+        }
+      });
+      observer.observe(message,{childList:true,characterData:true,subtree:true});
+    }
+  }
+  document.addEventListener('DOMContentLoaded',setupExamEditorRoute);
+  const lateCheck=setInterval(()=>{
+    if(document.getElementById('qt-admin-editor')){clearInterval(lateCheck);setupExamEditorRoute();}
+  },100);
+  setTimeout(()=>clearInterval(lateCheck),10000);
+})();
+</script>
+
+</body></html>
