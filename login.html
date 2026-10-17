@@ -75,8 +75,67 @@
             border: 1px solid rgba(245, 230, 211, 0.2);
         }
     </style>
+
+    <style id="marsad-transition-style">
+        #marsad-transition-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #0a1930;
+            color: #f7f1e5;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+        }
+        #marsad-transition-screen.is-visible { display: flex; }
+        #marsad-transition-screen .transition-card {
+            width: min(360px, 100%);
+            padding: 30px 24px;
+            border: 1px solid #d0aa67;
+            border-radius: 16px;
+            background: #102742;
+            box-shadow: 0 18px 50px rgba(0,0,0,.25);
+        }
+        #marsad-transition-screen .transition-spinner {
+            width: 28px;
+            height: 28px;
+            margin: 0 auto 17px;
+            border: 3px solid rgba(208,170,103,.28);
+            border-top-color: #d0aa67;
+            border-radius: 50%;
+            animation: marsad-transition-spin .8s linear infinite;
+        }
+        #marsad-transition-screen .transition-title {
+            margin: 0 0 8px;
+            color: #ecd8ad;
+            font-size: 21px;
+            font-weight: 800;
+        }
+        #marsad-transition-screen .transition-message {
+            margin: 0;
+            color: #e0e5ec;
+            font-size: 13px;
+        }
+        @keyframes marsad-transition-spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            #marsad-transition-screen .transition-spinner { animation: none; }
+        }
+    </style>
+
 </head>
 <body class="page-bg min-h-screen relative flex items-center justify-center lg:justify-start p-4 sm:p-6 lg:p-12">
+
+    <div id="marsad-transition-screen" role="status" aria-live="polite" aria-label="جارٍ فتح لوحة الإدارة">
+        <div class="transition-card">
+            <div class="transition-spinner" aria-hidden="true"></div>
+            <p class="transition-title">مَرْصَد</p>
+            <p class="transition-message">تم التحقق بنجاح، جارٍ فتح لوحة الإدارة…</p>
+        </div>
+    </div>
+
 
     <!-- طبقة تظليل خفيفة على الصورة لزيادة وضوح كارت الدخول -->
     <div class="fixed inset-0 bg-gradient-to-r from-black/40 via-black/20 to-black/60 pointer-events-none"></div>
@@ -310,6 +369,8 @@ if (requestedRole === 'student') {
                     throw new Error('هذا الحساب لا يملك صلاحية الإدارة.');
                 }
 
+                const transitionScreen = document.getElementById('marsad-transition-screen');
+                if (transitionScreen) transitionScreen.classList.add('is-visible');
                 window.location.replace('admin-v2.html');
             } catch (error) {
                 const detail = error && error.message ? error.message : String(error);
