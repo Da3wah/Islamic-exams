@@ -251,7 +251,54 @@ $('importStudentsBtn').addEventListener('click',async()=>{const btn=$('importStu
 $('downloadCredentials').addEventListener('click',()=>{if(!importedCredentials.length)return;const csv=[['name','code','password','course'],...importedCredentials.map(c=>[c.name,c.code,c.password,c.course])].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='student-login-credentials.csv';a.click();URL.revokeObjectURL(url)});
 $('courseImageFile').addEventListener('change',()=>{const f=$('courseImageFile').files[0],box=$('courseImagePreview');if(!f){box.style.backgroundImage='';box.textContent='معاينة صورة المساق';return}if(!f.type.startsWith('image/')){msg('courseMsg','اختاري ملف صورة صالحًا.','error');return}const reader=new FileReader();reader.onload=()=>{box.style.backgroundImage=`url("${reader.result}")`;box.textContent=''};reader.readAsDataURL(f)});
 $('courseForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const payload={name:$('courseName').value.trim(),description:$('courseDescription').value.trim()||null,active:$('courseActive').value==='true'};const id=$('courseEditId').value;if($('courseImageFile').files[0])throw Error('معاينة الصورة تعمل، لكن حفظ الصورة الدائم لم يُربط بعد بمساحة تخزين Supabase؛ لم يتم حفظ بيانات المساق حتى لا تفقدي الصورة أو بياناتك.');const result=id?await db.from('courses').update(payload).eq('id',Number(id)):await db.from('courses').insert(payload);if(result.error)throw result.error;msg('courseMsg',id?'تم تعديل المساق.':'تم إنشاء المساق.','success');$('courseForm').reset();$('courseEditId').value='';$('courseImageFile').value='';$('courseImagePreview').style.backgroundImage='';$('courseImagePreview').textContent='معاينة صورة المساق';$('courseFormHeading').textContent='إضافة مساق';await loadCourses();closeManagementForm('courseFormCard')}catch(x){msg('courseMsg','تعذر إنشاء المساق: '+x.message,'error')}});
-$('subjectForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const payload={course_id:Number($('subjectCourse').value),name:$('subjectName').value.trim(),description:$('subjectDescription').value.trim()||null,display_order:Number($('subjectOrder').value||0),active:$('subjectActive').value==='true'};const id=$('subjectEditId').value;const result=id?await db.from('course_subjects').update(payload).eq('id',Number(id)):await db.from('course_subjects').insert(payload);if(result.error)throw result.error;msg('subjectMsg',id?'تم تعديل المادة.':'تمت إضافة المادة للمساق.','success');$('subjectForm').reset();$('subjectEditId').value='';$('subjectOrder').value='0';$('subjectFormHeading').textContent='إضافة مادة جديدة';await loadSubjects();closeManagementForm('subjectFormCard')}catch(x){msg('subjectMsg','تعذر حفظ المادة: '+x.message,'error')}});
+$('subjectForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const payload={course_id:Number($('subjectCourse').value),name:$('subjectName').value.trim(),description:$('subjectDescription').value.trim()||null,display_order:Number($('subjectOrder').value||0),active:$('subjectActive').value==='true'};const id=$('subjectEditId').value;const result=id?await db.from('course_subjects').update(payload).eq('id',Number(id)):await db.from('course_subjects').insert(payload);if(result.error)throw result.error;msg('subjectMsg',id?'تم تعديل المادة.':'تمت إضافة المادة للمساق.','success');$('subjectForm').reset();$('subjectEditId').value='';$('subjectOrder').value='0';
+$('subjectForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  try{
+    await adminCheck();
+
+    const payload={
+      course_id:Number($('subjectCourse').value),
+      name:$('subjectName').value.trim(),
+      description:$('subjectDescription').value.trim()||null,
+      display_order:Number($('subjectOrder').value||0),
+      active:$('subjectActive').value==='true'
+    };
+
+    const id=$('subjectEditId').value;
+    const returnCourseId=!id?subjectReturnCourseId:null;
+
+    const result=id
+      ? await db.from('course_subjects').update(payload).eq('id',Number(id))
+      : await db.from('course_subjects').insert(payload);
+
+    if(result.error) throw result.error;
+
+    msg('subjectMsg',id?'تم تعديل المادة.':'تمت إضافة المادة للمساق.','success');
+
+    $('subjectForm').reset();
+    $('subjectEditId').value='';
+    $('subjectOrder').value='0';
+    $('subjectFormHeading').textContent='إضافة مادة جديدة';
+    subjectReturnCourseId=null;
+
+    await loadSubjects();
+
+    if(returnCourseId){
+      await loadCourses();
+      go('courses');
+      renderCourseDetails(
+        cache.courses.find(c=>String(c.id)===String(returnCourseId))
+      );
+    }else{
+      closeManagementForm('subjectFormCard');
+    }
+
+  }catch(x){
+    msg('subjectMsg','تعذر حفظ المادة: '+x.message,'error');
+  }
+});
+
 $('examCourse').addEventListener('change',()=>{const cid=$('examCourse').value;const filtered=cache.subjects.filter(s=>String(s.course_id)===cid);fillSelect('examSubject',filtered,'لا توجد مادة محددة / اختبار أسبوعي',x=>x.name)});$('assignmentCourse').addEventListener('change',()=>{const cid=$('assignmentCourse').value;fillSelect('assignmentSubject',cache.subjects.filter(s=>String(s.course_id)===cid),'اختاري المادة',x=>x.name)});
 $('examForm').addEventListener('submit',async e=>{e.preventDefault();const submitBtn=$('examForm').querySelector('button[type=submit],button:not([type])');if(submitBtn)submitBtn.disabled=true;try{await adminCheck();const type=$('examType').value,sub=$('examSubject').value;const payload={title:$('examTitle').value.trim(),type,course_id:Number($('examCourse').value),course_subject_id:type==='Final'&&sub?Number(sub):null,week_number:type==='Weekly'&&$('examWeek').value?Number($('examWeek').value):null,open_at:$('examOpen').value?new Date($('examOpen').value).toISOString():null,close_at:$('examClose').value?new Date($('examClose').value).toISOString():null};if(type==='Final'&&!sub)throw Error('اختاري المادة للاختبار النهائي.');let id=$('examEditId').value;let result;if(id){result=await db.from('exams').update(payload).eq('id',Number(id));}else{result=await db.from('exams').insert(payload).select('id').single();if(!result.error&&result.data)id=String(result.data.id)}if(result.error)throw result.error;if(isExamEditorRoute){if(id){$('examEditId').value=id;try{if(location.protocol!=='file:')history.replaceState(null,'',`${location.pathname}?examAction=edit&id=${encodeURIComponent(id)}`)}catch(_){}examAction='edit';examRouteId=String(id);document.body.classList.remove('exam-editor-add-route');$('examFormHeading').textContent='تعديل الاختبار وإضافة أسئلته';await loadExams();fillSelect('questionExam',cache.exams,'اختاري الاختبار',x=>x.title);$('questionExam').value=id;$('questionFormCard').classList.add('open');$('questionFormCard').classList.remove('hidden');await loadExistingQuestions(id);msg('examMsg',examAction==='add'?'تم إنشاء الاختبار. يمكنك الآن إضافة أسئلته ثم العودة إلى القائمة.':'تم حفظ بيانات الاختبار. يمكنك متابعة أسئلته.','success');}else{msg('examMsg','تم حفظ الاختبار.','success')}}else{msg('examMsg',id?'تم تعديل الاختبار مع الحفاظ على أسئلته.':'تم إنشاء الاختبار.','success');$('examForm').reset();$('examEditId').value='';await loadExams();closeManagementForm('examFormCard')}}catch(x){msg('examMsg','تعذر حفظ الاختبار: '+x.message,'error')}finally{if(submitBtn)submitBtn.disabled=false}});
 async function loadExistingQuestions(examId){const box=$('existingQuestions'),list=$('existingQuestionsList');try{const {data,error}=await db.from('questions').select('id,question_text,options,correct_answer').eq('exam_id',Number(examId)).order('id',{ascending:true});if(error)throw error;if(!data||!data.length){box.classList.add('hidden');list.innerHTML='';return}box.classList.remove('hidden');list.innerHTML=tableHTML(['السؤال','الخيارات','الإجابة الصحيحة'],data.map(q=>`<tr><td>${esc(q.question_text||'')}</td><td>${esc(Array.isArray(q.options)?q.options.join(' | '):q.options||'—')}</td><td>${esc(q.correct_answer||'—')}</td></tr>`))}catch(err){box.classList.add('hidden');msg('questionMsg','تعذر عرض الأسئلة الحالية: '+err.message,'error')}}
