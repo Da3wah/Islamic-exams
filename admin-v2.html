@@ -384,7 +384,108 @@ async function loadPage(p){await adminCheck();if(!cache.courses.length)await loa
 async function refreshAll(){try{await adminCheck();await loadCourses();await loadSubjects();await loadStudents();await loadExams();await loadAssignments();await loadResults();await loadTeachers();msg('homeMsg','تم تحديث البيانات.','success')}catch(e){msg('homeMsg','تعذر تحديث البيانات: '+(e.message||e),'error')}}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;msg('loginMsg','جارٍ التحقق من بيانات الدخول...');try{const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;await verifyAdmin(data.session);$('loginScreen').classList.add('hidden');$('adminTransition').hidden=true;$('app').classList.remove('hidden');go(isExamEditorRoute?'exams':'home');await refreshAll();if(isExamEditorRoute){await loadCourses();await loadSubjects();await loadExams();await initializeExamEditorRoute()}msg('loginMsg','')}catch(err){await db.auth.signOut();msg('loginMsg',err.message||String(err),'error')}finally{$('loginBtn').disabled=false}});
 $('nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)go(b.dataset.page)});document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));$('refreshAll').addEventListener('click',refreshAll);document.querySelectorAll('[data-refresh]').forEach(b=>b.addEventListener('click',async()=>{try{await loadPage(b.dataset.refresh==='examResults'||b.dataset.refresh==='courseResults'?'results':b.dataset.refresh);if(b.dataset.refresh==='examResults'||b.dataset.refresh==='courseResults')await loadResults()}catch(e){alert('تعذر التحديث: '+e.message)}}));
-$('studentForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('createStudentBtn');btn.disabled=true;msg('studentMsg','جارٍ إنشاء حساب الطالب...');try{await adminCheck();const course=$('studentCourse').value;const payload={name:$('studentName').value.trim(),code:$('studentCode').value.trim(),password:$('studentPassword').value,course_id:course?Number(course):null};if(!payload.name)throw Error('أدخلي اسم الطالب.');if(!payload.code)throw Error('أدخلي كود الدخول.');if(!payload.password)throw Error('أدخلي كلمة المرور الأولية.');const {data,error}=await db.functions.invoke('create-student',{body:payload});if(error){let detail=error.message||String(error);try{if(error.context?.json){const b=await error.context.json();detail=b.details||b.error||detail}}catch(_){}throw Error(detail)}if(!data||data.success!==true)throw Error(data?.details||data?.error||'لم تؤكد وظيفة الخادم نجاح إنشاء الطالب.');$('studentForm').reset();await loadStudents();showStudentsList();alert('تمت إضافة الطالب بنجاح. كود الدخول: '+(data.code||payload.code));}catch(err){msg('studentMsg','تعذر إنشاء الطالب: '+(err.message||String(err)),'error')}finally{btn.disabled=false}});
+
+$('studentForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const btn = $('createStudentBtn');
+  btn.disabled = true;
+
+  try {
+    await adminCheck();
+
+    const editId = $('studentEditId').value.trim();
+
+    const payload = {
+      name: $('studentName').value.trim(),
+      code: $('studentCode').value.trim(),
+      course_id: $('studentCourse').value
+        ? Number($('studentCourse').value)
+        : null
+    };
+
+    if (!payload.name) throw Error('أدخلي اسم الطالب.');
+    if (!payload.code) throw Error('أدخلي كود الدخول.');
+
+    let data;
+
+    if (editId) {
+      msg('studentMsg', 'جارٍ حفظ تعديلات الطالب...');
+
+      const result = await db.functions.invoke(
+        'admin-manage-student',
+        {
+          body: {
+            action: 'update_student',
+            student_id: Number(editId),
+            ...payload
+          }
+        }
+      );
+
+      if (result.error) throw result.error;
+      data = result.data;
+
+      if (!data || data.success !== true) {
+        throw Error(
+          data?.details ||
+          data?.error ||
+          'لم يتأكد نجاح تعديل الطالب.'
+        );
+      }
+
+      alert('تم تحديث بيانات الطالب بنجاح.');
+    } else {
+      payload.password = $('studentPassword').value;
+
+      if (!payload.password) {
+        throw Error('أدخلي كلمة المرور الأولية.');
+      }
+
+      msg('studentMsg', 'جارٍ إنشاء حساب الطالب...');
+
+      const result = await db.functions.invoke(
+        'create-student',
+        { body: payload }
+      );
+
+      if (result.error) throw result.error;
+      data = result.data;
+
+      if (!data || data.success !== true) {
+        throw Error(
+          data?.details ||
+          data?.error ||
+          'لم تؤكد وظيفة الخادم نجاح إنشاء الطالب.'
+        );
+      }
+
+      alert(
+        'تمت إضافة الطالب بنجاح. كود الدخول: ' +
+        (data.code || payload.code)
+      );
+    }
+
+    $('studentForm').reset();
+    $('studentEditId').value = '';
+    $('studentPassword').disabled = false;
+    $('studentPassword').required = true;
+
+    await loadStudents();
+    showStudentsList();
+
+  } catch (err) {
+    msg(
+      'studentMsg',
+      'تعذر حفظ بيانات الطالب: ' +
+      (err.message || String(err)),
+      'error'
+    );
+  } finally {
+    btn.disabled = false;
+  }
+});
+if(error){let detail=error.message||String(error);try{if(error.context?.json){const b=await error.context.json();detail=b.details||b.error||detail}}catch(_){}throw Error(detail)}if(!data||data.success!==true)throw Error(data?.details||data?.error||'لم تؤكد وظيفة الخادم نجاح إنشاء الطالب.');$('studentForm').reset();await loadStudents();showStudentsList();alert('تمت إضافة الطالب بنجاح. كود الدخول: '+(data.code||payload.code));}catch(err){msg('studentMsg','تعذر إنشاء الطالب: '+(err.message||String(err)),'error')}finally{btn.disabled=false}});
 function showStudentsList(){ $('studentsListView').classList.remove('hidden');$('studentEditorView').classList.add('hidden');$('studentImportView').classList.add('hidden');msg('studentMsg','');msg('importStudentsMsg',''); }
 function showStudentEditor(){ $('studentsListView').classList.add('hidden');$('studentEditorView').classList.remove('hidden');$('studentImportView').classList.add('hidden');msg('studentMsg',''); }
 function showStudentsImport(){ $('studentsListView').classList.add('hidden');$('studentEditorView').classList.add('hidden');$('studentImportView').classList.remove('hidden');msg('importStudentsMsg',''); }
