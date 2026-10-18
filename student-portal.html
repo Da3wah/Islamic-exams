@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -13,13 +14,138 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#08192F;--navy2:#122844;--gold:#D5AB5E;--cream:#F7F3E9;--ink:#17263D;--muted:#6B7484;--line:#E4D9C5;--white:#fff;--green:#276749;--red:#a12a2a;--shadow:0 12px 34px rgba(8,25,47,.08)}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:"Cairo",Arial,sans-serif;line-height:1.8}button,input,textarea,select{font:inherit}button{cursor:pointer;transition:transform .15s,background .15s,opacity .15s}button:hover:not(:disabled){transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed}
-.hidden{display:none!important}.shell{max-width:1180px;margin:auto;padding:24px}.topbar{background:var(--navy);color:white;border-bottom:3px solid var(--gold)}.topbar-inner{max-width:1180px;margin:auto;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:14px}.brand-mark{width:46px;height:46px;border:1px solid var(--gold);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:25px;font-weight:800}.brand h1{font-size:21px;margin:0;line-height:1.4}.brand p{margin:2px 0 0;color:#d6deea;font-size:12px}.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.btn{border:0;border-radius:11px;padding:10px 18px;font-weight:700;background:var(--gold);color:var(--navy)}.btn.secondary{background:var(--navy2);color:#fff}.btn.outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c9c4}
-.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin:18px 0;box-shadow:var(--shadow)}.login-wrap{min-height:calc(100vh - 95px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(circle at 15% 15%,#e9dfca 0,transparent 34%),var(--cream)}.login-card{width:min(100%,480px);padding:34px;border-radius:24px;background:white;border:1px solid var(--line);box-shadow:0 22px 60px #08192f18}.eyebrow{color:#8c6b2f;font-size:12px;font-weight:800;letter-spacing:.04em}.login-card h2{font-size:27px;color:var(--navy);margin:5px 0}.sub{color:var(--muted);margin-top:4px}.field{display:grid;gap:6px;margin:15px 0}.field label,label{font-weight:700;font-size:14px}.field input,.field textarea,input,textarea,select{width:100%;border:1px solid #d9d4c8;background:#fff;border-radius:10px;padding:11px 13px;outline:none;color:var(--ink)}input:focus,textarea:focus,select:focus{border-color:#b38a42;box-shadow:0 0 0 3px #d5ab5e26}.login-card .btn{width:100%;margin-top:10px;padding:12px}
-.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:stretch;margin:10px 0 24px}.hero-main{background:linear-gradient(135deg,var(--navy),#183654);color:white;border-radius:22px;padding:26px;position:relative;overflow:hidden}.hero-main:after{content:"";position:absolute;width:200px;height:200px;border:1px solid #d5ab5e44;border-radius:50%;left:-70px;bottom:-110px;box-shadow:0 0 0 25px #d5ab5e0b,0 0 0 50px #d5ab5e08}.hero-main h2{margin:3px 0 5px;font-size:26px}.hero-main p{color:#d8e0ea;margin:0;max-width:560px}.hero-side{border-radius:22px;background:white;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;justify-content:center}.progress-track{height:10px;background:#eee8dc;border-radius:99px;overflow:hidden;margin:12px 0}.progress-fill{height:100%;background:var(--gold);border-radius:99px;width:0;transition:width .3s}.progress-caption{font-size:13px;color:var(--muted)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px}.section-head h2,.section-head h3{margin:0;color:var(--navy)}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}.course-list,.item-list{display:grid;grid-template-columns:repeat( auto-fit,minmax(245px,1fr));gap:14px}.course-card,.item-card{background:white;border:1px solid var(--line);border-radius:17px;padding:19px;min-width:0;box-shadow:0 6px 20px #08192f06}.course-card{display:flex;flex-direction:column;gap:9px}.course-card .btn{margin-top:auto;align-self:flex-start}.course-card h3,.item-card h3{margin:0;color:var(--navy);font-size:18px}.course-card p,.item-card p{margin:3px 0}.status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:3px 10px;border-radius:99px;background:#f3ead8;color:#77591f;font-size:12px;font-weight:800}.status.current{background:#e6f3e9;color:#276749}.status.locked{background:#eceef1;color:#606b79}.status.completed{background:#e7edf6;color:#284c7c}.score{font-weight:800;color:#276749}.muted{color:var(--muted)}.error{color:var(--red);white-space:pre-wrap}.success{color:var(--green);white-space:pre-wrap}.notice{border-radius:12px;padding:11px 14px;background:#f8f1e3;border:1px solid var(--line);margin:12px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row h2{margin:0;color:var(--navy)}.row .spacer{flex:1}.option{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:11px;background:#fffdf9}.option input{width:auto;margin-top:8px;accent-color:var(--navy)}.question{margin:14px 0;padding:18px;border:1px solid var(--line);border-radius:15px;background:#fff}.question h3{margin:0 0 8px;color:var(--navy)}.question textarea{min-height:115px}.divider{height:1px;border:0;background:var(--line);margin:20px 0}details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}#view section{margin:18px 0}.empty{color:var(--muted);padding:16px;background:#fff;border:1px dashed var(--line);border-radius:13px}
-@media(max-width:760px){.shell{padding:15px}.topbar-inner{padding:16px;align-items:flex-start}.brand h1{font-size:18px}.brand-mark{width:40px;height:40px}.hero{grid-template-columns:1fr}.hero-main h2{font-size:22px}.login-card{padding:24px}.panel{padding:17px}.course-list,.item-list{grid-template-columns:1fr}.top-actions{justify-content:flex-end}.top-actions .btn{padding:8px 11px;font-size:13px}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Cairo",Arial,sans-serif;line-height:1.8}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;transition:transform .15s,background .15s,opacity .15s}
+button:hover:not(:disabled){transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
+.shell{max-width:1180px;margin:auto;padding:24px}
+.topbar{background:var(--navy);color:white;border-bottom:3px solid var(--gold)}
+.topbar-inner{max-width:1180px;margin:auto;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-mark{width:46px;height:46px;border:1px solid var(--gold);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:25px;font-weight:800}
+.brand h1{font-size:21px;margin:0;line-height:1.4}
+.brand p{margin:2px 0 0;color:#d6deea;font-size:12px}
+.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:10px 18px;font-weight:700;background:var(--gold);color:var(--navy)}
+.btn.secondary{background:var(--navy2);color:#fff}
+.btn.outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c9c4}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin:18px 0;box-shadow:var(--shadow)}
+.login-wrap{min-height:calc(100vh - 95px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(circle at 15% 15%,#e9dfca 0,transparent 34%),var(--cream)}
+.login-card{width:min(100%,480px);padding:34px;border-radius:24px;background:white;border:1px solid var(--line);box-shadow:0 22px 60px #08192f18}
+.eyebrow{color:#8c6b2f;font-size:12px;font-weight:800;letter-spacing:.04em}
+.login-card h2{font-size:27px;color:var(--navy);margin:5px 0}
+.sub{color:var(--muted);margin-top:4px}
+.field{display:grid;gap:6px;margin:15px 0}
+.field label,label{font-weight:700;font-size:14px}
+.field input,.field textarea,input,textarea,select{width:100%;border:1px solid #d9d4c8;background:#fff;border-radius:10px;padding:11px 13px;outline:none;color:var(--ink)}
+input:focus,textarea:focus,select:focus{border-color:#b38a42;box-shadow:0 0 0 3px #d5ab5e26}
+.login-card .btn{width:100%;margin-top:10px;padding:12px}
+.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:stretch;margin:10px 0 24px}
+.hero-main{background:linear-gradient(135deg,var(--navy),#183654);color:white;border-radius:22px;padding:26px;position:relative;overflow:hidden}
+.hero-main:after{content:"";position:absolute;width:200px;height:200px;border:1px solid #d5ab5e44;border-radius:50%;left:-70px;bottom:-110px;box-shadow:0 0 0 25px #d5ab5e0b,0 0 0 50px #d5ab5e08}
+.hero-main h2{margin:3px 0 5px;font-size:26px}
+.hero-main p{color:#d8e0ea;margin:0;max-width:560px}
+.hero-side{border-radius:22px;background:white;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;justify-content:center}
+.progress-track{height:10px;background:#eee8dc;border-radius:99px;overflow:hidden;margin:12px 0}
+.progress-fill{height:100%;background:var(--gold);border-radius:99px;width:0;transition:width .3s}
+.progress-caption{font-size:13px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px}
+.section-head h2,.section-head h3{margin:0;color:var(--navy)}
+.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.course-list,.item-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
+.course-card,.item-card{background:white;border:1px solid var(--line);border-radius:17px;padding:19px;min-width:0;box-shadow:0 6px 20px #08192f06}
+.course-card{display:flex;flex-direction:column;gap:9px}
+.course-card .btn{margin-top:auto;align-self:flex-start}
+.course-card h3,.item-card h3{margin:0;color:var(--navy);font-size:18px}
+.course-card p,.item-card p{margin:3px 0}
+.status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:3px 10px;border-radius:99px;background:#f3ead8;color:#77591f;font-size:12px;font-weight:800}
+.status.current{background:#e6f3e9;color:#276749}
+.status.locked{background:#eceef1;color:#606b79}
+.status.completed{background:#e7edf6;color:#284c7c}
+.score{font-weight:800;color:#276749}
+.muted{color:var(--muted)}
+.error{color:var(--red);white-space:pre-wrap}
+.success{color:var(--green);white-space:pre-wrap}
+.notice{border-radius:12px;padding:11px 14px;background:#f8f1e3;border:1px solid var(--line);margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row h2{margin:0;color:var(--navy)}
+.row .spacer{flex:1}
+.option{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:11px;background:#fffdf9}
+.option input{width:auto;margin-top:8px;accent-color:var(--navy)}
+.question{margin:14px 0;padding:18px;border:1px solid var(--line);border-radius:15px;background:#fff}
+.question h3{margin:0 0 8px;color:var(--navy)}
+.question textarea{min-height:115px}
+.divider{height:1px;border:0;background:var(--line);margin:20px 0}
+details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}
+#view section{margin:18px 0}
+.empty{color:var(--muted);padding:16px;background:#fff;border:1px dashed var(--line);border-radius:13px}
+
+/* رادار المرصد */
+.home-insights{margin:0 0 24px}
+.radar-panel{position:relative;overflow:hidden;border-radius:22px;background:linear-gradient(125deg,#071426 0%,#102b49 62%,#183653 100%);color:#fff;border:1px solid #c99e4e;box-shadow:0 16px 38px #08192f24;padding:22px}
+.radar-panel:before{content:"";position:absolute;width:250px;height:250px;border:1px solid #d5ab5e35;border-radius:50%;left:-92px;top:-112px;box-shadow:0 0 0 25px #d5ab5e0a,0 0 0 52px #d5ab5e08;pointer-events:none}
+.radar-head{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative;z-index:1}
+.radar-kicker{font-size:12px;font-weight:800;color:#e7c783;letter-spacing:.04em}
+.radar-title{font-size:24px;margin:2px 0;color:#fff}
+.radar-intro{color:#d9e2ec;margin:0;font-size:14px}
+.radar-count{flex-shrink:0;min-width:66px;height:66px;border-radius:50%;border:1px solid #d5ab5e;background:#d5ab5e16;display:grid;place-items:center;text-align:center;color:#f3d89f;font-weight:800;line-height:1.2}
+.radar-count strong{display:block;font-size:23px}
+.radar-list{display:grid;gap:11px;margin-top:18px;position:relative;z-index:1}
+.radar-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:center;padding:14px;border:1px solid #ffffff24;border-radius:15px;background:#ffffff0b}
+.radar-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#d5ab5e1c;color:#f0d394;font-size:20px}
+.radar-item h3{font-size:16px;margin:0;color:#fff}
+.radar-item p{font-size:12px;color:#d2dce7;margin:2px 0 0}
+.radar-item .radar-state{display:inline-flex;font-size:11px;font-weight:800;color:#f4d18a;border:1px solid #d5ab5e66;border-radius:99px;padding:2px 9px;margin-bottom:5px}
+.radar-item .radar-state.overdue{color:#ffd0c8;border-color:#e77d70;background:#a12a2a30}
+.radar-action{white-space:nowrap;border:1px solid #d5ab5e;background:#d5ab5e;color:#08192f;border-radius:10px;padding:8px 12px;font-weight:800;font-size:12px}
+.radar-empty{padding:16px;border:1px dashed #d5ab5e77;border-radius:14px;color:#e2e8ef;background:#ffffff08;position:relative;z-index:1}
+
+/* المسار النجمي */
+.path-panel{margin-top:16px;border-radius:20px;background:#fff;border:1px solid var(--line);padding:20px;box-shadow:var(--shadow)}
+.path-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.path-heading h3{margin:0;color:var(--navy);font-size:19px}
+.path-heading p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.path-percent{font-weight:800;color:#8a672c;font-size:22px;white-space:nowrap}
+.star-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px;position:relative}
+.star-stage{position:relative;text-align:center;border:1px solid var(--line);border-radius:14px;padding:13px 8px;background:#fcfaf5;min-width:0}
+.star-stage.done{background:#f1f7f0;border-color:#9fc7a5}
+.star-icon{width:34px;height:34px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;background:#eee6d5;color:#8c6b2f;font-size:18px}
+.star-stage.done .star-icon{background:#276749;color:#fff}
+.star-stage strong{display:block;color:var(--navy);font-size:13px}
+.star-stage small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.path-note{font-size:12px;color:var(--muted);margin:12px 0 0}
+
+@media(max-width:760px){
+ .shell{padding:15px}
+ .topbar-inner{padding:16px;align-items:flex-start}
+ .brand h1{font-size:18px}
+ .brand-mark{width:40px;height:40px}
+ .hero{grid-template-columns:1fr}
+ .hero-main h2{font-size:22px}
+ .login-card{padding:24px}
+ .panel{padding:17px}
+ .course-list,.item-list{grid-template-columns:1fr}
+ .top-actions{justify-content:flex-end}
+ .top-actions .btn{padding:8px 11px;font-size:13px}
+}
+@media(max-width:620px){
+ .radar-panel{padding:17px}
+ .radar-title{font-size:20px}
+ .radar-count{min-width:55px;height:55px}
+ .radar-item{grid-template-columns:auto minmax(0,1fr);gap:10px}
+ .radar-action{grid-column:2;justify-self:start}
+ .path-panel{padding:16px}
+ .star-path{gap:6px}
+ .star-stage{padding:10px 4px}
+ .star-stage strong{font-size:11px}
+ .star-stage small{font-size:10px}
+ .path-heading h3{font-size:17px}
+}
 </style>
 </head>
 <body>
@@ -29,6 +155,7 @@
   <div class="top-actions"><button type="button" id="header-logout" class="btn outline hidden">تسجيل الخروج</button></div>
  </div>
 </header>
+
 <main id="login-section" class="login-wrap">
  <section class="login-card">
   <span class="eyebrow">بوابة الطلاب</span><h2>أهلًا بك في مرصد</h2><p class="sub">سجّل الدخول باستخدام كود الطالب وكلمة المرور.</p>
@@ -39,11 +166,40 @@
   </form><p id="login-message" role="status" aria-live="polite"></p>
  </section>
 </main>
+
 <main id="app-section" class="shell hidden">
  <div class="hero">
   <section class="hero-main"><span class="eyebrow" style="color:var(--gold)">رحلتك في طلب العلم</span><h2 id="welcome-title">مرحبًا بك</h2><p>تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد.</p></section>
   <section class="hero-side"><strong>إنجازك في المساقات</strong><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div><div id="progress-caption" class="progress-caption">جارٍ حساب التقدم…</div></section>
  </div>
+
+ <section class="home-insights" aria-label="مستجدات وتقدم الطالب">
+  <section class="radar-panel" aria-labelledby="radar-title">
+   <div class="radar-head">
+    <div>
+     <div class="radar-kicker">رادار المرصد · ما يحتاج انتباهك</div>
+     <h2 id="radar-title" class="radar-title">مستجداتك ومهامك المطلوبة</h2>
+     <p class="radar-intro" id="radar-course-name">يتم تحميل المهام من مساقك الحالي…</p>
+    </div>
+    <div class="radar-count"><div><strong id="radar-count-number">—</strong><span>مطلوب</span></div></div>
+   </div>
+   <div id="radar-list" class="radar-list"><div class="radar-empty">جارٍ تحميل المهام والاختبارات المرتبطة بمساقك الحالي…</div></div>
+  </section>
+
+  <section class="path-panel" aria-labelledby="path-title">
+   <div class="path-heading">
+    <div><h3 id="path-title">مسارك النجمي في المساق الحالي</h3><p id="path-course-label">تقدمك محسوب من المهام والاختبارات الموجودة في النظام.</p></div>
+    <div class="path-percent" id="path-percent">—٪</div>
+   </div>
+   <div id="star-path" class="star-path">
+    <div class="star-stage"><div class="star-icon">✦</div><strong>الاختبارات الأسبوعية</strong><small>جارٍ الحساب</small></div>
+    <div class="star-stage"><div class="star-icon">✦</div><strong>تكاليف المواد</strong><small>جارٍ الحساب</small></div>
+    <div class="star-stage"><div class="star-icon">✦</div><strong>الاختبارات النهائية</strong><small>جارٍ الحساب</small></div>
+   </div>
+   <p class="path-note">المراحل تلخص إنجازك الفعلي في المساق الحالي، ولا تُحتسب المساقات القادمة أو المكتملة ضمن هذا المسار.</p>
+  </section>
+ </section>
+
  <div class="row"><span id="app-message" role="status" aria-live="polite"></span><span class="spacer"></span><button type="button" id="logout-button" class="btn secondary">تسجيل الخروج</button></div>
  <div id="view"></div>
  <details class="panel"><summary>تغيير كلمة المرور</summary><form id="password-form">
@@ -52,36 +208,420 @@
   <button class="btn" type="submit">تغيير كلمة المرور</button></form><p id="password-message" role="status" aria-live="polite"></p>
  </details>
 </main>
+
 <script>
 (() => {
 'use strict';
+
 const SUPABASE_URL='https://pxgxnwxpwvvefroaqpfr.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id), loginSection=$('login-section'), appSection=$('app-section'), view=$('view');
+
 let dashboard=null, examParent={type:'dashboard'}, activeExam=null;
+
 function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function message(id,text,kind=''){const n=$(id);if(n){n.className=kind;n.textContent=text||'';}}
-function friendlyError(e){const t=e?.message||String(e||'حدث خطأ غير معروف');if(/Invalid login credentials/i.test(t))return'الكود أو كلمة المرور غير صحيحة.';if(/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(t))return'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';if(/الامتحان لم يفتح بعد/i.test(t))return'الامتحان لم يفتح بعد.';if(/انتهى وقت الامتحان|انتهى موعد/i.test(t))return'انتهى موعد الامتحان أو التكليف.';return t;}
+function friendlyError(e){
+ const t=e?.message||String(e||'حدث خطأ غير معروف');
+ if(/Invalid login credentials/i.test(t))return'الكود أو كلمة المرور غير صحيحة.';
+ if(/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(t))return'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';
+ if(/الامتحان لم يفتح بعد/i.test(t))return'الامتحان لم يفتح بعد.';
+ if(/انتهى وقت الامتحان|انتهى موعد/i.test(t))return'انتهى موعد الامتحان أو التكليف.';
+ return t;
+}
 function prettyStatus(s){return({current:'المساق الحالي',completed:'مساق مكتمل',locked:'مساق قادم — مقفل'})[s]||'غير محدد';}
-function normalizeOptions(raw){if(Array.isArray(raw))return raw.map(item=>{if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:String(label)};}return{value:String(item??''),label:String(item??'')};}).filter(x=>x.label!=='');if(raw&&typeof raw==='object')return Object.entries(raw).map(([k,item])=>{if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:`${k}. ${label}`};}return{value:String(item??''),label:`${k}. ${item??''}`};}).filter(x=>x.label!=='');return[];}
+function normalizeOptions(raw){
+ if(Array.isArray(raw))return raw.map(item=>{
+  if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:String(label)};}
+  return{value:String(item??''),label:String(item??'')};
+ }).filter(x=>x.label!=='');
+ if(raw&&typeof raw==='object')return Object.entries(raw).map(([k,item])=>{
+  if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:`${k}. ${label}`};}
+  return{value:String(item??''),label:`${k}. ${item??''}`};
+ }).filter(x=>x.label!=='');
+ return[];
+}
 function showSignedIn(){loginSection.classList.add('hidden');appSection.classList.remove('hidden');$('header-logout').classList.remove('hidden');}
 function showSignedOut(){loginSection.classList.remove('hidden');appSection.classList.add('hidden');$('header-logout').classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
-async function refreshDashboard({render=true}={}){const{data,error}=await client.rpc('get_student_dashboard');if(error)throw error;dashboard=data;$('welcome-title').textContent=`مرحبًا ${dashboard?.student?.name||'بالطالب'}`;updateProgress();if(render)renderDashboard();}
-function updateProgress(){const courses=dashboard?.courses||[];let total=0,done=0;courses.filter(c=>c.status==='current'||c.status==='completed').forEach(c=>{(c.weekly_exams||[]).forEach(x=>{total++;if(x.result)done++;});(c.subjects||[]).forEach(s=>{(s.assignments||[]).forEach(a=>{total++;if(a.submission?.submitted_at||a.submission?.submitted)done++;});if(s.final_exam){total++;if(s.final_exam.result)done++;}});});const pct=total?Math.round(done/total*100):0;$('progress-fill').style.width=pct+'%';$('progress-caption').textContent=total?`أتممتِ ${done} من ${total} مهمة أو امتحان (${pct}٪)`:'ستظهر نسبة التقدم بعد إضافة التكاليف والامتحانات.';}
-function renderDashboard(){const courses=dashboard?.courses||[];const groups=[{status:'current',title:'المساقات الحالية',desc:'المساقات المتاحة لك الآن'},{status:'completed',title:'المساقات التي اجتزتها',desc:'إنجازاتك العلمية المكتملة'},{status:'locked',title:'المساقات القادمة',desc:'ستتاح لك عند فتحها من الإدارة'}];view.innerHTML=groups.map(g=>{const items=courses.filter(c=>c.status===g.status);return `<section><div class="section-head"><div><h2>${g.title}</h2><p>${g.desc}</p></div></div>${items.length?`<div class="course-list">${items.map(c=>`<article class="course-card"><span class="status ${esc(c.status)}">${esc(prettyStatus(c.status))}</span><h3>${esc(c.name)}</h3>${c.description?`<p class="muted">${esc(c.description)}</p>`:''}${c.course_result?`<div class="notice">نتيجة المساق المعلنة<br>المجموع: <strong>${esc(c.course_result.total_score??'—')}</strong> · النسبة: <strong>${esc(c.course_result.percentage??'—')}٪</strong></div>`:''}<button class="btn ${c.status==='locked'?'light':''}" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">${c.status==='locked'?'غير متاح حاليًا':'فتح المساق'}</button></article>`).join('')}</div>`:'<div class="empty">لا توجد مساقات في هذا القسم حتى الآن.</div>'}</section>`;}).join('');}
-function openCourse(courseId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));if(!c)return renderDashboard();if(c.status==='locked'){message('app-message','هذا المساق قادم ولا يمكن الدخول إليه الآن.','error');return;}message('app-message','');const weekly=c.weekly_exams||[],subjects=c.subjects||[];view.innerHTML=`<div class="row"><button class="btn light" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(c.name)}</h2></div>${c.description?`<p class="muted">${esc(c.description)}</p>`:''}<section><div class="section-head"><div><h3>الامتحانات الأسبوعية للمساق</h3><p>اختبارات مرتبطة بالمساق بالكامل</p></div></div>${weekly.length?`<div class="item-list">${weekly.map(e=>`<article class="item-card"><h3>${esc(e.title)}</h3>${e.week_number!=null?`<p>الأسبوع: ${esc(e.week_number)}</p>`:''}${e.result?`<p>النتيجة: <span class="score">${esc(e.result.score)} / ${esc(e.result.total)}</span></p>`:''}<button class="btn" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان / النتيجة</button></article>`).join('')}</div>`:'<div class="empty">لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</div>'}</section><section><div class="section-head"><div><h3>مواد المساق</h3><p>اختاري المادة لعرض تكاليفها وامتحانها النهائي</p></div></div>${subjects.length?`<div class="item-list">${subjects.map(s=>`<article class="item-card"><h3>${esc(s.name)}</h3>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}<button class="btn secondary" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button></article>`).join('')}</div>`:'<div class="empty">لا توجد مواد مضافة لهذا المساق حتى الآن.</div>'}</section>`;}
-function openSubject(courseId,subjectId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId)),s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));if(!c||!s||c.status==='locked')return renderDashboard();const assignments=s.assignments||[],f=s.final_exam;view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenCourse(${Number(c.id)})">رجوع للمساق</button><h2>${esc(s.name)}</h2></div>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}<section><div class="section-head"><div><h3>التكاليف</h3><p>اقرئي السؤال والتعليمات قبل التسليم</p></div></div>${assignments.length?`<div class="item-list">${assignments.map(a=>`<article class="item-card"><h3>${esc(a.title)}</h3>${a.description?`<p>${esc(a.description)}</p>`:''}<p>الحالة: ${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</p>${a.submission?.grade!=null?`<p>الدرجة المستحقة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}${a.close_at?`<p class="muted">آخر موعد: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}<button class="btn" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">${a.submission?.submitted_at||a.submission?.submitted?'عرض التسليم':'فتح التكليف'}</button></article>`).join('')}</div>`:'<div class="empty">لا توجد تكاليف لهذه المادة حتى الآن.</div>'}</section><section><div class="section-head"><div><h3>امتحان نهاية المادة</h3></div></div>${f?`<article class="item-card"><h3>${esc(f.title)}</h3>${f.result?`<p>النتيجة: <span class="score">${esc(f.result.score)} / ${esc(f.result.total)}</span></p>`:''}<button class="btn secondary" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان / النتيجة</button></article>`:'<div class="empty">لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</div>'}</section>`;}
-function openAssignment(courseId,subjectId,assignmentId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId)),s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId)),a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));if(!c||!s||!a||c.status!=='current'){message('app-message','لا يمكن فتح هذا التكليف الآن.','error');return;}if(a.submission?.submitted_at||a.submission?.submitted){view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div><section class="item-card"><h3>تم تسليم التكليف</h3><p>تم تثبيت الإجابة بعد التسليم، ولا يمكن تعديلها من هذه الصفحة.</p>${a.submission.grade!=null?`<p>الدرجة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}<p class="muted">لعرض نص الإجابة المرسلة، افتحي تفاصيل التكليف إن كانت متاحة في النظام.</p></section>`;return;}view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>${a.description?`<p>${esc(a.description)}</p>`:''}${a.question_text?`<section class="item-card"><h3>سؤال التكليف</h3><p style="white-space:pre-wrap">${esc(a.question_text)}</p></section>`:''}${a.close_at?`<p>آخر موعد للتسليم: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}<form id="assignment-form" class="panel"><div class="field"><label for="assignment-answer">إجابتك</label><textarea id="assignment-answer" rows="8" maxlength="20000" required></textarea></div><button class="btn" type="submit">تسليم التكليف نهائيًا</button><p class="muted">بعد التسليم لا يمكن تعديل الإجابة.</p></form><p id="assignment-message" role="status" aria-live="polite"></p>`;$('assignment-form').addEventListener('submit',async ev=>{ev.preventDefault();const button=$('assignment-form').querySelector('button');button.disabled=true;message('assignment-message','جارٍ تسليم التكليف…');const{error}=await client.rpc('submit_student_assignment',{p_assignment_id:Number(assignmentId),p_submission_text:$('assignment-answer').value});if(error){message('assignment-message',friendlyError(error),'error');button.disabled=false;return;}message('assignment-message','تم التسليم بنجاح.','success');try{await refreshDashboard({render:false});openSubject(courseId,subjectId);}catch(e){message('app-message',friendlyError(e),'error');}});}
-async function openExam(examId,parentType,courseId,subjectId){examParent=parentType==='subject'?{type:'subject',courseId:Number(courseId),subjectId:Number(subjectId)}:{type:'course',courseId:Number(courseId)};activeExam=null;message('app-message','جارٍ تحميل الامتحان…');view.innerHTML='';const{data,error}=await client.rpc('get_student_exam',{p_exam_id:Number(examId)});if(error){message('app-message',friendlyError(error),'error');return;}activeExam=data;message('app-message','');renderExam(data);}
-function renderExam(data){const exam=data.exam||{},state=data.state;let content=`<div class="row"><button class="btn light" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title||'الامتحان')}</h2></div>`;if(state==='submitted'){const pending=Number(data.result?.pending_manual_count||0);content+=`<section class="panel"><h3>تم تسليم الامتحان</h3><p class="score">${pending?'توجد إجابات مقالية بانتظار التصحيح اليدوي.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p><p class="muted">لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;view.innerHTML=content;return;}if(state==='upcoming'||state==='closed'||state==='course_completed'){content+=`<section class="panel">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد هذا الامتحان.':'المساق مكتمل؛ لا يمكن إعادة الامتحان.'}</section>`;view.innerHTML=content;return;}const questions=data.questions||[];if(!questions.length){view.innerHTML=content+'<div class="empty">لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</div>';return;}content+=`<form id="exam-form"><p class="notice">راجعي إجاباتك قبل التسليم. لا يمكن إعادة تسليم الامتحان بعد إرساله.</p>`;content+=questions.map((q,i)=>{const opts=normalizeOptions(q.options),multi=q.question_type==='multiple_select',type=q.question_type||'';const body=opts.length?opts.map(o=>`<label class="option"><input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}"><span>${esc(o.label)}</span></label>`).join(''):`<div class="field"><label for="answer-${Number(q.id)}">${type==='essay'?'إجابتك المقالية':'الإجابة'}</label><textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="5"':''}></textarea></div>`;return `<section class="question"><h3>السؤال ${i+1}</h3><p style="white-space:pre-wrap">${esc(q.question_text||'')}</p>${multi?'<p class="muted">اختاري كل الإجابات الصحيحة.</p>':''}${body}</section>`;}).join('');content+='<button class="btn" type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>';view.innerHTML=content;$('exam-form').addEventListener('submit',async ev=>{ev.preventDefault();if(!confirm('هل تريدين تسليم الامتحان؟ لن تتمكني من إعادة تسليمه.'))return;const button=$('exam-form').querySelector('button[type="submit"]');button.disabled=true;message('exam-message','جارٍ حفظ الإجابات…');const answers=questions.map(q=>{const opts=normalizeOptions(q.options);let answer;if(q.question_type==='multiple_select'){answer=JSON.stringify(Array.from(view.querySelectorAll(`input[name="question-${Number(q.id)}"]:checked`)).map(x=>x.value));if(answer==='[]')answer='';}else if(opts.length){answer=view.querySelector(`input[name="question-${Number(q.id)}"]:checked`)?.value||'';}else{answer=$(`answer-${Number(q.id)}`)?.value||'';}return{question_id:Number(q.id),answer};}).filter(x=>x.answer!=='');const{data:result,error}=await client.rpc('submit_student_exam',{p_exam_id:Number(exam.id),p_answers:answers});if(error){button.disabled=false;message('exam-message',friendlyError(error),'error');return;}renderExam({state:'submitted',exam,result});try{await refreshDashboard({render:false});}catch(_){}});}
-function backFromExam(){if(examParent.type==='subject')openSubject(examParent.courseId,examParent.subjectId);else if(examParent.type==='course')openCourse(examParent.courseId);else renderDashboard();}
-$('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const code=$('student-code').value.trim(),password=$('student-password').value;if(!code||!password)return;const b=$('login-button');b.disabled=true;message('login-message','جارٍ تسجيل الدخول…');const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});b.disabled=false;if(error){message('login-message',friendlyError(error),'error');return;}try{await refreshDashboard();showSignedIn();message('login-message','');message('app-message','');}catch(e){await client.auth.signOut();showSignedOut();message('login-message',friendlyError(e),'error');}});
-async function logout(){const b=$('logout-button');b.disabled=true;try{const{error}=await client.auth.signOut();if(error)throw error;window.location.replace('index.html');}catch(e){b.disabled=false;message('app-message','تعذر تسجيل الخروج: '+friendlyError(e),'error');}}
-$('logout-button').addEventListener('click',logout);$('header-logout').addEventListener('click',logout);
-$('password-form').addEventListener('submit',async ev=>{ev.preventDefault();const p=$('new-password').value,c=$('confirm-password').value;if(p.length<8){message('password-message','كلمة المرور يجب ألا تقل عن 8 أحرف.','error');return;}if(p!==c){message('password-message','كلمتا المرور غير متطابقتين.','error');return;}const{error}=await client.auth.updateUser({password:p});if(error){message('password-message',friendlyError(error),'error');return;}$('password-form').reset();message('password-message','تم تغيير كلمة المرور.','success');});
-window.portalOpenCourse=openCourse;window.portalRenderDashboard=renderDashboard;window.portalOpenSubject=openSubject;window.portalOpenAssignment=openAssignment;window.portalOpenExam=openExam;window.portalBackFromExam=backFromExam;
-(async()=>{const{data}=await client.auth.getSession();if(!data?.session)return;try{await refreshDashboard();showSignedIn();}catch(_){await client.auth.signOut();showSignedOut();}})();
+
+async function refreshDashboard({render=true}={}){
+ const{data,error}=await client.rpc('get_student_dashboard');
+ if(error)throw error;
+ dashboard=data;
+ $('welcome-title').textContent=`مرحبًا ${dashboard?.student?.name||'بالطالب'}`;
+ updateProgress();
+ renderHomeInsights();
+ if(render)renderDashboard();
+}
+
+function updateProgress(){
+ const courses=dashboard?.courses||[];
+ let total=0,done=0;
+ courses.filter(c=>c.status==='current'||c.status==='completed').forEach(c=>{
+  (c.weekly_exams||[]).forEach(x=>{total++;if(x.result)done++;});
+  (c.subjects||[]).forEach(s=>{
+   (s.assignments||[]).forEach(a=>{total++;if(a.submission?.submitted_at||a.submission?.submitted)done++;});
+   if(s.final_exam){total++;if(s.final_exam.result)done++;}
+  });
+ });
+ const pct=total?Math.round(done/total*100):0;
+ $('progress-fill').style.width=pct+'%';
+ $('progress-caption').textContent=total?`أتممتِ ${done} من ${total} مهمة أو امتحان (${pct}٪)`:'ستظهر نسبة التقدم بعد إضافة التكاليف والامتحانات.';
+}
+
+/* حساب الرادار والمسار من بيانات لوحة الطالب الموجودة */
+function isSubmittedAssignment(a){return Boolean(a?.submission?.submitted_at||a?.submission?.submitted);}
+function hasExamResult(e){return Boolean(e?.result);}
+function dateLabel(value){
+ if(!value)return '';
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?'':d.toLocaleString('ar-EG',{dateStyle:'medium',timeStyle:'short'});
+}
+function deadlineState(closeAt){
+ if(!closeAt)return{label:'بانتظار الإنجاز',overdue:false};
+ const d=new Date(closeAt);
+ if(Number.isNaN(d.getTime()))return{label:'بانتظار الإنجاز',overdue:false};
+ if(d.getTime()<Date.now())return{label:'انتهى الموعد',overdue:true};
+ return{label:'مطلوب منك',overdue:false};
+}
+function currentCourse(){return(dashboard?.courses||[]).find(c=>c.status==='current')||null;}
+
+function renderHomeInsights(){
+ const c=currentCourse();
+ const radar=$('radar-list'),count=$('radar-count-number');
+ const radarName=$('radar-course-name'),pathName=$('path-course-label');
+ const path=$('star-path'),pct=$('path-percent');
+ if(!radar||!count||!path||!pct)return;
+
+ if(!c){
+  radarName.textContent='لا يوجد مساق حالي متاح الآن.';
+  count.textContent='0';
+  radar.innerHTML='<div class="radar-empty">ستظهر هنا المهام والاختبارات عندما يتاح لك مساق حالي.</div>';
+  pathName.textContent='لا يوجد مساق حالي لاحتساب المسار النجمي.';
+  pct.textContent='—٪';
+  path.innerHTML='';
+  return;
+ }
+
+ radarName.textContent='المساق الحالي: '+(c.name||'مساقك الحالي');
+ pathName.textContent='المساق الحالي: '+(c.name||'مساقك الحالي');
+
+ const items=[],weekly=c.weekly_exams||[],subjects=c.subjects||[];
+
+ weekly.forEach(e=>{
+  if(!hasExamResult(e)){
+   const st=deadlineState(e.close_at);
+   items.push({
+    kind:'exam',
+    title:e.title||'اختبار أسبوعي',
+    subtitle:'اختبار أسبوعي للمساق'+(e.week_number!=null?' · الأسبوع '+e.week_number:'')+(e.close_at?' · آخر موعد: '+dateLabel(e.close_at):''),
+    state:st,
+    action:`portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)`,
+    icon:'✦'
+   });
+  }
+ });
+
+ subjects.forEach(s=>{
+  (s.assignments||[]).forEach(a=>{
+   if(!isSubmittedAssignment(a)){
+    const st=deadlineState(a.close_at);
+    items.push({
+     kind:'assignment',
+     title:a.title||'تكليف',
+     subtitle:'مادة: '+(s.name||'')+(a.close_at?' · آخر موعد: '+dateLabel(a.close_at):''),
+     state:st,
+     action:`portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})`,
+     icon:'✎'
+    });
+   }
+  });
+  if(s.final_exam&&!hasExamResult(s.final_exam)){
+   const e=s.final_exam,st=deadlineState(e.close_at);
+   items.push({
+    kind:'exam',
+    title:e.title||'الامتحان النهائي',
+    subtitle:'الامتحان النهائي · مادة: '+(s.name||'')+(e.close_at?' · آخر موعد: '+dateLabel(e.close_at):''),
+    state:st,
+    action:`portalOpenExam(${Number(e.id)},'subject',${Number(c.id)},${Number(s.id)})`,
+    icon:'✦'
+   });
+  }
+ });
+
+ count.textContent=String(items.length);
+
+ if(!items.length){
+  radar.innerHTML='<div class="radar-empty">لا توجد حاليًا تكاليف أو اختبارات غير منجزة في هذا المساق. ستظهر المهام هنا تلقائيًا عندما تُضاف إلى بيانات المساق.</div>';
+ }else{
+  radar.innerHTML=items.map(it=>`
+   <article class="radar-item">
+    <div class="radar-mark" aria-hidden="true">${it.icon}</div>
+    <div>
+     <span class="radar-state ${it.state.overdue?'overdue':''}">${esc(it.state.label)}</span>
+     <h3>${esc(it.title)}</h3>
+     <p>${esc(it.subtitle)}</p>
+    </div>
+    <button type="button" class="radar-action" onclick="${it.action}">${it.kind==='assignment'?'فتح التكليف':'فتح الاختبار'}</button>
+   </article>
+  `).join('');
+ }
+
+ const stages=[
+  {title:'الاختبارات الأسبوعية',icon:'✦',items:weekly,done:e=>hasExamResult(e)},
+  {title:'تكاليف المواد',icon:'✎',items:subjects.flatMap(s=>s.assignments||[]),done:a=>isSubmittedAssignment(a)},
+  {title:'الاختبارات النهائية',icon:'★',items:subjects.map(s=>s.final_exam).filter(Boolean),done:e=>hasExamResult(e)}
+ ];
+ let total=0,done=0;
+ const stageHtml=stages.map(s=>{
+  const n=s.items.length,d=s.items.filter(s.done).length;
+  total+=n;done+=d;
+  const complete=n>0&&d===n;
+  return`<div class="star-stage ${complete?'done':''}">
+   <div class="star-icon">${complete?'✓':s.icon}</div>
+   <strong>${esc(s.title)}</strong>
+   <small>${n?d+' من '+n+' مكتمل':'لم يُضف بعد'}</small>
+  </div>`;
+ }).join('');
+ const percent=total?Math.round(done/total*100):0;
+ pct.textContent=total?percent+'٪':'—٪';
+ path.innerHTML=stageHtml;
+}
+
+function renderDashboard(){
+ const courses=dashboard?.courses||[];
+ const groups=[
+  {status:'current',title:'المساقات الحالية',desc:'المساقات المتاحة لك الآن'},
+  {status:'completed',title:'المساقات التي اجتزتها',desc:'إنجازاتك العلمية المكتملة'},
+  {status:'locked',title:'المساقات القادمة',desc:'ستتاح لك عند فتحها من الإدارة'}
+ ];
+ view.innerHTML=groups.map(g=>{
+  const items=courses.filter(c=>c.status===g.status);
+  return`<section>
+   <div class="section-head"><div><h2>${g.title}</h2><p>${g.desc}</p></div></div>
+   ${items.length?`<div class="course-list">${items.map(c=>`
+    <article class="course-card">
+     <span class="status ${esc(c.status)}">${esc(prettyStatus(c.status))}</span>
+     <h3>${esc(c.name)}</h3>
+     ${c.description?`<p class="muted">${esc(c.description)}</p>`:''}
+     ${c.course_result?`<div class="notice">نتيجة المساق المعلنة<br>المجموع: <strong>${esc(c.course_result.total_score??'—')}</strong> · النسبة: <strong>${esc(c.course_result.percentage??'—')}٪</strong></div>`:''}
+     <button class="btn ${c.status==='locked'?'light':''}" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">${c.status==='locked'?'غير متاح حاليًا':'فتح المساق'}</button>
+    </article>`).join('')}</div>`:'<div class="empty">لا توجد مساقات في هذا القسم حتى الآن.</div>'}
+  </section>`;
+ }).join('');
+}
+
+function openCourse(courseId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ if(!c)return renderDashboard();
+ if(c.status==='locked'){message('app-message','هذا المساق قادم ولا يمكن الدخول إليه الآن.','error');return;}
+ message('app-message','');
+ const weekly=c.weekly_exams||[],subjects=c.subjects||[];
+ view.innerHTML=`<div class="row"><button class="btn light" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(c.name)}</h2></div>
+ ${c.description?`<p class="muted">${esc(c.description)}</p>`:''}
+ <section>
+  <div class="section-head"><div><h3>الامتحانات الأسبوعية للمساق</h3><p>اختبارات مرتبطة بالمساق بالكامل</p></div></div>
+  ${weekly.length?`<div class="item-list">${weekly.map(e=>`
+   <article class="item-card"><h3>${esc(e.title)}</h3>
+    ${e.week_number!=null?`<p>الأسبوع: ${esc(e.week_number)}</p>`:''}
+    ${e.result?`<p>النتيجة: <span class="score">${esc(e.result.score)} / ${esc(e.result.total)}</span></p>`:''}
+    <button class="btn" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان / النتيجة</button>
+   </article>`).join('')}</div>`:'<div class="empty">لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</div>'}
+ </section>
+ <section>
+  <div class="section-head"><div><h3>مواد المساق</h3><p>اختاري المادة لعرض تكاليفها وامتحانها النهائي</p></div></div>
+  ${subjects.length?`<div class="item-list">${subjects.map(s=>`
+   <article class="item-card"><h3>${esc(s.name)}</h3>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}
+    <button class="btn secondary" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button>
+   </article>`).join('')}</div>`:'<div class="empty">لا توجد مواد مضافة لهذا المساق حتى الآن.</div>'}
+ </section>`;
+}
+
+function openSubject(courseId,subjectId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
+ if(!c||!s||c.status==='locked')return renderDashboard();
+ const assignments=s.assignments||[],f=s.final_exam;
+ view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenCourse(${Number(c.id)})">رجوع للمساق</button><h2>${esc(s.name)}</h2></div>
+ ${s.description?`<p class="muted">${esc(s.description)}</p>`:''}
+ <section><div class="section-head"><div><h3>التكاليف</h3><p>اقرئي السؤال والتعليمات قبل التسليم</p></div></div>
+ ${assignments.length?`<div class="item-list">${assignments.map(a=>`
+  <article class="item-card"><h3>${esc(a.title)}</h3>${a.description?`<p>${esc(a.description)}</p>`:''}
+   <p>الحالة: ${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</p>
+   ${a.submission?.grade!=null?`<p>الدرجة المستحقة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
+   ${a.close_at?`<p class="muted">آخر موعد: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
+   <button class="btn" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">${a.submission?.submitted_at||a.submission?.submitted?'عرض التسليم':'فتح التكليف'}</button>
+  </article>`).join('')}</div>`:'<div class="empty">لا توجد تكاليف لهذه المادة حتى الآن.</div>'}
+ </section>
+ <section><div class="section-head"><div><h3>امتحان نهاية المادة</h3></div></div>
+ ${f?`<article class="item-card"><h3>${esc(f.title)}</h3>${f.result?`<p>النتيجة: <span class="score">${esc(f.result.score)} / ${esc(f.result.total)}</span></p>`:''}
+  <button class="btn secondary" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان / النتيجة</button>
+ </article>`:'<div class="empty">لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</div>'}
+ </section>`;
+}
+
+function openAssignment(courseId,subjectId,assignmentId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
+ const a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));
+ if(!c||!s||!a||c.status!=='current'){message('app-message','لا يمكن فتح هذا التكليف الآن.','error');return;}
+ if(a.submission?.submitted_at||a.submission?.submitted){
+  view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>
+   <section class="item-card"><h3>تم تسليم التكليف</h3><p>تم تثبيت الإجابة بعد التسليم، ولا يمكن تعديلها من هذه الصفحة.</p>
+   ${a.submission.grade!=null?`<p>الدرجة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
+   <p class="muted">لعرض نص الإجابة المرسلة، افتحي تفاصيل التكليف إن كانت متاحة في النظام.</p></section>`;
+  return;
+ }
+ view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>
+ ${a.description?`<p>${esc(a.description)}</p>`:''}
+ ${a.question_text?`<section class="item-card"><h3>سؤال التكليف</h3><p style="white-space:pre-wrap">${esc(a.question_text)}</p></section>`:''}
+ ${a.close_at?`<p>آخر موعد للتسليم: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
+ <form id="assignment-form" class="panel"><div class="field"><label for="assignment-answer">إجابتك</label><textarea id="assignment-answer" rows="8" maxlength="20000" required></textarea></div>
+ <button class="btn" type="submit">تسليم التكليف نهائيًا</button><p class="muted">بعد التسليم لا يمكن تعديل الإجابة.</p></form>
+ <p id="assignment-message" role="status" aria-live="polite"></p>`;
+
+ $('assignment-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const button=$('assignment-form').querySelector('button');
+  button.disabled=true;
+  message('assignment-message','جارٍ تسليم التكليف…');
+  const{error}=await client.rpc('submit_student_assignment',{p_assignment_id:Number(assignmentId),p_submission_text:$('assignment-answer').value});
+  if(error){message('assignment-message',friendlyError(error),'error');button.disabled=false;return;}
+  message('assignment-message','تم التسليم بنجاح.','success');
+  try{await refreshDashboard({render:false});openSubject(courseId,subjectId);}
+  catch(e){message('app-message',friendlyError(e),'error');}
+ });
+}
+
+async function openExam(examId,parentType,courseId,subjectId){
+ examParent=parentType==='subject'?{type:'subject',courseId:Number(courseId),subjectId:Number(subjectId)}:{type:'course',courseId:Number(courseId)};
+ activeExam=null;
+ message('app-message','جارٍ تحميل الامتحان…');
+ view.innerHTML='';
+ const{data,error}=await client.rpc('get_student_exam',{p_exam_id:Number(examId)});
+ if(error){message('app-message',friendlyError(error),'error');return;}
+ activeExam=data;
+ message('app-message','');
+ renderExam(data);
+}
+
+function renderExam(data){
+ const exam=data.exam||{},state=data.state;
+ let content=`<div class="row"><button class="btn light" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title||'الامتحان')}</h2></div>`;
+ if(state==='submitted'){
+  const pending=Number(data.result?.pending_manual_count||0);
+  content+=`<section class="panel"><h3>تم تسليم الامتحان</h3><p class="score">${pending?'توجد إجابات مقالية بانتظار التصحيح اليدوي.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p><p class="muted">لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;
+  view.innerHTML=content;return;
+ }
+ if(state==='upcoming'||state==='closed'||state==='course_completed'){
+  content+=`<section class="panel">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد هذا الامتحان.':'المساق مكتمل؛ لا يمكن إعادة الامتحان.'}</section>`;
+  view.innerHTML=content;return;
+ }
+ const questions=data.questions||[];
+ if(!questions.length){view.innerHTML=content+'<div class="empty">لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</div>';return;}
+ content+=`<form id="exam-form"><p class="notice">راجعي إجاباتك قبل التسليم. لا يمكن إعادة تسليم الامتحان بعد إرساله.</p>`;
+ content+=questions.map((q,i)=>{
+  const opts=normalizeOptions(q.options),multi=q.question_type==='multiple_select',type=q.question_type||'';
+  const body=opts.length?opts.map(o=>`<label class="option"><input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}"><span>${esc(o.label)}</span></label>`).join(''):`<div class="field"><label for="answer-${Number(q.id)}">${type==='essay'?'إجابتك المقالية':'الإجابة'}</label><textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="5"':''}></textarea></div>`;
+  return`<section class="question"><h3>السؤال ${i+1}</h3><p style="white-space:pre-wrap">${esc(q.question_text||'')}</p>${multi?'<p class="muted">اختاري كل الإجابات الصحيحة.</p>':''}${body}</section>`;
+ }).join('');
+ content+='<button class="btn" type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>';
+ view.innerHTML=content;
+
+ $('exam-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!confirm('هل تريدين تسليم الامتحان؟ لن تتمكني من إعادة تسليمه.'))return;
+  const button=$('exam-form').querySelector('button[type="submit"]');
+  button.disabled=true;
+  message('exam-message','جارٍ حفظ الإجابات…');
+  const answers=questions.map(q=>{
+   const opts=normalizeOptions(q.options);
+   let answer;
+   if(q.question_type==='multiple_select'){
+    answer=JSON.stringify(Array.from(view.querySelectorAll(`input[name="question-${Number(q.id)}"]:checked`)).map(x=>x.value));
+    if(answer==='[]')answer='';
+   }else if(opts.length){
+    answer=view.querySelector(`input[name="question-${Number(q.id)}"]:checked`)?.value||'';
+   }else{
+    answer=$(`answer-${Number(q.id)}`)?.value||'';
+   }
+   return{question_id:Number(q.id),answer};
+  }).filter(x=>x.answer!=='');
+  const{data:result,error}=await client.rpc('submit_student_exam',{p_exam_id:Number(exam.id),p_answers:answers});
+  if(error){button.disabled=false;message('exam-message',friendlyError(error),'error');return;}
+  renderExam({state:'submitted',exam,result});
+  try{await refreshDashboard({render:false});}catch(_){}
+ });
+}
+
+function backFromExam(){
+ if(examParent.type==='subject')openSubject(examParent.courseId,examParent.subjectId);
+ else if(examParent.type==='course')openCourse(examParent.courseId);
+ else renderDashboard();
+}
+
+$('login-form').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ const code=$('student-code').value.trim(),password=$('student-password').value;
+ if(!code||!password)return;
+ const b=$('login-button');
+ b.disabled=true;
+ message('login-message','جارٍ تسجيل الدخول…');
+ const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});
+ b.disabled=false;
+ if(error){message('login-message',friendlyError(error),'error');return;}
+ try{
+  await refreshDashboard();
+  showSignedIn();
+  message('login-message','');
+  message('app-message','');
+ }catch(e){
+  await client.auth.signOut();
+  showSignedOut();
+  message('login-message',friendlyError(e),'error');
+ }
+});
+
+async function logout(){
+ const b=$('logout-button');
+ b.disabled=true;
+ try{
+  const{error}=await client.auth.signOut();
+  if(error)throw error;
+  window.location.replace('index.html');
+ }catch(e){
+  b.disabled=false;
+  message('app-message','تعذر تسجيل الخروج: '+friendlyError(e),'error');
+ }
+}
+$('logout-button').addEventListener('click',logout);
+$('header-logout').addEventListener('click',logout);
+
+$('password-form').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ const p=$('new-password').value,c=$('confirm-password').value;
+ if(p.length<8){message('password-message','كلمة المرور يجب ألا تقل عن 8 أحرف.','error');return;}
+ if(p!==c){message('password-message','كلمتا المرور غير متطابقتين.','error');return;}
+ const{error}=await client.auth.updateUser({password:p});
+ if(error){message('password-message',friendlyError(error),'error');return;}
+ $('password-form').reset();
+ message('password-message','تم تغيير كلمة المرور.','success');
+});
+
+window.portalOpenCourse=openCourse;
+window.portalRenderDashboard=renderDashboard;
+window.portalOpenSubject=openSubject;
+window.portalOpenAssignment=openAssignment;
+window.portalOpenExam=openExam;
+window.portalBackFromExam=backFromExam;
+
+(async()=>{
+ const{data}=await client.auth.getSession();
+ if(!data?.session)return;
+ try{await refreshDashboard();showSignedIn();}
+ catch(_){await client.auth.signOut();showSignedOut();}
+})();
 })();
 </script>
 </body>
