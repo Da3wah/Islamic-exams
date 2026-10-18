@@ -449,6 +449,64 @@ $('addExamRoute').addEventListener('click',()=>openExamRoute('add'));$('backToEx
 async function initializeExamEditorRoute(){if(!isExamEditorRoute)return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('exams').classList.add('active');$('title').textContent=examAction==='add'?'إضافة اختبار جديد':'تعديل الاختبار';$('subtitle').textContent='صفحة مستقلة لإدخال بيانات الاختبار وأسئلته.';$('examFormCard').classList.add('open');$('examsListView').classList.add('hidden-view');$('questionFormCard').classList.add('open');$('questionFormCard').classList.remove('hidden');$('questionFormCard').style.display='block';if(examAction==='add'){$('examForm').reset();$('examEditId').value='';$('examFormHeading').textContent='بيانات الاختبار الجديد';$('questionFormCard').classList.add('hidden');$('questionFormCard').style.display='none';}else{if(!examRouteId)throw Error('رقم الاختبار غير موجود في الرابط.');let result=await db.from('exams').select('id,title,type,course_id,course_subject_id,week_number,open_at,close_at,active').eq('id',Number(examRouteId)).single();if(result.error&&/active|column|schema cache/i.test(result.error.message||''))result=await db.from('exams').select('id,title,type,course_id,course_subject_id,week_number,open_at,close_at').eq('id',Number(examRouteId)).single();if(result.error)throw result.error;const data=result.data;$('examEditId').value=data.id;$('examTitle').value=data.title||'';$('examType').value=data.type||'Weekly';$('examCourse').value=String(data.course_id||'');$('examCourse').dispatchEvent(new Event('change'));$('examSubject').value=data.course_subject_id?String(data.course_subject_id):'';$('examWeek').value=data.week_number||'';$('examOpen').value=data.open_at?new Date(data.open_at).toISOString().slice(0,16):'';$('examClose').value=data.close_at?new Date(data.close_at).toISOString().slice(0,16):'';$('examFormHeading').textContent='تعديل بيانات الاختبار';$('questionFormCard').style.display='block';fillSelect('questionExam',cache.exams,'اختاري الاختبار',x=>x.title);$('questionExam').value=String(data.id);await loadExistingQuestions(data.id)} }
 document.addEventListener('click',async e=>{const open=e.target.closest('[data-open-form]');if(open){if(open.dataset.openForm==='studentFormCard'){$('studentForm').reset();$('studentEditId').value='';$('studentPassword').required=true;$('studentFormHeading').textContent='إضافة طالب';}if(open.dataset.openForm==='courseFormCard'){$('courseForm').reset();$('courseEditId').value='';$('courseImageFile').value='';$('courseImagePreview').style.backgroundImage='';$('courseImagePreview').textContent='معاينة صورة المساق';$('courseFormHeading').textContent='إضافة مساق';}if(open.dataset.openForm==='examFormCard'){$('examForm').reset();$('examEditId').value='';$('examFormHeading').textContent='إضافة اختبار';}if(open.dataset.openForm==='assignmentFormCard'){$('assignmentForm').reset();$('assignmentMaxGrade').value='10';$('assignmentEditId').value='';$('assignmentFormHeading').textContent='إضافة تكليف';}if(open.dataset.openForm==='subjectFormCard'){subjectReturnCourseId=null;$('subjectForm').reset();$('subjectEditId').value='';$('subjectOrder').value='0';$('subjectActive').value='true';$('subjectFormHeading').textContent='إضافة مادة جديدة';}openManagementForm(open.dataset.openForm);return;}const cancel=e.target.closest('[data-cancel-form]');if(cancel){if(cancel.dataset.cancelForm==='subjectFormCard')subjectReturnCourseId=null;closeManagementForm(cancel.dataset.cancelForm);return;}
 
+const editStudentButton = e.target.closest('[data-edit-student]');
+
+if (editStudentButton) {
+  try {
+    await adminCheck();
+
+    const studentId = Number(editStudentButton.dataset.editStudent);
+
+    const student = cache.students.find(
+      item => Number(item.id) === studentId
+    );
+
+    if (!student) {
+      throw new Error('لم يتم العثور على الطالب. حدّثي قائمة الطلاب وحاولي مجددًا.');
+    }
+
+    const { data: links, error } = await db
+      .from('student_courses')
+      .select('course_id,active')
+      .eq('student_id', studentId);
+
+    if (error) throw error;
+
+    $('studentForm').reset();
+
+    $('studentEditId').value = String(studentId);
+    $('studentName').value = student.name || '';
+    $('studentCode').value = student.code || '';
+
+    $('studentPassword').value = '';
+    $('studentPassword').required = false;
+    $('studentPassword').disabled = true;
+
+    const currentCourse = (links || []).find(
+      item => item.active !== false
+    );
+
+    $('studentCourse').value = currentCourse
+      ? String(currentCourse.course_id)
+      : '';
+
+    $('studentFormHeading').textContent = 'تعديل بيانات الطالب';
+    $('createStudentBtn').textContent = 'حفظ التعديلات';
+    $('studentEditHint').textContent =
+      'راجعي الاسم والكود والمساق قبل حفظ التعديلات.';
+
+    showStudentEditor();
+
+  } catch (error) {
+    alert(
+      'تعذر فتح بيانات الطالب للتعديل: ' +
+      (error.message || String(error))
+    );
+  }
+
+  return;
+}
+
 const ec=e.target.closest('[data-edit-course]');if(ec){const x=cache.courses.find(v=>String(v.id)===ec.dataset.editCourse);if(!x)return;$('courseEditId').value=x.id;$('courseName').value=x.name||'';$('courseDescription').value=x.description||'';$('courseActive').value=String(x.active!==false);$('courseImageFile').value='';$('courseImagePreview').style.backgroundImage=x.image_url?`url("${x.image_url}")`:'';$('courseImagePreview').textContent=x.image_url?'':'معاينة صورة المساق';$('courseFormHeading').textContent='تعديل المساق';openManagementForm('courseFormCard');return;}
 const sj=e.target.closest('[data-edit-subject]');if(sj){const x=cache.subjects.find(v=>String(v.id)===sj.dataset.editSubject);if(!x)return;subjectReturnCourseId=$('courseDetailsView').classList.contains('open')?String(x.course_id):null;$('subjectEditId').value=x.id;$('subjectCourse').value=String(x.course_id);$('subjectName').value=x.name||'';$('subjectOrder').value=x.display_order||0;$('subjectActive').value=String(x.active!==false);$('subjectDescription').value=x.description||'';$('subjectFormHeading').textContent='تعديل المادة';openManagementForm('subjectFormCard');return;}
 const cd=e.target.closest('[data-course-details]');if(cd){const x=cache.courses.find(v=>String(v.id)===cd.dataset.courseDetails);if(!x)return;renderCourseDetails(x);return;}
