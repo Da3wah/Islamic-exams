@@ -1,465 +1,88 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>بوابة الطالب</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="question-types-bridge.js"></script>
-  <script src="assignment-section-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08192F">
+<title>بوابة الطالب | مرصد</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="question-types-bridge.js"></script>
+<script src="assignment-section-bridge.js"></script>
 <script src="marsad-branding.js"></script>
-  <style>
-    /* Basic functional layout only; visual design is intentionally deferred. */
-    body { font-family: Arial, sans-serif; margin: 0; padding: 16px; line-height: 1.7; }
-    main { max-width: 960px; margin: 0 auto; }
-    section, .panel { border: 1px solid #bbb; padding: 16px; margin: 12px 0; }
-    input, textarea, button { font: inherit; padding: 8px; margin: 4px 0; max-width: 100%; box-sizing: border-box; }
-    input, textarea { width: 100%; }
-    button { cursor: pointer; }
-    button:disabled { cursor: not-allowed; opacity: .55; }
-    .course-list, .item-list { display: grid; gap: 8px; }
-    .course-card, .item-card { border: 1px solid #bbb; padding: 12px; }
-    .muted { color: #555; }
-    .error { color: #a00000; white-space: pre-wrap; }
-    .success { color: #17632b; white-space: pre-wrap; }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .row button { margin-inline-end: 4px; }
-    .option { display: block; margin: 8px 0; }
-    .option input { width: auto; margin-inline-end: 6px; }
-    .hidden { display: none !important; }
-    .score { font-weight: bold; }
-    .status { display: inline-block; border: 1px solid #888; padding: 1px 8px; margin-inline-start: 6px; }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#08192F;--navy2:#122844;--gold:#D5AB5E;--cream:#F7F3E9;--ink:#17263D;--muted:#6B7484;--line:#E4D9C5;--white:#fff;--green:#276749;--red:#a12a2a;--shadow:0 12px 34px rgba(8,25,47,.08}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:"Cairo",Arial,sans-serif;line-height:1.8}button,input,textarea,select{font:inherit}button{cursor:pointer;transition:transform .15s,background .15s,opacity .15s}button:hover:not(:disabled){transform:translateY(-1px)}button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}.shell{max-width:1180px;margin:auto;padding:24px}.topbar{background:var(--navy);color:white;border-bottom:3px solid var(--gold)}.topbar-inner{max-width:1180px;margin:auto;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:14px}.brand-mark{width:46px;height:46px;border:1px solid var(--gold);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:25px;font-weight:800}.brand h1{font-size:21px;margin:0;line-height:1.4}.brand p{margin:2px 0 0;color:#d6deea;font-size:12px}.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:10px 18px;font-weight:700;background:var(--gold);color:var(--navy)}.btn.secondary{background:var(--navy2);color:#fff}.btn.outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c9c4}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin:18px 0;box-shadow:var(--shadow)}.login-wrap{min-height:calc(100vh - 95px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(circle at 15% 15%,#e9dfca 0,transparent 34%),var(--cream)}.login-card{width:min(100%,480px);padding:34px;border-radius:24px;background:white;border:1px solid var(--line);box-shadow:0 22px 60px #08192f18}.eyebrow{color:#8c6b2f;font-size:12px;font-weight:800;letter-spacing:.04em}.login-card h2{font-size:27px;color:var(--navy);margin:5px 0}.sub{color:var(--muted);margin-top:4px}.field{display:grid;gap:6px;margin:15px 0}.field label,label{font-weight:700;font-size:14px}.field input,.field textarea,input,textarea,select{width:100%;border:1px solid #d9d4c8;background:#fff;border-radius:10px;padding:11px 13px;outline:none;color:var(--ink)}input:focus,textarea:focus,select:focus{border-color:#b38a42;box-shadow:0 0 0 3px #d5ab5e26}.login-card .btn{width:100%;margin-top:10px;padding:12px}
+.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:stretch;margin:10px 0 24px}.hero-main{background:linear-gradient(135deg,var(--navy),#183654);color:white;border-radius:22px;padding:26px;position:relative;overflow:hidden}.hero-main:after{content:"";position:absolute;width:200px;height:200px;border:1px solid #d5ab5e44;border-radius:50%;left:-70px;bottom:-110px;box-shadow:0 0 0 25px #d5ab5e0b,0 0 0 50px #d5ab5e08}.hero-main h2{margin:3px 0 5px;font-size:26px}.hero-main p{color:#d8e0ea;margin:0;max-width:560px}.hero-side{border-radius:22px;background:white;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;justify-content:center}.progress-track{height:10px;background:#eee8dc;border-radius:99px;overflow:hidden;margin:12px 0}.progress-fill{height:100%;background:var(--gold);border-radius:99px;width:0;transition:width .3s}.progress-caption{font-size:13px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px}.section-head h2,.section-head h3{margin:0;color:var(--navy)}.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}.course-list,.item-list{display:grid;grid-template-columns:repeat( auto-fit,minmax(245px,1fr));gap:14px}.course-card,.item-card{background:white;border:1px solid var(--line);border-radius:17px;padding:19px;min-width:0;box-shadow:0 6px 20px #08192f06}.course-card{display:flex;flex-direction:column;gap:9px}.course-card .btn{margin-top:auto;align-self:flex-start}.course-card h3,.item-card h3{margin:0;color:var(--navy);font-size:18px}.course-card p,.item-card p{margin:3px 0}.status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:3px 10px;border-radius:99px;background:#f3ead8;color:#77591f;font-size:12px;font-weight:800}.status.current{background:#e6f3e9;color:#276749}.status.locked{background:#eceef1;color:#606b79}.status.completed{background:#e7edf6;color:#284c7c}.score{font-weight:800;color:#276749}.muted{color:var(--muted)}.error{color:var(--red);white-space:pre-wrap}.success{color:var(--green);white-space:pre-wrap}.notice{border-radius:12px;padding:11px 14px;background:#f8f1e3;border:1px solid var(--line);margin:12px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row h2{margin:0;color:var(--navy)}.row .spacer{flex:1}.option{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:11px;background:#fffdf9}.option input{width:auto;margin-top:8px;accent-color:var(--navy)}.question{margin:14px 0;padding:18px;border:1px solid var(--line);border-radius:15px;background:#fff}.question h3{margin:0 0 8px;color:var(--navy)}.question textarea{min-height:115px}.divider{height:1px;border:0;background:var(--line);margin:20px 0}details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}#view section{margin:18px 0}.empty{color:var(--muted);padding:16px;background:#fff;border:1px dashed var(--line);border-radius:13px}
+@media(max-width:760px){.shell{padding:15px}.topbar-inner{padding:16px;align-items:flex-start}.brand h1{font-size:18px}.brand-mark{width:40px;height:40px}.hero{grid-template-columns:1fr}.hero-main h2{font-size:22px}.login-card{padding:24px}.panel{padding:17px}.course-list,.item-list{grid-template-columns:1fr}.top-actions{justify-content:flex-end}.top-actions .btn{padding:8px 11px;font-size:13px}}
+</style>
 </head>
 <body>
-<main>
-  <h1>بوابة الطالب</h1>
-  <p>تسجيل الدخول بالكود وكلمة المرور.</p>
-
-  <section id="login-section">
-    <h2>دخول الطالب</h2>
-    <form id="login-form">
-      <label for="student-code">كود الطالب</label>
-      <input id="student-code" name="student-code" autocomplete="username" required />
-      <label for="student-password">كلمة المرور</label>
-      <input id="student-password" name="student-password" type="password" autocomplete="current-password" required />
-      <button id="login-button" type="submit">دخول</button>
-    </form>
-    <p id="login-message" role="status" aria-live="polite"></p>
-  </section>
-
-  <section id="app-section" class="hidden">
-    <div class="row">
-      <h2 id="welcome-title">لوحة الطالب</h2>
-      <button type="button" id="logout-button">تسجيل الخروج</button>
-    </div>
-    <p id="app-message" role="status" aria-live="polite"></p>
-    <div id="view"></div>
-    <details>
-      <summary>تغيير كلمة المرور</summary>
-      <form id="password-form">
-        <label for="new-password">كلمة المرور الجديدة (8 أحرف على الأقل)</label>
-        <input id="new-password" type="password" minlength="8" autocomplete="new-password" required />
-        <label for="confirm-password">تأكيد كلمة المرور الجديدة</label>
-        <input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required />
-        <button type="submit">تغيير كلمة المرور</button>
-      </form>
-      <p id="password-message" role="status" aria-live="polite"></p>
-    </details>
-  </section>
+<header class="topbar">
+ <div class="topbar-inner">
+  <div class="brand"><div class="brand-mark" aria-hidden="true">م</div><div><h1>مَرْصَد</h1><p>بوابة الطالب · رحلة علمية منظمة</p></div></div>
+  <div class="top-actions"><button type="button" id="header-logout" class="btn outline hidden">تسجيل الخروج</button></div>
+ </div>
+</header>
+<main id="login-section" class="login-wrap">
+ <section class="login-card">
+  <span class="eyebrow">بوابة الطلاب</span><h2>أهلًا بك في مرصد</h2><p class="sub">سجّل الدخول باستخدام كود الطالب وكلمة المرور.</p>
+  <form id="login-form">
+   <div class="field"><label for="student-code">كود الطالب</label><input id="student-code" name="student-code" autocomplete="username" required placeholder="اكتبي كود الطالب"></div>
+   <div class="field"><label for="student-password">كلمة المرور</label><input id="student-password" name="student-password" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></div>
+   <button id="login-button" class="btn" type="submit">دخول إلى البوابة</button>
+  </form><p id="login-message" role="status" aria-live="polite"></p>
+ </section>
 </main>
-
+<main id="app-section" class="shell hidden">
+ <div class="hero">
+  <section class="hero-main"><span class="eyebrow" style="color:var(--gold)">رحلتك في طلب العلم</span><h2 id="welcome-title">مرحبًا بك</h2><p>تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد.</p></section>
+  <section class="hero-side"><strong>إنجازك في المساقات</strong><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div><div id="progress-caption" class="progress-caption">جارٍ حساب التقدم…</div></section>
+ </div>
+ <div class="row"><span id="app-message" role="status" aria-live="polite"></span><span class="spacer"></span><button type="button" id="logout-button" class="btn secondary">تسجيل الخروج</button></div>
+ <div id="view"></div>
+ <details class="panel"><summary>تغيير كلمة المرور</summary><form id="password-form">
+  <div class="field"><label for="new-password">كلمة المرور الجديدة (8 أحرف على الأقل)</label><input id="new-password" type="password" minlength="8" autocomplete="new-password" required></div>
+  <div class="field"><label for="confirm-password">تأكيد كلمة المرور الجديدة</label><input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required></div>
+  <button class="btn" type="submit">تغيير كلمة المرور</button></form><p id="password-message" role="status" aria-live="polite"></p>
+ </details>
+</main>
 <script>
 (() => {
-  'use strict';
-
-  const SUPABASE_URL = 'https://pxgxnwxpwvvefroaqpfr.supabase.co';
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
-  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-  const $ = (id) => document.getElementById(id);
-  const loginSection = $('login-section');
-  const appSection = $('app-section');
-  const view = $('view');
-  let dashboard = null;
-  let examParent = { type: 'dashboard' };
-  let activeExam = null;
-
-  function esc(value) {
-    return String(value ?? '').replace(/[&<>"']/g, ch => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    })[ch]);
-  }
-
-  function message(id, text, kind = '') {
-    const node = $(id);
-    node.className = kind;
-    node.textContent = text || '';
-  }
-
-  function prettyStatus(status) {
-    return ({ current: 'المساق الحالي', completed: 'مساق مكتمل', locked: 'مساق قادم — مقفل' })[status] || 'غير محدد';
-  }
-
-  function normalizeOptions(raw) {
-    if (Array.isArray(raw)) {
-      return raw.map((item) => {
-        if (item && typeof item === 'object') {
-          const answer = item.text ?? item.label ?? item.value ?? item.answer ?? '';
-          const label = item.label ?? item.text ?? item.answer ?? item.value ?? '';
-          return { value: String(answer), label: String(label) };
-        }
-        return { value: String(item ?? ''), label: String(item ?? '') };
-      }).filter(x => x.label !== '');
-    }
-    if (raw && typeof raw === 'object') {
-      return Object.entries(raw).map(([key, item]) => {
-        if (item && typeof item === 'object') {
-          const answer = item.text ?? item.label ?? item.value ?? item.answer ?? '';
-          const label = item.label ?? item.text ?? item.answer ?? item.value ?? '';
-          return { value: String(answer), label: `${key}. ${String(label)}` };
-        }
-        return { value: String(item ?? ''), label: `${key}. ${String(item ?? '')}` };
-      }).filter(x => x.label !== '');
-    }
-    return [];
-  }
-
-  async function refreshDashboard({ render = true } = {}) {
-    const { data, error } = await client.rpc('get_student_dashboard');
-    if (error) throw error;
-    dashboard = data;
-    $('welcome-title').textContent = `مرحبًا ${dashboard?.student?.name || 'بالطالب'}`;
-    if (render) renderDashboard();
-  }
-
-  function showSignedIn() {
-    loginSection.classList.add('hidden');
-    appSection.classList.remove('hidden');
-  }
-
-  function showSignedOut() {
-    loginSection.classList.remove('hidden');
-    appSection.classList.add('hidden');
-    dashboard = null;
-    activeExam = null;
-    view.innerHTML = '';
-  }
-
-  function renderDashboard() {
-    const courses = dashboard?.courses || [];
-    const groups = [
-      { status: 'current', title: 'المساق الحالي' },
-      { status: 'completed', title: 'المساقات التي اجتزتها' },
-      { status: 'locked', title: 'المساقات القادمة' }
-    ];
-    view.innerHTML = groups.map(group => {
-      const items = courses.filter(course => course.status === group.status);
-      return `<section><h3>${group.title}</h3>${items.length ? `<div class="course-list">${items.map(course => `
-        <article class="course-card">
-          <strong>${esc(course.name)}</strong>
-          <span class="status">${esc(prettyStatus(course.status))}</span>
-          ${course.description ? `<p>${esc(course.description)}</p>` : ''}
-          ${course.course_result ? `<p>نتيجة المساق المعلنة:</p><p>المجموع الكلي: <span class="score">${esc(course.course_result.total_score ?? '—')}</span> درجة</p><p>النسبة المئوية: <span class="score">${esc(course.course_result.percentage ?? '—')}%</span></p>` : ''}          <button type="button" ${course.status === 'locked' ? 'disabled' : ''} onclick="portalOpenCourse(${Number(course.id)})">${course.status === 'locked' ? 'غير متاح حاليًا' : 'فتح المساق'}</button>
-        </article>`).join('')}</div>` : '<p class="muted">لا توجد مساقات في هذا القسم حتى الآن.</p>'}</section>`;
-    }).join('');
-  }
-
-  function openCourse(courseId) {
-    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
-    if (!course) return renderDashboard();
-    if (course.status === 'locked') {
-      message('app-message', 'هذا المساق قادم ولا يمكن الدخول إليه الآن.', 'error');
-      return;
-    }
-    message('app-message', '');
-    const weekly = course.weekly_exams || [];
-    const subjects = course.subjects || [];
-    view.innerHTML = `
-      <div class="row"><button type="button" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(course.name)}</h2></div>
-      ${course.description ? `<p>${esc(course.description)}</p>` : ''}
-      <section><h3>الامتحانات الأسبوعية للمساق</h3>
-        ${weekly.length ? `<div class="item-list">${weekly.map(exam => `
-          <article class="item-card"><strong>${esc(exam.title)}</strong>${exam.week_number != null ? `<p>الأسبوع: ${esc(exam.week_number)}</p>` : ''}
-          ${exam.result ? `<p>النتيجة: ${esc(exam.result.score)} / ${esc(exam.result.total)}</p>` : ''}
-          <button type="button" onclick="portalOpenExam(${Number(exam.id)}, 'course', ${Number(course.id)}, null)">فتح الامتحان / النتيجة</button></article>`).join('')}</div>` : '<p>لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</p>'}
-      </section>
-      <section><h3>مواد المساق</h3>
-        ${subjects.length ? `<div class="item-list">${subjects.map(subject => `
-          <article class="item-card"><strong>${esc(subject.name)}</strong>
-          ${subject.description ? `<p>${esc(subject.description)}</p>` : ''}
-          <button type="button" onclick="portalOpenSubject(${Number(course.id)}, ${Number(subject.id)})">فتح المادة</button></article>`).join('')}</div>` : '<p>لا توجد مواد مضافة لهذا المساق حتى الآن.</p>'}
-      </section>`;
-  }
-
-  function openSubject(courseId, subjectId) {
-    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
-    const subject = course?.subjects?.find(item => Number(item.id) === Number(subjectId));
-    if (!course || !subject || course.status === 'locked') return renderDashboard();
-    const assignments = subject.assignments || [];
-    const finalExam = subject.final_exam;
-    view.innerHTML = `
-      <div class="row"><button type="button" onclick="portalOpenCourse(${Number(course.id)})">رجوع للمساق</button><h2>${esc(subject.name)}</h2></div>
-      ${subject.description ? `<p>${esc(subject.description)}</p>` : ''}
-      <section><h3>تكاليف المادة</h3>
-        ${assignments.length ? `<div class="item-list">${assignments.map(assignment => `
-          <article class="item-card"><strong>${esc(assignment.title)}</strong>
-          ${assignment.description ? `<p>${esc(assignment.description)}</p>` : ''}
-          <p>الحالة: ${assignment.submission ? 'تم التسليم' : 'لم يتم التسليم'}</p>
-          ${assignment.submission?.grade != null ? `<p>الدرجة: ${esc(assignment.submission.grade)}</p>` : ''}
-          ${assignment.close_at ? `<p>آخر موعد: ${esc(new Date(assignment.close_at).toLocaleString('ar-EG'))}</p>` : ''}
-          <button type="button" onclick="portalOpenAssignment(${Number(course.id)}, ${Number(subject.id)}, ${Number(assignment.id)})">${assignment.submission ? 'عرض / تعديل التسليم' : 'حل التكليف وتسليمه'}</button></article>`).join('')}</div>` : '<p>لا توجد تكاليف لهذه المادة حتى الآن.</p>'}
-      </section>
-      <section><h3>امتحان نهاية المادة</h3>
-        ${finalExam ? `<article class="item-card"><strong>${esc(finalExam.title)}</strong>
-          ${finalExam.result ? `<p>النتيجة: ${esc(finalExam.result.score)} / ${esc(finalExam.result.total)}</p>` : ''}
-          <button type="button" onclick="portalOpenExam(${Number(finalExam.id)}, 'subject', ${Number(course.id)}, ${Number(subject.id)})">فتح الامتحان / النتيجة</button></article>` : '<p>لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</p>'}
-      </section>`;
-  }
-
-  function openAssignment(courseId, subjectId, assignmentId) {
-    const course = (dashboard?.courses || []).find(item => Number(item.id) === Number(courseId));
-    const subject = course?.subjects?.find(item => Number(item.id) === Number(subjectId));
-    const assignment = subject?.assignments?.find(item => Number(item.id) === Number(assignmentId));
-    if (!course || !subject || !assignment || course.status !== 'current') {
-      message('app-message', 'لا يمكن تعديل هذا التكليف الآن.', 'error');
-      return;
-    }
-    const existingText = assignment.submission?.submission_text || '';
-    view.innerHTML = `
-      <div class="row"><button type="button" onclick="portalOpenSubject(${Number(course.id)}, ${Number(subject.id)})">رجوع للمادة</button><h2>${esc(assignment.title)}</h2></div>
-      ${assignment.description ? `<p>${esc(assignment.description)}</p>` : ''}
-      ${assignment.close_at ? `<p>آخر موعد للتسليم: ${esc(new Date(assignment.close_at).toLocaleString('ar-EG'))}</p>` : ''}
-      ${assignment.submission ? `<p>آخر تسليم: ${esc(assignment.submission.submitted_at ? new Date(assignment.submission.submitted_at).toLocaleString('ar-EG') : '—')}</p>` : ''}
-      ${assignment.submission?.grade != null ? `<p>الدرجة: ${esc(assignment.submission.grade)}</p>` : ''}
-      <form id="assignment-form">
-        <label for="assignment-answer">اكتبي إجابتك</label>
-        <textarea id="assignment-answer" rows="8" maxlength="20000" required>${esc(existingText)}</textarea>
-        <button type="submit">تسليم التكليف</button>
-      </form>
-      <p id="assignment-message" role="status" aria-live="polite"></p>`;
-    $('assignment-form').addEventListener('submit', async event => {
-      event.preventDefault();
-      const text = $('assignment-answer').value;
-      message('assignment-message', 'جارٍ حفظ التسليم…');
-      const { data, error } = await client.rpc('submit_student_assignment', {
-        p_assignment_id: Number(assignmentId),
-        p_submission_text: text
-      });
-      if (error) {
-        message('assignment-message', friendlyError(error), 'error');
-        return;
-      }
-      message('assignment-message', 'تم تسليم التكليف بنجاح.', 'success');
-      try {
-        await refreshDashboard();
-        openSubject(courseId, subjectId);
-      } catch (refreshError) {
-        message('app-message', friendlyError(refreshError), 'error');
-      }
-    });
-  }
-
-  async function openExam(examId, parentType, courseId, subjectId) {
-    examParent = parentType === 'subject'
-      ? { type: 'subject', courseId: Number(courseId), subjectId: Number(subjectId) }
-      : { type: 'course', courseId: Number(courseId) };
-    activeExam = null;
-    message('app-message', 'جارٍ تحميل الامتحان…');
-    view.innerHTML = '';
-    const { data, error } = await client.rpc('get_student_exam', { p_exam_id: Number(examId) });
-    if (error) {
-      message('app-message', friendlyError(error), 'error');
-      return;
-    }
-    activeExam = data;
-    message('app-message', '');
-    renderExam(data);
-  }
-
-  function renderExam(data) {
-    const exam = data.exam || {};
-    const state = data.state;
-    let content = `<div class="row"><button type="button" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title || 'الامتحان')}</h2></div>`;
-    if (state === 'submitted') {
-      content += `<section><h3>تم تسليم الامتحان</h3><p class="score">النتيجة: ${esc(data.result?.score ?? '—')} / ${esc(data.result?.total ?? '—')}</p><p>لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;
-      view.innerHTML = content;
-      return;
-    }
-    if (state === 'upcoming') {
-      content += `<p>الامتحان لم يفتح بعد.</p>`;
-      view.innerHTML = content;
-      return;
-    }
-    if (state === 'closed') {
-      content += `<p>انتهى موعد هذا الامتحان.</p>`;
-      view.innerHTML = content;
-      return;
-    }
-    if (state === 'course_completed') {
-      content += `<p>المساق مكتمل؛ لا يمكن إعادة الامتحان.</p>`;
-      view.innerHTML = content;
-      return;
-    }
-    const questions = data.questions || [];
-    if (!questions.length) {
-      content += `<p>لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</p>`;
-      view.innerHTML = content;
-      return;
-    }
-    content += `<form id="exam-form"><p>لن تظهر الإجابات الصحيحة إلا بعد انتهاء الامتحان، ولن يعرض النظام الإجابات الصحيحة بعد التسليم.</p>`;
-    content += questions.map((question, index) => {
-      const opts = normalizeOptions(question.options);
-      const body = opts.length
-        ? opts.map((option, i) => `<label class="option"><input type="radio" name="question-${Number(question.id)}" value="${esc(option.value)}" /> ${esc(option.label)}</label>`).join('')
-        : `<label for="answer-${Number(question.id)}">الإجابة</label><input id="answer-${Number(question.id)}" name="question-${Number(question.id)}" type="text" />`;
-      return `<section><h3>السؤال ${index + 1}</h3><p>${esc(question.question_text || '')}</p>${body}</section>`;
-    }).join('');
-    content += `<button type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>`;
-    view.innerHTML = content;
-    $('exam-form').addEventListener('submit', async event => {
-      event.preventDefault();
-      const submitButton = $('exam-form').querySelector('button[type="submit"]');
-      if (!confirm('هل تريدين تسليم الامتحان؟ لن تتمكني من إعادة تسليمه.')) return;
-      submitButton.disabled = true;
-      message('exam-message', 'جارٍ تصحيح الإجابات وحفظ النتيجة…');
-      const answers = questions.map(question => {
-        const opts = normalizeOptions(question.options);
-        let answer = '';
-        if (opts.length) {
-          answer = view.querySelector(`input[name="question-${Number(question.id)}"]:checked`)?.value ?? '';
-        } else {
-          answer = view.querySelector(`#answer-${Number(question.id)}`)?.value ?? '';
-        }
-        return { question_id: Number(question.id), answer };
-      }).filter(item => item.answer !== '');
-      const { data: result, error } = await client.rpc('submit_student_exam', {
-        p_exam_id: Number(exam.id),
-        p_answers: answers
-      });
-      if (error) {
-        submitButton.disabled = false;
-        message('exam-message', friendlyError(error), 'error');
-        return;
-      }
-      message('exam-message', 'تم التسليم بنجاح.', 'success');
-      renderExam({
-        state: 'submitted',
-        exam,
-        result
-      });
-      try { await refreshDashboard({ render: false }); } catch (_) { /* Keep the submitted result visible. */ }
-    });
-  }
-
-  function backFromExam() {
-    if (examParent.type === 'subject') openSubject(examParent.courseId, examParent.subjectId);
-    else if (examParent.type === 'course') openCourse(examParent.courseId);
-    else renderDashboard();
-  }
-
-  function friendlyError(error) {
-    const text = error?.message || String(error || 'حدث خطأ غير معروف');
-    if (/Invalid login credentials/i.test(text)) return 'الكود أو كلمة المرور غير صحيحة.';
-    if (/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(text)) return 'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';
-    if (/الامتحان لم يفتح بعد/i.test(text)) return 'الامتحان لم يفتح بعد.';
-    if (/انتهى وقت الامتحان|انتهى موعد/i.test(text)) return 'انتهى موعد الامتحان أو التكليف.';
-    return text;
-  }
-
-  $('login-form').addEventListener('submit', async event => {
-    event.preventDefault();
-    const code = $('student-code').value.trim();
-    const password = $('student-password').value;
-    if (!code || !password) return;
-    const button = $('login-button');
-    button.disabled = true;
-    message('login-message', 'جارٍ تسجيل الدخول…');
-    // Internal Auth convention for student-code logins.
-    const email = `student.${code.toLowerCase()}@login.invalid`;
-    const { error: loginError } = await client.auth.signInWithPassword({ email, password });
-    button.disabled = false;
-    if (loginError) {
-      message('login-message', friendlyError(loginError), 'error');
-      return;
-    }
-    try {
-      await refreshDashboard();
-      showSignedIn();
-      message('login-message', '');
-      message('app-message', '');
-    } catch (error) {
-      await client.auth.signOut();
-      showSignedOut();
-      message('login-message', friendlyError(error), 'error');
-    }
-  });
-
- $('logout-button').addEventListener('click', async () => {
-  const button = $('logout-button');
-  button.disabled = true;
-
-  try {
-    const { error } = await client.auth.signOut();
-
-    if (error) {
-      throw error;
-    }
-
-    window.location.replace('index.html');
-
-  } catch (error) {
-    button.disabled = false;
-
-    message(
-      'app-message',
-      'تعذر تسجيل الخروج بالكامل: ' + friendlyError(error),
-      'error'
-    );
-  }
-});
-
-  $('password-form').addEventListener('submit', async event => {
-    event.preventDefault();
-    const password = $('new-password').value;
-    const confirmPassword = $('confirm-password').value;
-    if (password.length < 8) {
-      message('password-message', 'كلمة المرور يجب ألا تقل عن 8 أحرف.', 'error');
-      return;
-    }
-    if (password !== confirmPassword) {
-      message('password-message', 'كلمتا المرور غير متطابقتين.', 'error');
-      return;
-    }
-    const { error } = await client.auth.updateUser({ password });
-    if (error) {
-      message('password-message', friendlyError(error), 'error');
-      return;
-    }
-    $('password-form').reset();
-    message('password-message', 'تم تغيير كلمة المرور.', 'success');
-  });
-
-  // Expose only navigation handlers needed by simple HTML buttons.
-  window.portalOpenCourse = openCourse;
-  window.portalRenderDashboard = renderDashboard;
-  window.portalOpenSubject = openSubject;
-  window.portalOpenAssignment = openAssignment;
-  window.portalOpenExam = openExam;
-  window.portalBackFromExam = backFromExam;
-
-  // Restore an existing session after a refresh, if one is present.
-  (async () => {
-    const { data } = await client.auth.getSession();
-    if (!data?.session) return;
-    try {
-      await refreshDashboard();
-      showSignedIn();
-    } catch (_) {
-      await client.auth.signOut();
-      showSignedOut();
-    }
-  })();
+'use strict';
+const SUPABASE_URL='https://pxgxnwxpwvvefroaqpfr.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id), loginSection=$('login-section'), appSection=$('app-section'), view=$('view');
+let dashboard=null, examParent={type:'dashboard'}, activeExam=null;
+function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function message(id,text,kind=''){const n=$(id);if(n){n.className=kind;n.textContent=text||'';}}
+function friendlyError(e){const t=e?.message||String(e||'حدث خطأ غير معروف');if(/Invalid login credentials/i.test(t))return'الكود أو كلمة المرور غير صحيحة.';if(/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(t))return'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';if(/الامتحان لم يفتح بعد/i.test(t))return'الامتحان لم يفتح بعد.';if(/انتهى وقت الامتحان|انتهى موعد/i.test(t))return'انتهى موعد الامتحان أو التكليف.';return t;}
+function prettyStatus(s){return({current:'المساق الحالي',completed:'مساق مكتمل',locked:'مساق قادم — مقفل'})[s]||'غير محدد';}
+function normalizeOptions(raw){if(Array.isArray(raw))return raw.map(item=>{if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:String(label)};}return{value:String(item??''),label:String(item??'')};}).filter(x=>x.label!=='');if(raw&&typeof raw==='object')return Object.entries(raw).map(([k,item])=>{if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:`${k}. ${label}`};}return{value:String(item??''),label:`${k}. ${item??''}`};}).filter(x=>x.label!=='');return[];}
+function showSignedIn(){loginSection.classList.add('hidden');appSection.classList.remove('hidden');$('header-logout').classList.remove('hidden');}
+function showSignedOut(){loginSection.classList.remove('hidden');appSection.classList.add('hidden');$('header-logout').classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
+async function refreshDashboard({render=true}={}){const{data,error}=await client.rpc('get_student_dashboard');if(error)throw error;dashboard=data;$('welcome-title').textContent=`مرحبًا ${dashboard?.student?.name||'بالطالب'}`;updateProgress();if(render)renderDashboard();}
+function updateProgress(){const courses=dashboard?.courses||[];let total=0,done=0;courses.filter(c=>c.status==='current'||c.status==='completed').forEach(c=>{(c.weekly_exams||[]).forEach(x=>{total++;if(x.result)done++;});(c.subjects||[]).forEach(s=>{(s.assignments||[]).forEach(a=>{total++;if(a.submission?.submitted_at||a.submission?.submitted)done++;});if(s.final_exam){total++;if(s.final_exam.result)done++;}});});const pct=total?Math.round(done/total*100):0;$('progress-fill').style.width=pct+'%';$('progress-caption').textContent=total?`أتممتِ ${done} من ${total} مهمة أو امتحان (${pct}٪)`:'ستظهر نسبة التقدم بعد إضافة التكاليف والامتحانات.';}
+function renderDashboard(){const courses=dashboard?.courses||[];const groups=[{status:'current',title:'المساقات الحالية',desc:'المساقات المتاحة لك الآن'},{status:'completed',title:'المساقات التي اجتزتها',desc:'إنجازاتك العلمية المكتملة'},{status:'locked',title:'المساقات القادمة',desc:'ستتاح لك عند فتحها من الإدارة'}];view.innerHTML=groups.map(g=>{const items=courses.filter(c=>c.status===g.status);return `<section><div class="section-head"><div><h2>${g.title}</h2><p>${g.desc}</p></div></div>${items.length?`<div class="course-list">${items.map(c=>`<article class="course-card"><span class="status ${esc(c.status)}">${esc(prettyStatus(c.status))}</span><h3>${esc(c.name)}</h3>${c.description?`<p class="muted">${esc(c.description)}</p>`:''}${c.course_result?`<div class="notice">نتيجة المساق المعلنة<br>المجموع: <strong>${esc(c.course_result.total_score??'—')}</strong> · النسبة: <strong>${esc(c.course_result.percentage??'—')}٪</strong></div>`:''}<button class="btn ${c.status==='locked'?'light':''}" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">${c.status==='locked'?'غير متاح حاليًا':'فتح المساق'}</button></article>`).join('')}</div>`:'<div class="empty">لا توجد مساقات في هذا القسم حتى الآن.</div>'}</section>`;}).join('');}
+function openCourse(courseId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));if(!c)return renderDashboard();if(c.status==='locked'){message('app-message','هذا المساق قادم ولا يمكن الدخول إليه الآن.','error');return;}message('app-message','');const weekly=c.weekly_exams||[],subjects=c.subjects||[];view.innerHTML=`<div class="row"><button class="btn light" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(c.name)}</h2></div>${c.description?`<p class="muted">${esc(c.description)}</p>`:''}<section><div class="section-head"><div><h3>الامتحانات الأسبوعية للمساق</h3><p>اختبارات مرتبطة بالمساق بالكامل</p></div></div>${weekly.length?`<div class="item-list">${weekly.map(e=>`<article class="item-card"><h3>${esc(e.title)}</h3>${e.week_number!=null?`<p>الأسبوع: ${esc(e.week_number)}</p>`:''}${e.result?`<p>النتيجة: <span class="score">${esc(e.result.score)} / ${esc(e.result.total)}</span></p>`:''}<button class="btn" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان / النتيجة</button></article>`).join('')}</div>`:'<div class="empty">لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</div>'}</section><section><div class="section-head"><div><h3>مواد المساق</h3><p>اختاري المادة لعرض تكاليفها وامتحانها النهائي</p></div></div>${subjects.length?`<div class="item-list">${subjects.map(s=>`<article class="item-card"><h3>${esc(s.name)}</h3>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}<button class="btn secondary" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button></article>`).join('')}</div>`:'<div class="empty">لا توجد مواد مضافة لهذا المساق حتى الآن.</div>'}</section>`;}
+function openSubject(courseId,subjectId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId)),s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));if(!c||!s||c.status==='locked')return renderDashboard();const assignments=s.assignments||[],f=s.final_exam;view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenCourse(${Number(c.id)})">رجوع للمساق</button><h2>${esc(s.name)}</h2></div>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}<section><div class="section-head"><div><h3>التكاليف</h3><p>اقرئي السؤال والتعليمات قبل التسليم</p></div></div>${assignments.length?`<div class="item-list">${assignments.map(a=>`<article class="item-card"><h3>${esc(a.title)}</h3>${a.description?`<p>${esc(a.description)}</p>`:''}<p>الحالة: ${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</p>${a.submission?.grade!=null?`<p>الدرجة المستحقة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}${a.close_at?`<p class="muted">آخر موعد: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}<button class="btn" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">${a.submission?.submitted_at||a.submission?.submitted?'عرض التسليم':'فتح التكليف'}</button></article>`).join('')}</div>`:'<div class="empty">لا توجد تكاليف لهذه المادة حتى الآن.</div>'}</section><section><div class="section-head"><div><h3>امتحان نهاية المادة</h3></div></div>${f?`<article class="item-card"><h3>${esc(f.title)}</h3>${f.result?`<p>النتيجة: <span class="score">${esc(f.result.score)} / ${esc(f.result.total)}</span></p>`:''}<button class="btn secondary" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان / النتيجة</button></article>`:'<div class="empty">لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</div>'}</section>`;}
+function openAssignment(courseId,subjectId,assignmentId){const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId)),s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId)),a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));if(!c||!s||!a||c.status!=='current'){message('app-message','لا يمكن فتح هذا التكليف الآن.','error');return;}if(a.submission?.submitted_at||a.submission?.submitted){view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div><section class="item-card"><h3>تم تسليم التكليف</h3><p>تم تثبيت الإجابة بعد التسليم، ولا يمكن تعديلها من هذه الصفحة.</p>${a.submission.grade!=null?`<p>الدرجة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}<p class="muted">لعرض نص الإجابة المرسلة، افتحي تفاصيل التكليف إن كانت متاحة في النظام.</p></section>`;return;}view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>${a.description?`<p>${esc(a.description)}</p>`:''}${a.question_text?`<section class="item-card"><h3>سؤال التكليف</h3><p style="white-space:pre-wrap">${esc(a.question_text)}</p></section>`:''}${a.close_at?`<p>آخر موعد للتسليم: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}<form id="assignment-form" class="panel"><div class="field"><label for="assignment-answer">إجابتك</label><textarea id="assignment-answer" rows="8" maxlength="20000" required></textarea></div><button class="btn" type="submit">تسليم التكليف نهائيًا</button><p class="muted">بعد التسليم لا يمكن تعديل الإجابة.</p></form><p id="assignment-message" role="status" aria-live="polite"></p>`;$('assignment-form').addEventListener('submit',async ev=>{ev.preventDefault();const button=$('assignment-form').querySelector('button');button.disabled=true;message('assignment-message','جارٍ تسليم التكليف…');const{error}=await client.rpc('submit_student_assignment',{p_assignment_id:Number(assignmentId),p_submission_text:$('assignment-answer').value});if(error){message('assignment-message',friendlyError(error),'error');button.disabled=false;return;}message('assignment-message','تم التسليم بنجاح.','success');try{await refreshDashboard({render:false});openSubject(courseId,subjectId);}catch(e){message('app-message',friendlyError(e),'error');}});}
+async function openExam(examId,parentType,courseId,subjectId){examParent=parentType==='subject'?{type:'subject',courseId:Number(courseId),subjectId:Number(subjectId)}:{type:'course',courseId:Number(courseId)};activeExam=null;message('app-message','جارٍ تحميل الامتحان…');view.innerHTML='';const{data,error}=await client.rpc('get_student_exam',{p_exam_id:Number(examId)});if(error){message('app-message',friendlyError(error),'error');return;}activeExam=data;message('app-message','');renderExam(data);}
+function renderExam(data){const exam=data.exam||{},state=data.state;let content=`<div class="row"><button class="btn light" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title||'الامتحان')}</h2></div>`;if(state==='submitted'){const pending=Number(data.result?.pending_manual_count||0);content+=`<section class="panel"><h3>تم تسليم الامتحان</h3><p class="score">${pending?'توجد إجابات مقالية بانتظار التصحيح اليدوي.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p><p class="muted">لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;view.innerHTML=content;return;}if(state==='upcoming'||state==='closed'||state==='course_completed'){content+=`<section class="panel">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد هذا الامتحان.':'المساق مكتمل؛ لا يمكن إعادة الامتحان.'}</section>`;view.innerHTML=content;return;}const questions=data.questions||[];if(!questions.length){view.innerHTML=content+'<div class="empty">لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</div>';return;}content+=`<form id="exam-form"><p class="notice">راجعي إجاباتك قبل التسليم. لا يمكن إعادة تسليم الامتحان بعد إرساله.</p>`;content+=questions.map((q,i)=>{const opts=normalizeOptions(q.options),multi=q.question_type==='multiple_select',type=q.question_type||'';const body=opts.length?opts.map(o=>`<label class="option"><input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}"><span>${esc(o.label)}</span></label>`).join(''):`<div class="field"><label for="answer-${Number(q.id)}">${type==='essay'?'إجابتك المقالية':'الإجابة'}</label><textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="5"':''}></textarea></div>`;return `<section class="question"><h3>السؤال ${i+1}</h3><p style="white-space:pre-wrap">${esc(q.question_text||'')}</p>${multi?'<p class="muted">اختاري كل الإجابات الصحيحة.</p>':''}${body}</section>`;}).join('');content+='<button class="btn" type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>';view.innerHTML=content;$('exam-form').addEventListener('submit',async ev=>{ev.preventDefault();if(!confirm('هل تريدين تسليم الامتحان؟ لن تتمكني من إعادة تسليمه.'))return;const button=$('exam-form').querySelector('button[type="submit"]');button.disabled=true;message('exam-message','جارٍ حفظ الإجابات…');const answers=questions.map(q=>{const opts=normalizeOptions(q.options);let answer;if(q.question_type==='multiple_select'){answer=JSON.stringify(Array.from(view.querySelectorAll(`input[name="question-${Number(q.id)}"]:checked`)).map(x=>x.value));if(answer==='[]')answer='';}else if(opts.length){answer=view.querySelector(`input[name="question-${Number(q.id)}"]:checked`)?.value||'';}else{answer=$(`answer-${Number(q.id)}`)?.value||'';}return{question_id:Number(q.id),answer};}).filter(x=>x.answer!=='');const{data:result,error}=await client.rpc('submit_student_exam',{p_exam_id:Number(exam.id),p_answers:answers});if(error){button.disabled=false;message('exam-message',friendlyError(error),'error');return;}renderExam({state:'submitted',exam,result});try{await refreshDashboard({render:false});}catch(_){}});}
+function backFromExam(){if(examParent.type==='subject')openSubject(examParent.courseId,examParent.subjectId);else if(examParent.type==='course')openCourse(examParent.courseId);else renderDashboard();}
+$('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const code=$('student-code').value.trim(),password=$('student-password').value;if(!code||!password)return;const b=$('login-button');b.disabled=true;message('login-message','جارٍ تسجيل الدخول…');const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});b.disabled=false;if(error){message('login-message',friendlyError(error),'error');return;}try{await refreshDashboard();showSignedIn();message('login-message','');message('app-message','');}catch(e){await client.auth.signOut();showSignedOut();message('login-message',friendlyError(e),'error');}});
+async function logout(){const b=$('logout-button');b.disabled=true;try{const{error}=await client.auth.signOut();if(error)throw error;window.location.replace('index.html');}catch(e){b.disabled=false;message('app-message','تعذر تسجيل الخروج: '+friendlyError(e),'error');}}
+$('logout-button').addEventListener('click',logout);$('header-logout').addEventListener('click',logout);
+$('password-form').addEventListener('submit',async ev=>{ev.preventDefault();const p=$('new-password').value,c=$('confirm-password').value;if(p.length<8){message('password-message','كلمة المرور يجب ألا تقل عن 8 أحرف.','error');return;}if(p!==c){message('password-message','كلمتا المرور غير متطابقتين.','error');return;}const{error}=await client.auth.updateUser({password:p});if(error){message('password-message',friendlyError(error),'error');return;}$('password-form').reset();message('password-message','تم تغيير كلمة المرور.','success');});
+window.portalOpenCourse=openCourse;window.portalRenderDashboard=renderDashboard;window.portalOpenSubject=openSubject;window.portalOpenAssignment=openAssignment;window.portalOpenExam=openExam;window.portalBackFromExam=backFromExam;
+(async()=>{const{data}=await client.auth.getSession();if(!data?.session)return;try{await refreshDashboard();showSignedIn();}catch(_){await client.auth.signOut();showSignedOut();}})();
 })();
 </script>
 </body>
