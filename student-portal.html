@@ -827,14 +827,17 @@ $('login-form').addEventListener('submit',async ev=>{
  const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});
  b.disabled=false;
  if(error){message('login-message',friendlyError(error),'error');return;}
+ // نجاح المصادقة يعني أن الطالب دخل بالفعل؛ فشل تحميل بيانات اللوحة
+ // لا ينبغي أن يمسح جلسة الدخول أو يعيده إلى شاشة الدخول.
+ showSignedIn();
  try{
   await refreshDashboard();
-  showSignedIn();
   switchTab('home');
+  message('login-message','');
+  message('app-message','');
  }catch(e){
-  await client.auth.signOut();
-  showSignedOut();
-  message('login-message',friendlyError(e),'error');
+  message('app-message','تم تسجيل الدخول بنجاح، لكن تعذّر تحميل بيانات البوابة: '+friendlyError(e),'error');
+  message('login-message','');
  }
 });
 
@@ -856,10 +859,21 @@ window.portalOpenExam=openExam;
 window.switchTab=switchTab;
 
 (async()=>{
- const{data}=await client.auth.getSession();
+ const {data,error:sessionError}=await client.auth.getSession();
+ if(sessionError){
+  message('login-message','تعذّر استعادة جلسة الدخول: '+friendlyError(sessionError),'error');
+  return;
+ }
  if(!data?.session)return;
- try{await refreshDashboard();showSignedIn();switchTab('home');}
- catch(_){await client.auth.signOut();showSignedOut();}
+ showSignedIn();
+ try{
+  await refreshDashboard();
+  switchTab('home');
+  message('app-message','');
+ }catch(e){
+  // نحتفظ بالجلسة ونوضح الخطأ بدل تسجيل الخروج تلقائيًا.
+  message('app-message','تم استعادة جلسة الدخول، لكن تعذّر تحميل بيانات البوابة: '+friendlyError(e),'error');
+ }
 })();
 })();
 </script>
