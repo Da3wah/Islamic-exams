@@ -3,223 +3,263 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08192F">
-<title>بوابة الطالب | مرصد</title>
+<meta name="theme-color" content="#070E17">
+<title>بوابة الطالب | مرصد للنوازل العقدية</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="question-types-bridge.js"></script>
 <script src="assignment-section-bridge.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navyDark: '#070E17',
+                    navyCard: 'rgba(10, 20, 32, 0.85)',
+                    navyBorder: 'rgba(232, 216, 200, 0.18)',
+                    creamLight: '#FAF0E6',
+                    creamBase: '#F5E6D3',
+                    creamSoft: '#E8D8C8',
+                    creamMuted: '#C8B8A5',
+                    goldLogo: '#D4AF37',
+                    goldDark: '#8A701E',
+                    mutedText: '#9AA8B8',
+                    redError: '#A12A2A',
+                    greenSuccess: '#276749'
+                },
+                fontFamily: {
+                    cairo: ['Cairo', 'sans-serif']
+                },
+                animation: {
+                    'spin-slow': 'spin 12s linear infinite',
+                    'ping-slow': 'ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    'float': 'float 4s ease-in-out infinite'
+                },
+                keyframes: {
+                    float: {
+                        '0%, 100%': { transform: 'translateY(0px)' },
+                        '50%': { transform: 'translateY(-6px)' }
+                    }
+                }
+            }
+        }
+    }
+</script>
 <style>
-:root{--navy:#08192F;--navy2:#122844;--gold:#D5AB5E;--cream:#F7F3E9;--ink:#17263D;--muted:#6B7484;--line:#E4D9C5;--white:#fff;--green:#276749;--red:#a12a2a;--shadow:0 12px 34px rgba(8,25,47,.08)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:"Cairo",Arial,sans-serif;line-height:1.8}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer;transition:transform .15s,background .15s,opacity .15s}
-button:hover:not(:disabled){transform:translateY(-1px)}
-button:disabled{opacity:.5;cursor:not-allowed}
-.hidden{display:none!important}
-.shell{max-width:1180px;margin:auto;padding:24px}
-.topbar{background:var(--navy);color:white;border-bottom:3px solid var(--gold)}
-.topbar-inner{max-width:1180px;margin:auto;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}
-.brand{display:flex;align-items:center;gap:14px}
-.brand-mark{width:46px;height:46px;border:1px solid var(--gold);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-size:25px;font-weight:800}
-.brand h1{font-size:21px;margin:0;line-height:1.4}
-.brand p{margin:2px 0 0;color:#d6deea;font-size:12px}
-.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.btn{border:0;border-radius:11px;padding:10px 18px;font-weight:700;background:var(--gold);color:var(--navy)}
-.btn.secondary{background:var(--navy2);color:#fff}
-.btn.outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}
-.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}
-.btn.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c9c4}
-.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin:18px 0;box-shadow:var(--shadow)}
-.login-wrap{min-height:calc(100vh - 95px);display:grid;place-items:center;padding:28px 16px;background:radial-gradient(circle at 15% 15%,#e9dfca 0,transparent 34%),var(--cream)}
-.login-card{width:min(100%,480px);padding:34px;border-radius:24px;background:white;border:1px solid var(--line);box-shadow:0 22px 60px #08192f18}
-.eyebrow{color:#8c6b2f;font-size:12px;font-weight:800;letter-spacing:.04em}
-.login-card h2{font-size:27px;color:var(--navy);margin:5px 0}
-.sub{color:var(--muted);margin-top:4px}
-.field{display:grid;gap:6px;margin:15px 0}
-.field label,label{font-weight:700;font-size:14px}
-.field input,.field textarea,input,textarea,select{width:100%;border:1px solid #d9d4c8;background:#fff;border-radius:10px;padding:11px 13px;outline:none;color:var(--ink)}
-input:focus,textarea:focus,select:focus{border-color:#b38a42;box-shadow:0 0 0 3px #d5ab5e26}
-.login-card .btn{width:100%;margin-top:10px;padding:12px}
-.hero{display:grid;grid-template-columns:1.4fr .8fr;gap:20px;align-items:stretch;margin:10px 0 24px}
-.hero-main{background:linear-gradient(135deg,var(--navy),#183654);color:white;border-radius:22px;padding:26px;position:relative;overflow:hidden}
-.hero-main:after{content:"";position:absolute;width:200px;height:200px;border:1px solid #d5ab5e44;border-radius:50%;left:-70px;bottom:-110px;box-shadow:0 0 0 25px #d5ab5e0b,0 0 0 50px #d5ab5e08}
-.hero-main h2{margin:3px 0 5px;font-size:26px}
-.hero-main p{color:#d8e0ea;margin:0;max-width:560px}
-.hero-side{border-radius:22px;background:white;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;justify-content:center}
-.progress-track{height:10px;background:#eee8dc;border-radius:99px;overflow:hidden;margin:12px 0}
-.progress-fill{height:100%;background:var(--gold);border-radius:99px;width:0;transition:width .3s}
-.progress-caption{font-size:13px;color:var(--muted)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px}
-.section-head h2,.section-head h3{margin:0;color:var(--navy)}
-.section-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
-.course-list,.item-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
-.course-card,.item-card{background:white;border:1px solid var(--line);border-radius:17px;padding:19px;min-width:0;box-shadow:0 6px 20px #08192f06}
-.course-card{display:flex;flex-direction:column;gap:9px}
-.course-card .btn{margin-top:auto;align-self:flex-start}
-.course-card h3,.item-card h3{margin:0;color:var(--navy);font-size:18px}
-.course-card p,.item-card p{margin:3px 0}
-.status{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:3px 10px;border-radius:99px;background:#f3ead8;color:#77591f;font-size:12px;font-weight:800}
-.status.current{background:#e6f3e9;color:#276749}
-.status.locked{background:#eceef1;color:#606b79}
-.status.completed{background:#e7edf6;color:#284c7c}
-.score{font-weight:800;color:#276749}
-.muted{color:var(--muted)}
-.error{color:var(--red);white-space:pre-wrap}
-.success{color:var(--green);white-space:pre-wrap}
-.notice{border-radius:12px;padding:11px 14px;background:#f8f1e3;border:1px solid var(--line);margin:12px 0}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.row h2{margin:0;color:var(--navy)}
-.row .spacer{flex:1}
-.option{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:11px;background:#fffdf9}
-.option input{width:auto;margin-top:8px;accent-color:var(--navy)}
-.question{margin:14px 0;padding:18px;border:1px solid var(--line);border-radius:15px;background:#fff}
-.question h3{margin:0 0 8px;color:var(--navy)}
-.question textarea{min-height:115px}
-.divider{height:1px;border:0;background:var(--line);margin:20px 0}
-details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}
-#view section{margin:18px 0}
-.empty{color:var(--muted);padding:16px;background:#fff;border:1px dashed var(--line);border-radius:13px}
+    body {
+        font-family: 'Cairo', sans-serif;
+        background-color: #070E17;
+        color: #F5E6D3;
+        overflow-x: hidden;
+    }
 
-/* لوحة عاجل من المرصد: منفصلة بصريًا عن بطاقات المساقات */
-.home-insights{margin:0 0 24px}
-.radar-panel{
- position:relative;overflow:hidden;border-radius:24px;
- background:linear-gradient(120deg,#08192F 0%,#102844 72%,#183653 100%);
- color:#fff;border:2px solid #D5AB5E;
- box-shadow:0 18px 42px rgba(8,25,47,.19);padding:25px
-}
-.radar-panel:before{
- content:"";position:absolute;width:260px;height:260px;border:1px solid #D5AB5E66;
- border-radius:50%;left:-85px;top:-120px;
- box-shadow:0 0 0 22px #D5AB5E12,0 0 0 48px #D5AB5E0D;pointer-events:none
-}
-.radar-panel:after{
- content:"تنبيه دراسي";position:absolute;left:22px;bottom:16px;
- color:#D5AB5E;font-size:10px;font-weight:800;letter-spacing:.12em;opacity:.72;pointer-events:none
-}
-.radar-head{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative;z-index:1}
-.radar-kicker{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:800;color:#E8C979;letter-spacing:.04em}
-.urgent-pulse{width:9px;height:9px;border-radius:50%;background:#E8C979;box-shadow:0 0 0 5px #D5AB5E24;flex-shrink:0}
-.radar-title{font-size:clamp(25px,3vw,34px);line-height:1.35;margin:5px 0;color:#fff;font-weight:800}
-.radar-intro{color:#E0E7EF;margin:0;font-size:14px}
-.radar-count{flex-shrink:0;min-width:76px;height:76px;border-radius:20px;border:1px solid #D5AB5E;background:#D5AB5E18;display:grid;place-items:center;text-align:center;color:#F1D18A;font-weight:800;line-height:1.25}
-.radar-count strong{display:block;font-size:27px;color:#fff}
-.radar-list{display:grid;gap:11px;margin-top:20px;position:relative;z-index:1}
-.radar-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:center;padding:15px;border:1px solid #D5AB5E66;border-right:4px solid #D5AB5E;border-radius:15px;background:#FFFCF6;color:#17263D}
-.radar-mark{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:#F2E5C8;color:#8A672C;font-size:21px}
-.radar-item h3{font-size:16px;margin:0;color:#08192F}
-.radar-item p{font-size:12px;color:#6B7484;margin:2px 0 0}
-.radar-item .radar-state{display:inline-flex;font-size:11px;font-weight:800;color:#76551D;border:1px solid #D5AB5E99;border-radius:99px;padding:2px 9px;margin-bottom:5px;background:#FBF3E2}
-.radar-item .radar-state.overdue{color:#A12A2A;border-color:#E7A49B;background:#FFF0EE}
-.radar-action{white-space:nowrap;border:1px solid #C39A48;background:linear-gradient(135deg,#E8C979,#D5AB5E);color:#08192F;border-radius:10px;padding:9px 13px;font-weight:800;font-size:12px}
-.radar-empty{padding:17px;border:1px dashed #D5AB5E99;border-radius:14px;color:#F2E8D5;background:#FFFFFF0B;position:relative;z-index:1}
-/* المسار النجمي */
-.path-panel{margin-top:16px;border-radius:20px;background:#fff;border:1px solid var(--line);padding:20px;box-shadow:var(--shadow)}
-.path-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.path-heading h3{margin:0;color:var(--navy);font-size:19px}
-.path-heading p{margin:3px 0 0;color:var(--muted);font-size:13px}
-.path-percent{font-weight:800;color:#8a672c;font-size:22px;white-space:nowrap}
-.star-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px;position:relative}
-.star-stage{position:relative;text-align:center;border:1px solid var(--line);border-radius:14px;padding:13px 8px;background:#fcfaf5;min-width:0}
-.star-stage.done{background:#f1f7f0;border-color:#9fc7a5}
-.star-icon{width:34px;height:34px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;background:#eee6d5;color:#8c6b2f;font-size:18px}
-.star-stage.done .star-icon{background:#276749;color:#fff}
-.star-stage strong{display:block;color:var(--navy);font-size:13px}
-.star-stage small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-.path-note{font-size:12px;color:var(--muted);margin:12px 0 0}
+    .page-bg {
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(245, 230, 211, 0.06) 0%, transparent 45%),
+            radial-gradient(circle at 50% 50%, rgba(7, 14, 23, 0.95) 0%, #070E17 100%);
+        background-attachment: fixed;
+    }
 
-@media(max-width:760px){
- .shell{padding:15px}
- .topbar-inner{padding:16px;align-items:flex-start}
- .brand h1{font-size:18px}
- .brand-mark{width:40px;height:40px}
- .hero{grid-template-columns:1fr}
- .hero-main h2{font-size:22px}
- .login-card{padding:24px}
- .panel{padding:17px}
- .course-list,.item-list{grid-template-columns:1fr}
- .top-actions{justify-content:flex-end}
- .top-actions .btn{padding:8px 11px;font-size:13px}
-}
-@media(max-width:620px){
- .radar-panel{padding:17px}
- .radar-title{font-size:23px}
- .radar-count{min-width:60px;height:60px;border-radius:15px}
- .radar-item{grid-template-columns:auto minmax(0,1fr);gap:10px}
- .radar-action{grid-column:2;justify-self:start}
- .path-panel{padding:16px}
- .star-path{gap:6px}
- .star-stage{padding:10px 4px}
- .star-stage strong{font-size:11px}
- .star-stage small{font-size:10px}
- .path-heading h3{font-size:17px}
-}
+    .glass-panel {
+        background: rgba(12, 24, 38, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(245, 230, 211, 0.18);
+    }
+
+    .glass-panel-active {
+        background: rgba(16, 30, 48, 0.88);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+    }
+
+    .gold-gradient-btn {
+        background: linear-gradient(135deg, #FAF0E6 0%, #E8D8C8 40%, #D4AF37 100%);
+    }
+
+    .gold-border-glow {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+    }
+
+    .orbit-ring {
+        border: 1px dashed rgba(212, 175, 55, 0.35);
+        border-radius: 50%;
+    }
+
+    .radar-sweep {
+        background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(212, 175, 55, 0.3) 360deg);
+        border-radius: 50%;
+    }
+
+    .wax-seal {
+        background: radial-gradient(circle, #D4AF37 0%, #8A701E 70%, #4A3A0B 100%);
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    *{box-sizing:border-box}
+    button{cursor:pointer;transition:transform .15s,background .15s,opacity .15s}
+    button:hover:not(:disabled){transform:translateY(-1px)}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .shell{max-width:1180px;margin:auto;padding:24px}
+    
+    input,textarea,select{width:100%;border:1px solid rgba(245,230,211,0.2);background:rgba(10,20,32,0.9);border-radius:12px;padding:12px 14px;outline:none;color:#F5E6D3;font-family:'Cairo',sans-serif}
+    input:focus,textarea:focus,select:focus{border-color:#D4AF37;box-shadow:0 0 0 3px rgba(212,175,55,0.25)}
+
+    .error{color:#ff8888;white-space:pre-wrap}
+    .success{color:#7ee898;white-space:pre-wrap}
 </style>
 </head>
-<body>
-<header class="topbar">
- <div class="topbar-inner">
-  <div class="brand"><div class="brand-mark" aria-hidden="true">م</div><div><h1>مَرْصَد</h1><p>بوابة الطالب · رحلة علمية منظمة</p></div></div>
-  <div class="top-actions"><button type="button" id="header-logout" class="btn outline hidden">تسجيل الخروج</button></div>
+<body class="page-bg min-h-screen">
+
+<header class="glass-panel border-b border-goldLogo/30 sticky top-0 z-40">
+ <div class="max-w-[1180px] mx-auto px-6 py-4 flex justify-between items-center gap-4">
+  <div class="flex items-center gap-3">
+    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-goldLogo to-goldDark flex items-center justify-center text-navyDark text-xl font-black border border-creamBase/40">م</div>
+    <div>
+        <h1 class="text-lg font-black text-creamBase">مَرْصَد للنوازل العقدية</h1>
+        <p class="text-[11px] text-mutedText">بوابة الطالب · رحلة علمية منظمة</p>
+    </div>
+  </div>
+  <div><button type="button" id="header-logout" class="px-4 py-2 rounded-xl border border-goldLogo/40 text-goldLogo text-xs font-bold hover:bg-goldLogo/10 transition-all">تسجيل الخروج</button></div>
  </div>
 </header>
 
-<main id="login-section" class="login-wrap">
- <section class="login-card">
-  <span class="eyebrow">بوابة الطلاب</span><h2>أهلًا بك في مرصد</h2><p class="sub">سجّل الدخول باستخدام كود الطالب وكلمة المرور.</p>
-  <form id="login-form">
-   <div class="field"><label for="student-code">كود الطالب</label><input id="student-code" name="student-code" autocomplete="username" required placeholder="اكتبي كود الطالب"></div>
-   <div class="field"><label for="student-password">كلمة المرور</label><input id="student-password" name="student-password" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></div>
-   <button id="login-button" class="btn" type="submit">دخول إلى البوابة</button>
-  </form><p id="login-message" role="status" aria-live="polite"></p>
- </section>
-</main>
-
-<main id="app-section" class="shell hidden">
- <div class="hero">
-  <section class="hero-main"><span class="eyebrow" style="color:var(--gold)">رحلتك في طلب العلم</span><h2 id="welcome-title">مرحبًا بك</h2><p>تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد.</p></section>
-  <section class="hero-side"><strong>إنجازك في المساقات</strong><div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div><div id="progress-caption" class="progress-caption">جارٍ حساب التقدم…</div></section>
+<!-- قسم التطبيق واللوحة الرئيسية (بدون شاشة دخول) -->
+<main id="app-section" class="shell space-y-6 pt-6">
+ 
+ <!-- الهيرو الترحيبي -->
+ <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <section class="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-8 border border-goldLogo/30 relative overflow-hidden flex flex-col justify-center">
+   <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-goldLogo/10 rounded-full blur-2xl pointer-events-none"></div>
+   <span class="text-xs font-extrabold text-goldLogo tracking-widest uppercase">رحلتك في طلب العلم</span>
+   <h2 id="welcome-title" class="text-2xl sm:text-3xl font-black text-creamBase mt-2 mb-2">مرحبًا بك</h2>
+   <p class="text-xs text-creamMuted max-w-lg leading-relaxed">تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد بكل سهولة ويسر.</p>
+  </section>
+  
+  <section class="glass-panel rounded-3xl p-6 border border-creamBase/20 flex flex-col justify-center space-y-3">
+   <div class="flex justify-between items-center text-xs font-bold text-creamBase">
+       <span>إنجازك في المساقات</span>
+       <span id="progress-caption" class="text-[11px] text-mutedText">جارٍ حساب التقدم…</span>
+   </div>
+   <div class="h-2.5 bg-black/40 rounded-full overflow-hidden border border-creamBase/10">
+       <div id="progress-fill" class="h-full bg-gradient-to-r from-goldDark to-goldLogo rounded-full transition-all duration-500 w-0"></div>
+   </div>
+  </section>
  </div>
 
- <section class="home-insights" aria-label="مستجدات وتقدم الطالب">
-  <section class="radar-panel" aria-labelledby="radar-title">
-   <div class="radar-head">
-    <div>
-     <div class="radar-kicker"><span class="urgent-pulse" aria-hidden="true"></span> لوحة التنبيهات الدراسية</div>
-     <h2 id="radar-title" class="radar-title">عاجل من المرصد</h2>
-     <p class="radar-intro" id="radar-course-name">هنا تظهر الاختبارات والتكاليف التي تحتاج إلى إنجازك.</p>
+ <!-- لوحة عاجل من المرصد (الرادار والمسار النجمي) -->
+ <section class="space-y-6">
+  
+  <!-- رادار التنبيهات -->
+  <div class="glass-panel rounded-3xl p-6 sm:p-8 border-2 border-goldLogo/40 relative overflow-hidden shadow-2xl">
+   <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-goldLogo/10 rounded-full blur-3xl pointer-events-none"></div>
+   
+   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10 border-b border-creamBase/15 pb-6">
+    <div class="space-y-1">
+     <div class="flex items-center gap-2 text-goldLogo text-xs font-extrabold">
+      <span class="w-2.5 h-2.5 rounded-full bg-goldLogo animate-ping"></span> 
+      لوحة التنبيهات الدراسية
+     </div>
+     <h2 class="text-2xl sm:text-3xl font-black text-creamBase">عاجل من المرصد</h2>
+     <p id="radar-course-name" class="text-xs text-creamMuted">هنا تظهر الاختبارات والتكاليف التي تحتاج إلى إنجازك.</p>
     </div>
-    <div class="radar-count"><div><strong id="radar-count-number">—</strong><span>بانتظارك</span></div></div>
+    
+    <div class="flex-shrink-0 bg-black/40 border border-goldLogo/40 rounded-2xl p-3 px-5 text-center">
+        <span class="block text-[10px] text-mutedText font-bold uppercase">بانتظارك</span>
+        <strong id="radar-count-number" class="text-2xl font-black text-goldLogo">0</strong>
+    </div>
    </div>
-   <div id="radar-list" class="radar-list"><div class="radar-empty">جارٍ تحميل المهام والاختبارات المرتبطة بمساقك الحالي…</div></div>
-  </section>
 
-  <section class="path-panel" aria-labelledby="path-title">
-   <div class="path-heading">
-    <div><h3 id="path-title">مسارك النجمي في المساق الحالي</h3><p id="path-course-label">تقدمك محسوب من المهام والاختبارات الموجودة في النظام.</p></div>
-    <div class="path-percent" id="path-percent">—٪</div>
+   <div id="radar-list" class="grid grid-cols-1 gap-4 mt-6 relative z-10">
+    <div class="p-4 rounded-2xl border border-creamBase/20 text-creamMuted text-xs bg-black/30 text-center">جارٍ تحميل المهام والاختبارات المرتبطة بمساقك الحالي…</div>
    </div>
-   <div id="star-path" class="star-path">
-    <div class="star-stage"><div class="star-icon">✦</div><strong>الاختبارات الأسبوعية</strong><small>جارٍ الحساب</small></div>
-    <div class="star-stage"><div class="star-icon">✦</div><strong>تكاليف المواد</strong><small>جارٍ الحساب</small></div>
-    <div class="star-stage"><div class="star-icon">✦</div><strong>الاختبارات النهائية</strong><small>جارٍ الحساب</small></div>
+  </div>
+
+  <!-- المسار النجمي -->
+  <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-creamBase/20 relative">
+   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div>
+        <h3 class="text-lg font-black text-creamBase">مسارك النجمي في المساق الحالي</h3>
+        <p id="path-course-label" class="text-xs text-mutedText mt-0.5">تقدمك محسوب من المهام والاختبارات الموجودة في النظام.</p>
+    </div>
+    <div id="path-percent" class="text-2xl font-black text-goldLogo">—٪</div>
    </div>
-   <p class="path-note">المراحل تلخص إنجازك الفعلي في المساق الحالي، ولا تُحتسب المساقات القادمة أو المكتملة ضمن هذا المسار.</p>
-  </section>
+
+   <div id="star-path" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="p-4 rounded-2xl border border-creamBase/15 bg-black/30 text-center space-y-1">
+        <div class="w-8 h-8 rounded-full bg-goldLogo/20 text-goldLogo mx-auto flex items-center justify-center text-sm font-bold">✦</div>
+        <strong class="text-xs text-creamBase block">الاختبارات الأسبوعية</strong>
+        <small class="text-[10px] text-mutedText block">جارٍ الحساب</small>
+    </div>
+    <div class="p-4 rounded-2xl border border-creamBase/15 bg-black/30 text-center space-y-1">
+        <div class="w-8 h-8 rounded-full bg-goldLogo/20 text-goldLogo mx-auto flex items-center justify-center text-sm font-bold">✎</div>
+        <strong class="text-xs text-creamBase block">تكاليف المواد</strong>
+        <small class="text-[10px] text-mutedText block">جارٍ الحساب</small>
+    </div>
+    <div class="p-4 rounded-2xl border border-creamBase/15 bg-black/30 text-center space-y-1">
+        <div class="w-8 h-8 rounded-full bg-goldLogo/20 text-goldLogo mx-auto flex items-center justify-center text-sm font-bold">★</div>
+        <strong class="text-xs text-creamBase block">الاختبارات النهائية</strong>
+        <small class="text-[10px] text-mutedText block">جارٍ الحساب</small>
+    </div>
+   </div>
+   <p class="text-[11px] text-mutedText mt-4">المراحل تلخص إنجازك الفعلي في المساق الحالي، ولا تُحتسب المساقات القادمة أو المكتملة ضمن هذا المسار.</p>
+  </div>
+
  </section>
 
- <div class="row"><span id="app-message" role="status" aria-live="polite"></span><span class="spacer"></span><button type="button" id="logout-button" class="btn secondary">تسجيل الخروج</button></div>
+ <div class="flex items-center justify-between pt-2">
+  <span id="app-message" class="text-xs" role="status" aria-live="polite"></span>
+  <button type="button" id="logout-button" class="px-5 py-2.5 rounded-xl bg-navyCard border border-creamBase/20 text-creamBase text-xs font-bold hover:bg-redError/20 hover:border-redError transition-all">تسجيل الخروج</button>
+ </div>
+
  <div id="view"></div>
- <details class="panel"><summary>تغيير كلمة المرور</summary><form id="password-form">
-  <div class="field"><label for="new-password">كلمة المرور الجديدة (8 أحرف على الأقل)</label><input id="new-password" type="password" minlength="8" autocomplete="new-password" required></div>
-  <div class="field"><label for="confirm-password">تأكيد كلمة المرور الجديدة</label><input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required></div>
-  <button class="btn" type="submit">تغيير كلمة المرور</button></form><p id="password-message" role="status" aria-live="polite"></p>
+
+ <!-- تغيير كلمة المرور -->
+ <details class="glass-panel rounded-2xl p-6 border border-creamBase/20">
+  <summary class="cursor-pointer font-bold text-creamBase text-sm">تغيير كلمة المرور</summary>
+  <form id="password-form" class="mt-4 space-y-4">
+   <div class="field">
+       <label class="block text-xs font-bold text-creamBase mb-1" for="new-password">كلمة المرور الجديدة (8 أحرف على الأقل)</label>
+       <input id="new-password" type="password" minlength="8" autocomplete="new-password" required>
+   </div>
+   <div class="field">
+       <label class="block text-xs font-bold text-creamBase mb-1" for="confirm-password">تأكيد كلمة المرور الجديدة</label>
+       <input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required>
+   </div>
+   <button class="px-5 py-2.5 rounded-xl gold-gradient-btn text-navyDark font-black text-xs shadow-md" type="submit">تغيير كلمة المرور</button>
+  </form>
+  <p id="password-message" class="text-xs mt-2" role="status" aria-live="polite"></p>
  </details>
 </main>
+
+<style>
+.course-list, .item-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+.course-card, .item-card, .question, .panel { background: rgba(12, 24, 38, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(245, 230, 211, 0.18); border-radius: 20px; padding: 20px; color: #F5E6D3; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.course-card h3, .item-card h3, .question h3 { color: #FAF0E6; margin-top: 0; font-weight: 800; font-size: 18px; }
+.section-head { display: flex; justify-content: space-between; align-items: center; margin: 24px 0 12px; border-bottom: 1px solid rgba(245,230,211,0.1); padding-bottom: 8px; }
+.section-head h2, .section-head h3 { color: #FAF0E6; font-size: 20px; margin: 0; }
+.section-head p { color: #9AA8B8; font-size: 12px; margin: 2px 0 0; }
+.status { display: inline-flex; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; background: rgba(212,175,55,0.15); color: #D4AF37; border: 1px solid rgba(212,175,55,0.3); }
+.status.current { background: rgba(39,103,73,0.25); color: #7ee898; border-color: rgba(39,103,73,0.4); }
+.status.locked { background: rgba(255,255,255,0.05); color: #9AA8B8; border-color: rgba(255,255,255,0.1); }
+.status.completed { background: rgba(40,76,124,0.3); color: #9bbcdc; border-color: rgba(40,76,124,0.5); }
+.score { font-weight: 800; color: #7ee898; }
+.muted { color: #9AA8B8; }
+.notice { background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); border-radius: 14px; padding: 14px; margin: 12px 0; font-size: 13px; color: #FAF0E6; }
+.option { display: flex; align-items: flex-start; gap: 10px; padding: 12px; margin: 8px 0; border: 1px solid rgba(245,230,211,0.15); border-radius: 12px; background: rgba(7,14,23,0.5); cursor: pointer; }
+.option input { width: auto; margin-top: 4px; accent-color: #D4AF37; }
+.empty { color: #9AA8B8; padding: 20px; background: rgba(12,24,38,0.4); border: 1px dashed rgba(245,230,211,0.2); border-radius: 16px; text-align: center; }
+.btn { border: 0; border-radius: 12px; padding: 10px 18px; font-weight: 800; font-size: 12px; background: linear-gradient(135deg, #FAF0E6 0%, #D4AF37 100%); color: #070E17; box-shadow: 0 4px 15px rgba(212,175,55,0.2); }
+.btn.secondary { background: rgba(18,40,68,0.9); color: #FAF0E6; border: 1px solid rgba(245,230,211,0.2); }
+.btn.light { background: transparent; color: #D4AF37; border: 1px solid rgba(212,175,55,0.4); }
+</style>
 
 <script>
 (() => {
@@ -228,16 +268,14 @@ details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}
 const SUPABASE_URL='https://pxgxnwxpwvvefroaqpfr.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const $=id=>document.getElementById(id), loginSection=$('login-section'), appSection=$('app-section'), view=$('view');
+const $=id=>document.getElementById(id), view=$('view');
 
 let dashboard=null, examParent={type:'dashboard'}, activeExam=null;
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
-function message(id,text,kind=''){const n=$(id);if(n){n.className=kind;n.textContent=text||'';}}
+function message(id,text,kind=''){const n=$(id);if(n){n.className=`text-xs mt-2 ${kind==='error'?'text-redError':kind==='success'?'text-greenSuccess':'text-creamMuted'}`;n.textContent=text||'';}}
 function friendlyError(e){
  const t=e?.message||String(e||'حدث خطأ غير معروف');
- if(/Invalid login credentials/i.test(t))return'الكود أو كلمة المرور غير صحيحة.';
- if(/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(t))return'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';
  if(/الامتحان لم يفتح بعد/i.test(t))return'الامتحان لم يفتح بعد.';
  if(/انتهى وقت الامتحان|انتهى موعد/i.test(t))return'انتهى موعد الامتحان أو التكليف.';
  return t;
@@ -254,8 +292,6 @@ function normalizeOptions(raw){
  }).filter(x=>x.label!=='');
  return[];
 }
-function showSignedIn(){loginSection.classList.add('hidden');appSection.classList.remove('hidden');$('header-logout').classList.remove('hidden');}
-function showSignedOut(){loginSection.classList.remove('hidden');appSection.classList.add('hidden');$('header-logout').classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
 
 async function refreshDashboard({render=true}={}){
  const{data,error}=await client.rpc('get_student_dashboard');
@@ -278,11 +314,9 @@ function updateProgress(){
   });
  });
  const pct=total?Math.round(done/total*100):0;
- $('progress-fill').style.width=pct+'%';
- $('progress-caption').textContent=total?`أتممتِ ${done} من ${total} مهمة أو امتحان (${pct}٪)`:'ستظهر نسبة التقدم بعد إضافة التكاليف والامتحانات.';
+ $('progress-fill').style.width=pct+'\%';$('progress-caption').textContent=total?`أتممتِ ${done} من ${total} مهمة (${pct}٪)`:'ستظهر نسبة التقدم بعد إضافة التكاليف.';
 }
 
-/* حساب الرادار والمسار من بيانات لوحة الطالب الموجودة */
 function isSubmittedAssignment(a){return Boolean(a?.submission?.submitted_at||a?.submission?.submitted);}
 function hasExamResult(e){return Boolean(e?.result);}
 function dateLabel(value){
@@ -309,7 +343,7 @@ function renderHomeInsights(){
  if(!c){
   radarName.textContent='لا يوجد مساق حالي متاح الآن.';
   count.textContent='0';
-  radar.innerHTML='<div class="radar-empty">ستظهر هنا المهام والاختبارات عندما يتاح لك مساق حالي.</div>';
+  radar.innerHTML='<div class="p-4 rounded-2xl border border-creamBase/20 text-mutedText text-xs bg-black/30 text-center">ستظهر هنا المهام والاختبارات عندما يتاح لك مساق حالي.</div>';
   pathName.textContent='لا يوجد مساق حالي لاحتساب المسار النجمي.';
   pct.textContent='—٪';
   path.innerHTML='';
@@ -365,17 +399,19 @@ function renderHomeInsights(){
  count.textContent=String(items.length);
 
  if(!items.length){
-  radar.innerHTML='<div class="radar-empty">لا توجد حاليًا تكاليف أو اختبارات غير منجزة في هذا المساق. ستظهر المهام هنا تلقائيًا عندما تُضاف إلى بيانات المساق.</div>';
+  radar.innerHTML='<div class="p-4 rounded-2xl border border-creamBase/20 text-mutedText text-xs bg-black/30 text-center">لا توجد حاليًا تكاليف أو اختبارات غير منجزة في هذا المساق.</div>';
  }else{
   radar.innerHTML=items.map(it=>`
-   <article class="radar-item">
-    <div class="radar-mark" aria-hidden="true">${it.icon}</div>
-    <div>
-     <span class="radar-state ${it.state.overdue?'overdue':''}">${esc(it.state.label)}</span>
-     <h3>${esc(it.title)}</h3>
-     <p>${esc(it.subtitle)}</p>
+   <article class="p-4 rounded-2xl border border-goldLogo/30 bg-black/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+     <div class="w-10 h-10 rounded-xl bg-goldLogo/15 text-goldLogo flex items-center justify-center font-bold text-lg border border-goldLogo/30 flex-shrink-0">${it.icon}</div>
+     <div>
+      <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold mb-1 ${it.state.overdue?'bg-redError/20 text-redError border border-redError/30':'bg-goldLogo/20 text-goldLogo border border-goldLogo/30'}">${esc(it.state.label)}</span>
+      <h3 class="text-sm font-bold text-creamBase">${esc(it.title)}</h3>
+      <p class="text-xs text-mutedText">${esc(it.subtitle)}</p>
+     </div>
     </div>
-    <button type="button" class="radar-action" onclick="${it.action}">${it.kind==='assignment'?'فتح التكليف':'فتح الاختبار'}</button>
+    <button type="button" class="w-full sm:w-auto px-4 py-2 rounded-xl gold-gradient-btn text-navyDark font-black text-xs shadow-md" onclick="${it.action}">${it.kind==='assignment'?'فتح التكليف':'فتح الاختبار'}</button>
    </article>
   `).join('');
  }
@@ -390,10 +426,10 @@ function renderHomeInsights(){
   const n=s.items.length,d=s.items.filter(s.done).length;
   total+=n;done+=d;
   const complete=n>0&&d===n;
-  return`<div class="star-stage ${complete?'done':''}">
-   <div class="star-icon">${complete?'✓':s.icon}</div>
-   <strong>${esc(s.title)}</strong>
-   <small>${n?d+' من '+n+' مكتمل':'لم يُضف بعد'}</small>
+  return`<div class="p-4 rounded-2xl border ${complete?'border-greenSuccess/50 bg-greenSuccess/10':'border-creamBase/15 bg-black/30'} text-center space-y-1">
+   <div class="w-8 h-8 rounded-full ${complete?'bg-greenSuccess text-white':'bg-goldLogo/20 text-goldLogo'} mx-auto flex items-center justify-center text-xs font-bold">${complete?'✓':s.icon}</div>
+   <strong class="text-xs text-creamBase block">${esc(s.title)}</strong>
+   <small class="text-[10px] text-mutedText block">${n?d+' من '+n+' مكتمل':'لم يُضف بعد'}</small>
   </div>`;
  }).join('');
  const percent=total?Math.round(done/total*100):0;
@@ -410,15 +446,15 @@ function renderDashboard(){
  ];
  view.innerHTML=groups.map(g=>{
   const items=courses.filter(c=>c.status===g.status);
-  return`<section>
+  return`<section class="mt-8">
    <div class="section-head"><div><h2>${g.title}</h2><p>${g.desc}</p></div></div>
    ${items.length?`<div class="course-list">${items.map(c=>`
-    <article class="course-card">
+    <article class="course-card flex flex-col gap-3">
      <span class="status ${esc(c.status)}">${esc(prettyStatus(c.status))}</span>
      <h3>${esc(c.name)}</h3>
-     ${c.description?`<p class="muted">${esc(c.description)}</p>`:''}
-     ${c.course_result?`<div class="notice">نتيجة المساق المعلنة<br>المجموع: <strong>${esc(c.course_result.total_score??'—')}</strong> · النسبة: <strong>${esc(c.course_result.percentage??'—')}٪</strong></div>`:''}
-     <button class="btn ${c.status==='locked'?'light':''}" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">${c.status==='locked'?'غير متاح حاليًا':'فتح المساق'}</button>
+     ${c.description?`<p class="text-xs text-mutedText">${esc(c.description)}</p>`:''}
+     ${c.course_result?`<div class="notice">نتيجة المساق المعلنة<br>المجموع: <strong class="text-goldLogo">${esc(c.course_result.total_score??'—')}</strong> · النسبة: <strong class="text-goldLogo">${esc(c.course_result.percentage??'—')}٪</strong></div>`:''}
+     <button class="btn ${c.status==='locked'?'light':''} mt-auto" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">${c.status==='locked'?'غير متاح حاليًا':'فتح المساق'}</button>
     </article>`).join('')}</div>`:'<div class="empty">لا توجد مساقات في هذا القسم حتى الآن.</div>'}
   </section>`;
  }).join('');
@@ -430,22 +466,22 @@ function openCourse(courseId){
  if(c.status==='locked'){message('app-message','هذا المساق قادم ولا يمكن الدخول إليه الآن.','error');return;}
  message('app-message','');
  const weekly=c.weekly_exams||[],subjects=c.subjects||[];
- view.innerHTML=`<div class="row"><button class="btn light" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2>${esc(c.name)}</h2></div>
- ${c.description?`<p class="muted">${esc(c.description)}</p>`:''}
+ view.innerHTML=`<div class="flex items-center gap-3 my-6"><button class="btn light" onclick="portalRenderDashboard()">رجوع للمساقات</button><h2 class="text-xl font-bold text-creamBase">${esc(c.name)}</h2></div>
+ ${c.description?`<p class="text-xs text-mutedText mb-4">${esc(c.description)}</p>`:''}
  <section>
   <div class="section-head"><div><h3>الامتحانات الأسبوعية للمساق</h3><p>اختبارات مرتبطة بالمساق بالكامل</p></div></div>
   ${weekly.length?`<div class="item-list">${weekly.map(e=>`
-   <article class="item-card"><h3>${esc(e.title)}</h3>
-    ${e.week_number!=null?`<p>الأسبوع: ${esc(e.week_number)}</p>`:''}
-    ${e.result?`<p>النتيجة: <span class="score">${esc(e.result.score)} / ${esc(e.result.total)}</span></p>`:''}
-    <button class="btn" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان / النتيجة</button>
+   <article class="item-card flex flex-col gap-2"><h3>${esc(e.title)}</h3>
+    ${e.week_number!=null?`<p class="text-xs text-mutedText">الأسبوع: ${esc(e.week_number)}</p>`:''}
+    ${e.result?`<p class="text-xs">النتيجة: <span class="score">${esc(e.result.score)} /${esc(e.result.total)}</span></p>`:''}
+    <button class="btn mt-2" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان / النتيجة</button>
    </article>`).join('')}</div>`:'<div class="empty">لا توجد امتحانات أسبوعية مضافة لهذا المساق حتى الآن.</div>'}
  </section>
- <section>
+ <section class="mt-8">
   <div class="section-head"><div><h3>مواد المساق</h3><p>اختاري المادة لعرض تكاليفها وامتحانها النهائي</p></div></div>
   ${subjects.length?`<div class="item-list">${subjects.map(s=>`
-   <article class="item-card"><h3>${esc(s.name)}</h3>${s.description?`<p class="muted">${esc(s.description)}</p>`:''}
-    <button class="btn secondary" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button>
+   <article class="item-card flex flex-col gap-2"><h3>${esc(s.name)}</h3>${s.description?`<p class="text-xs text-mutedText">${esc(s.description)}</p>`:''}
+    <button class="btn secondary mt-auto" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button>
    </article>`).join('')}</div>`:'<div class="empty">لا توجد مواد مضافة لهذا المساق حتى الآن.</div>'}
  </section>`;
 }
@@ -455,20 +491,20 @@ function openSubject(courseId,subjectId){
  const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
  if(!c||!s||c.status==='locked')return renderDashboard();
  const assignments=s.assignments||[],f=s.final_exam;
- view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenCourse(${Number(c.id)})">رجوع للمساق</button><h2>${esc(s.name)}</h2></div>
- ${s.description?`<p class="muted">${esc(s.description)}</p>`:''}
+ view.innerHTML=`<div class="flex items-center gap-3 my-6"><button class="btn light" onclick="portalOpenCourse(${Number(c.id)})">رجوع للمساق</button><h2 class="text-xl font-bold text-creamBase">${esc(s.name)}</h2></div>
+ ${s.description?`<p class="text-xs text-mutedText mb-4">${esc(s.description)}</p>`:''}
  <section><div class="section-head"><div><h3>التكاليف</h3><p>اقرئي السؤال والتعليمات قبل التسليم</p></div></div>
  ${assignments.length?`<div class="item-list">${assignments.map(a=>`
-  <article class="item-card"><h3>${esc(a.title)}</h3>${a.description?`<p>${esc(a.description)}</p>`:''}
-   <p>الحالة: ${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</p>
-   ${a.submission?.grade!=null?`<p>الدرجة المستحقة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
-   ${a.close_at?`<p class="muted">آخر موعد: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
-   <button class="btn" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">${a.submission?.submitted_at||a.submission?.submitted?'عرض التسليم':'فتح التكليف'}</button>
+  <article class="item-card flex flex-col gap-2"><h3>${esc(a.title)}</h3>${a.description?`<p class="text-xs text-mutedText">${esc(a.description)}</p>`:''}
+   <p class="text-xs text-creamBase">الحالة: <span class="text-goldLogo font-bold">${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</span></p>
+   ${a.submission?.grade!=null?`<p class="text-xs">الدرجة المستحقة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
+   ${a.close_at?`<p class="text-[11px] text-mutedText">آخر موعد: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
+   <button class="btn mt-auto" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">${a.submission?.submitted_at||a.submission?.submitted?'عرض التسليم':'فتح التكليف'}</button>
   </article>`).join('')}</div>`:'<div class="empty">لا توجد تكاليف لهذه المادة حتى الآن.</div>'}
  </section>
- <section><div class="section-head"><div><h3>امتحان نهاية المادة</h3></div></div>
- ${f?`<article class="item-card"><h3>${esc(f.title)}</h3>${f.result?`<p>النتيجة: <span class="score">${esc(f.result.score)} / ${esc(f.result.total)}</span></p>`:''}
-  <button class="btn secondary" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان / النتيجة</button>
+ <section class="mt-8"><div class="section-head"><div><h3>امتحان نهاية المادة</h3></div></div>
+ ${f?`<article class="item-card flex flex-col gap-2"><h3>${esc(f.title)}</h3>${f.result?`<p class="text-xs">النتيجة: <span class="score">${esc(f.result.score)} / ${esc(f.result.total)}</span></p>`:''}
+  <button class="btn secondary mt-2" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان / النتيجة</button>
  </article>`:'<div class="empty">لم تتم إضافة الامتحان النهائي لهذه المادة بعد.</div>'}
  </section>`;
 }
@@ -479,19 +515,19 @@ function openAssignment(courseId,subjectId,assignmentId){
  const a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));
  if(!c||!s||!a||c.status!=='current'){message('app-message','لا يمكن فتح هذا التكليف الآن.','error');return;}
  if(a.submission?.submitted_at||a.submission?.submitted){
-  view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>
-   <section class="item-card"><h3>تم تسليم التكليف</h3><p>تم تثبيت الإجابة بعد التسليم، ولا يمكن تعديلها من هذه الصفحة.</p>
-   ${a.submission.grade!=null?`<p>الدرجة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
-   <p class="muted">لعرض نص الإجابة المرسلة، افتحي تفاصيل التكليف إن كانت متاحة في النظام.</p></section>`;
+  view.innerHTML=`<div class="flex items-center gap-3 my-6"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2 class="text-xl font-bold text-creamBase">${esc(a.title)}</h2></div>
+   <section class="item-card space-y-3"><h3>تم تسليم التكليف</h3><p class="text-xs text-mutedText">تم تثبيت الإجابة بعد التسليم، ولا يمكن تعديلها من هذه الصفحة.</p>
+   ${a.submission.grade!=null?`<p class="text-xs">الدرجة: <span class="score">${esc(a.submission.grade)}</span></p>`:''}
+   <p class="text-xs text-mutedText">لعرض نص الإجابة المرسلة، افتحي تفاصيل التكليف إن كانت متاحة في النظام.</p></section>`;
   return;
  }
- view.innerHTML=`<div class="row"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2>${esc(a.title)}</h2></div>
- ${a.description?`<p>${esc(a.description)}</p>`:''}
- ${a.question_text?`<section class="item-card"><h3>سؤال التكليف</h3><p style="white-space:pre-wrap">${esc(a.question_text)}</p></section>`:''}
- ${a.close_at?`<p>آخر موعد للتسليم: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
- <form id="assignment-form" class="panel"><div class="field"><label for="assignment-answer">إجابتك</label><textarea id="assignment-answer" rows="8" maxlength="20000" required></textarea></div>
- <button class="btn" type="submit">تسليم التكليف نهائيًا</button><p class="muted">بعد التسليم لا يمكن تعديل الإجابة.</p></form>
- <p id="assignment-message" role="status" aria-live="polite"></p>`;
+ view.innerHTML=`<div class="flex items-center gap-3 my-6"><button class="btn light" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">رجوع للمادة</button><h2 class="text-xl font-bold text-creamBase">${esc(a.title)}</h2></div>
+ ${a.description?`<p class="text-xs text-mutedText mb-4">${esc(a.description)}</p>`:''}
+ ${a.question_text?`<section class="item-card mb-4"><h3>سؤال التكليف</h3><p class="text-xs text-creamBase whitespace-pre-wrap">${esc(a.question_text)}</p></section>`:''}
+ ${a.close_at?`<p class="text-xs text-mutedText mb-4">آخر موعد للتسليم: ${esc(new Date(a.close_at).toLocaleString('ar-EG'))}</p>`:''}
+ <form id="assignment-form" class="panel space-y-4"><div class="field"><label class="block text-xs font-bold text-creamBase mb-1" for="assignment-answer">إجابتك</label><textarea id="assignment-answer" rows="8" maxlength="20000" required></textarea></div>
+ <button class="btn" type="submit">تسليم التكليف نهائيًا</button><p class="text-[11px] text-mutedText">بعد التسليم لا يمكن تعديل الإجابة.</p></form>
+ <p id="assignment-message" class="text-xs mt-2" role="status" aria-live="polite"></p>`;
 
  $('assignment-form').addEventListener('submit',async ev=>{
   ev.preventDefault();
@@ -520,25 +556,25 @@ async function openExam(examId,parentType,courseId,subjectId){
 
 function renderExam(data){
  const exam=data.exam||{},state=data.state;
- let content=`<div class="row"><button class="btn light" onclick="portalBackFromExam()">رجوع</button><h2>${esc(exam.title||'الامتحان')}</h2></div>`;
+ let content=`<div class="flex items-center gap-3 my-6"><button class="btn light" onclick="portalBackFromExam()">رجوع</button><h2 class="text-xl font-bold text-creamBase">${esc(exam.title||'الامتحان')}</h2></div>`;
  if(state==='submitted'){
   const pending=Number(data.result?.pending_manual_count||0);
-  content+=`<section class="panel"><h3>تم تسليم الامتحان</h3><p class="score">${pending?'توجد إجابات مقالية بانتظار التصحيح اليدوي.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p><p class="muted">لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;
+  content+=`<section class="panel space-y-2"><h3>تم تسليم الامتحان</h3><p class="score text-sm">${pending?'توجد إجابات مقالية بانتظار التصحيح اليدوي.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p><p class="text-xs text-mutedText">لن تظهر الإجابات الصحيحة داخل الصفحة.</p></section>`;
   view.innerHTML=content;return;
  }
  if(state==='upcoming'||state==='closed'||state==='course_completed'){
-  content+=`<section class="panel">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد هذا الامتحان.':'المساق مكتمل؛ لا يمكن إعادة الامتحان.'}</section>`;
+  content+=`<section class="panel text-xs text-mutedText">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد هذا الامتحان.':'المساق مكتمل؛ لا يمكن إعادة الامتحان.'}</section>`;
   view.innerHTML=content;return;
  }
  const questions=data.questions||[];
  if(!questions.length){view.innerHTML=content+'<div class="empty">لا توجد أسئلة مضافة لهذا الامتحان حتى الآن.</div>';return;}
- content+=`<form id="exam-form"><p class="notice">راجعي إجاباتك قبل التسليم. لا يمكن إعادة تسليم الامتحان بعد إرساله.</p>`;
+ content+=`<form id="exam-form" class="space-y-4"><div class="notice">راجعي إجاباتك قبل التسليم. لا يمكن إعادة تسليم الامتحان بعد إرساله.</div>`;
  content+=questions.map((q,i)=>{
   const opts=normalizeOptions(q.options),multi=q.question_type==='multiple_select',type=q.question_type||'';
-  const body=opts.length?opts.map(o=>`<label class="option"><input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}"><span>${esc(o.label)}</span></label>`).join(''):`<div class="field"><label for="answer-${Number(q.id)}">${type==='essay'?'إجابتك المقالية':'الإجابة'}</label><textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="5"':''}></textarea></div>`;
-  return`<section class="question"><h3>السؤال ${i+1}</h3><p style="white-space:pre-wrap">${esc(q.question_text||'')}</p>${multi?'<p class="muted">اختاري كل الإجابات الصحيحة.</p>':''}${body}</section>`;
+  const body=opts.length?opts.map(o=>`<label class="option"><input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}"><span class="text-xs text-creamBase">${esc(o.label)}</span></label>`).join(''):`<div class="field"><label class="block text-xs font-bold text-creamBase mb-1" for="answer-${Number(q.id)}">${type==='essay'?'إجابتك المقالية':'الإجابة'}</label><textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="5"':''}></textarea></div>`;
+  return`<section class="question space-y-3"><h3>السؤال ${i+1}</h3><p class="text-xs text-creamMuted whitespace-pre-wrap">${esc(q.question_text||'')}</p>${multi?'<p class="text-[11px] text-mutedText">اختاري كل الإجابات الصحيحة.</p>':''}${body}</section>`;
  }).join('');
- content+='<button class="btn" type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" role="status" aria-live="polite"></p>';
+ content+='<button class="btn mt-4" type="submit">إنهاء الامتحان وتسليم الإجابات</button></form><p id="exam-message" class="text-xs mt-2" role="status" aria-live="polite"></p>';
  view.innerHTML=content;
 
  $('exam-form').addEventListener('submit',async ev=>{
@@ -573,42 +609,22 @@ function backFromExam(){
  else renderDashboard();
 }
 
-$('login-form').addEventListener('submit',async ev=>{
- ev.preventDefault();
- const code=$('student-code').value.trim(),password=$('student-password').value;
- if(!code||!password)return;
- const b=$('login-button');
- b.disabled=true;
- message('login-message','جارٍ تسجيل الدخول…');
- const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});
- b.disabled=false;
- if(error){message('login-message',friendlyError(error),'error');return;}
- try{
-  await refreshDashboard();
-  showSignedIn();
-  message('login-message','');
-  message('app-message','');
- }catch(e){
-  await client.auth.signOut();
-  showSignedOut();
-  message('login-message',friendlyError(e),'error');
- }
-});
-
 async function logout(){
  const b=$('logout-button');
- b.disabled=true;
+ if(b)b.disabled=true;
  try{
   const{error}=await client.auth.signOut();
   if(error)throw error;
   window.location.replace('index.html');
  }catch(e){
-  b.disabled=false;
+  if(b)b.disabled=false;
   message('app-message','تعذر تسجيل الخروج: '+friendlyError(e),'error');
  }
 }
-$('logout-button').addEventListener('click',logout);
-$('header-logout').addEventListener('click',logout);
+const logoutBtn=$('logout-button');
+if(logoutBtn)logoutBtn.addEventListener('click',logout);
+const headerLogoutBtn=$('header-logout');
+if(headerLogoutBtn)headerLogoutBtn.addEventListener('click',logout);
 
 $('password-form').addEventListener('submit',async ev=>{
  ev.preventDefault();
@@ -630,9 +646,17 @@ window.portalBackFromExam=backFromExam;
 
 (async()=>{
  const{data}=await client.auth.getSession();
- if(!data?.session)return;
- try{await refreshDashboard();showSignedIn();}
- catch(_){await client.auth.signOut();showSignedOut();}
+ if(!data?.session){
+  // إذا لم يكن مسجلاً للدخول، يتم توجيهه لصفحة الدخول الرئيسية الخاصة بك (مثلاً index.html)
+  window.location.replace('index.html');
+  return;
+ }
+ try{
+  await refreshDashboard();
+ }catch(_){
+  await client.auth.signOut();
+  window.location.replace('index.html');
+ }
 })();
 })();
 </script>
