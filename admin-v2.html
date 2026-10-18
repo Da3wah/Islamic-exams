@@ -485,7 +485,6 @@ $('studentForm').addEventListener('submit', async e => {
     btn.disabled = false;
   }
 });
-if(error){let detail=error.message||String(error);try{if(error.context?.json){const b=await error.context.json();detail=b.details||b.error||detail}}catch(_){}throw Error(detail)}if(!data||data.success!==true)throw Error(data?.details||data?.error||'لم تؤكد وظيفة الخادم نجاح إنشاء الطالب.');$('studentForm').reset();await loadStudents();showStudentsList();alert('تمت إضافة الطالب بنجاح. كود الدخول: '+(data.code||payload.code));}catch(err){msg('studentMsg','تعذر إنشاء الطالب: '+(err.message||String(err)),'error')}finally{btn.disabled=false}});
 function showStudentsList(){ $('studentsListView').classList.remove('hidden');$('studentEditorView').classList.add('hidden');$('studentImportView').classList.add('hidden');msg('studentMsg','');msg('importStudentsMsg',''); }
 function showStudentEditor(){ $('studentsListView').classList.add('hidden');$('studentEditorView').classList.remove('hidden');$('studentImportView').classList.add('hidden');msg('studentMsg',''); }
 function showStudentsImport(){ $('studentsListView').classList.add('hidden');$('studentEditorView').classList.add('hidden');$('studentImportView').classList.remove('hidden');msg('importStudentsMsg',''); }
