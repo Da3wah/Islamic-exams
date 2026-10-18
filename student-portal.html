@@ -89,33 +89,13 @@
     }
 </style>
 </head>
-<body class="page-bg relative min-h-screen flex flex-col">
+<body class="page-bg relative min-h-screen flex">
 
-<!-- طبقة تظليل خفيفة للخلفية -->
+<!-- طبقة تظليل للخلفية -->
 <div class="fixed inset-0 bg-black/60 pointer-events-none z-0"></div>
 
-<!-- الهيدر العلوي -->
-<header class="relative z-10 border-b border-creamBase/20 bg-black/40 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl border border-goldLogo/60 bg-navyDark flex items-center justify-center text-goldLogo text-xl font-extrabold logo-gold-glow">
-                م
-            </div>
-            <div>
-                <h1 class="text-lg font-black text-creamBase leading-none">مَرْصَد</h1>
-                <p class="text-[11px] text-creamMuted font-medium mt-1">بوابة الطالب · رحلة علمية منظمة</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <button type="button" id="header-logout" class="hidden px-4 py-2 rounded-xl border border-creamBase/30 text-creamBase text-xs sm:text-sm font-bold hover:bg-creamBase/10 transition-all">
-                <i class="fa-solid fa-right-from-bracket ml-1"></i> تسجيل الخروج
-            </button>
-        </div>
-    </div>
-</header>
-
 <!-- شاشة تسجيل الدخول -->
-<main id="login-section" class="relative z-10 flex-1 flex items-center justify-center p-4">
+<main id="login-section" class="relative z-10 w-full min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 cream-card-glow text-center">
         <!-- مربع اللوجو -->
         <div class="w-28 h-20 mx-auto rounded-xl border-2 border-goldLogo/80 bg-navyDark/90 flex flex-col items-center justify-center p-2 logo-gold-glow relative mb-6">
@@ -149,122 +129,739 @@
     </div>
 </main>
 
-<!-- الواجهة الرئيسية للتطبيق (بعد تسجيل الدخول) -->
-<main id="app-section" class="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 hidden space-y-8">
+<!-- واجهة التطبيق الرئيسية (تظهر بعد تسجيل الدخول) -->
+<div id="app-section" class="relative z-10 w-full min-h-screen flex flex-row-reverse hidden">
 
-    <!-- البانر الترحيبي -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div class="lg:col-span-2 glass-panel rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-goldLogo/10 rounded-full blur-2xl pointer-events-none"></div>
-            <div>
-                <span class="px-3 py-1 rounded-full bg-goldLogo/15 border border-goldLogo/30 text-goldLogo text-xs font-bold">رحلتك في طلب العلم</span>
-                <h2 id="welcome-title" class="text-2xl sm:text-3xl font-black text-creamBase mt-3 mb-2">مرحباً بك</h2>
-                <p class="text-xs sm:text-sm text-creamMuted leading-relaxed max-w-xl">تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد بكل سهولة وتنظيم.</p>
+    <!-- المحتوى الرئيسي (يسار الشاشة) -->
+    <main class="flex-1 flex flex-col p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-screen space-y-6">
+        
+        <!-- الهيدر الداخلي -->
+        <header class="flex items-center justify-between glass-panel rounded-2xl p-4 sm:px-6">
+            <span id="app-message" role="status" aria-live="polite" class="text-xs font-bold"></span>
+            <div class="flex items-center gap-3">
+                <button type="button" id="header-logout" class="px-4 py-2 rounded-xl border border-creamBase/30 text-creamBase text-xs font-bold hover:bg-creamBase/10 transition-all">
+                    <i class="fa-solid fa-right-from-bracket ml-1"></i> تسجيل الخروج
+                </button>
             </div>
-        </div>
-        <div class="glass-panel rounded-2xl p-6 flex flex-col justify-center">
-            <span class="text-xs font-bold text-creamBase mb-2">إنجازك في المساقات</span>
-            <div class="w-full h-3 bg-black/50 border border-creamBase/20 rounded-full overflow-hidden my-2">
-                <div id="progress-fill" class="h-full cream-gradient rounded-full w-0 transition-all duration-500"></div>
+        </header>
+
+        <!-- منطقة العرض الديناميكية (التبويبات) -->
+        <div id="view" class="space-y-6"></div>
+
+    </main>
+
+    <!-- الشريط الجانبي الأيمن المخصص للطالب -->
+    <aside class="w-72 glass-panel border-r border-creamBase/20 hidden lg:flex flex-col justify-between p-6">
+        <div>
+            <!-- اللوجو -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-black text-goldLogo tracking-wider mb-1">مرصَد</h1>
+                <p class="text-[11px] font-semibold text-creamMuted tracking-widest">للنـوازل العقديـة</p>
+                <div class="w-16 h-px bg-goldLogo/40 mx-auto mt-3"></div>
             </div>
-            <div id="progress-caption" class="text-xs text-creamMuted font-medium mt-1">جارٍ حساب التقدم…</div>
+
+            <!-- قائمة التنقل -->
+            <nav class="space-y-1.5">
+                <button type="button" onclick="switchTab('home')" id="nav-home" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl bg-creamBase/10 text-creamBase font-bold text-sm border border-creamBase/20 shadow-sm transition-all">
+                    <i class="fa-solid fa-house text-goldLogo"></i> الرئيسية
+                </button>
+                <button type="button" onclick="switchTab('courses')" id="nav-courses" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right">
+                    <i class="fa-solid fa-book"></i> مساقاتي
+                </button>
+                <button type="button" onclick="switchTab('assignments')" id="nav-assignments" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right">
+                    <i class="fa-solid fa-file-signature"></i> التكاليف
+                </button>
+                <button type="button" onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right">
+                    <i class="fa-solid fa-file-pen"></i> الاختبارات
+                </button>
+                <button type="button" onclick="switchTab('results')" id="nav-results" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right">
+                    <i class="fa-solid fa-chart-pie"></i> النتائج
+                </button>
+                <button type="button" onclick="switchTab('password')" id="nav-password" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right">
+                    <i class="fa-solid fa-key"></i> كلمة المرور
+                </button>
+            </nav>
         </div>
+
+        <!-- زر تسجيل الخروج السفلي -->
+        <div class="pt-4 border-t border-creamBase/10">
+            <button type="button" id="logout-button" class="w-full py-2.5 rounded-xl bg-black/40 border border-creamBase/20 text-creamBase text-xs font-bold hover:bg-red-500/20 hover:border-red-500/40 transition-all">
+                تسجيل الخروج
+            </button>
+        </div>
+    </aside>
+
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const SUPABASE_URL='https://pxgxnwxpwvvefroaqpfr.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Y1VPWMTp80Sn-yIlAKAPCA_27GhFxtP';
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id), loginSection=$('login-section'), appSection=$('app-section'), view=$('view');
+
+let dashboard=null, currentActiveTab='home', examParent={type:'dashboard'}, activeExam=null;
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function message(id,text,kind=''){
+    const n=$(id);
+    if(n){
+        n.className = kind === 'error' ? 'text-red-400 font-bold text-xs mt-2' : kind === 'success' ? 'text-emerald-400 font-bold text-xs mt-2' : 'text-creamMuted text-xs mt-2';
+        n.textContent=text||'';
+    }
+}
+function friendlyError(e){
+ const t=e?.message||String(e||'حدث خطأ غير معروف');
+ if(/Invalid login credentials/i.test(t))return'الكود أو كلمة المرور غير صحيحة.';
+ if(/لم يتم ربط الحساب|profile|حساب طالب|student/i.test(t))return'الحساب غير مكتمل الربط بملف الطالب. نحتاج إتمام إعداد الحساب أولًا.';
+ if(/الامتحان لم يفتح بعد/i.test(t))return'الامتحان لم يفتح بعد.';
+ if(/انتهى وقت الامتحان|انتهى موعد/i.test(t))return'انتهى موعد الامتحان أو التكليف.';
+ return t;
+}
+function prettyStatus(s){return({current:'المساق الحالي',completed:'مساق مكتمل',locked:'مساق قادم — مقفل'})[s]||'غير محدد';}
+
+function normalizeOptions(raw){
+ if(Array.isArray(raw))return raw.map(item=>{
+  if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:String(label)};}
+  return{value:String(item??''),label:String(item??'')};
+ }).filter(x=>x.label!=='');
+ if(raw&&typeof raw==='object')return Object.entries(raw).map(([k,item])=>{
+  if(item&&typeof item==='object'){const val=item.text??item.label??item.value??item.answer??'';const label=item.label??item.text??item.answer??item.value??'';return{value:String(val),label:`${k}. ${label}`};}
+  return{value:String(item??''),label:`${k}. ${item??''}`};
+ }).filter(x=>x.label!=='');
+ return[];
+}
+
+function showSignedIn(){loginSection.classList.add('hidden');appSection.classList.remove('hidden');}
+function showSignedOut(){loginSection.classList.remove('hidden');appSection.classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
+
+async function refreshDashboard({render=true}={}){
+ const{data,error}=await client.rpc('get_student_dashboard');
+ if(error)throw error;
+ dashboard=data;
+ if(render)renderCurrentTab();
+}
+
+function isSubmittedAssignment(a){return Boolean(a?.submission?.submitted_at||a?.submission?.submitted);}
+function hasExamResult(e){return Boolean(e?.result);}
+function dateLabel(value){
+ if(!value)return '';
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?'':d.toLocaleString('ar-EG',{dateStyle:'medium',timeStyle:'short'});
+}
+function deadlineState(closeAt){
+ if(!closeAt)return{label:'بانتظار الإنجاز',overdue:false};
+ const d=new Date(closeAt);
+ if(Number.isNaN(d.getTime()))return{label:'بانتظار الإنجاز',overdue:false};
+ if(d.getTime()<Date.now())return{label:'انتهى الموعد',overdue:true};
+ return{label:'مطلوب منك',overdue:false};
+}
+function currentCourse(){return(dashboard?.courses||[]).find(c=>c.status==='current')||null;}
+
+// إدارة التنقل بين التبويبات عبر الشريط الجانبي
+function switchTab(tabName){
+ currentActiveTab=tabName;
+ ['home','courses','assignments','exams','results','password'].forEach(t=>{
+  const btn=$('nav-'+t);
+  if(btn){
+   if(t===tabName){
+    btn.className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl bg-creamBase/10 text-creamBase font-bold text-sm border border-creamBase/20 shadow-sm transition-all";
+    const icon=btn.querySelector('i');
+    if(icon)icon.className=icon.className.replace(/text-mutedText|text-goldLogo/g,'')+' text-goldLogo';
+   }else{
+    btn.className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-mutedText hover:text-creamLight hover:bg-black/30 transition-all text-sm font-medium text-right";
+    const icon=btn.querySelector('i');
+    if(icon)icon.className=icon.className.replace('text-goldLogo','text-mutedText');
+   }
+  }
+ });
+ renderCurrentTab();
+}
+
+function renderCurrentTab(){
+ if(currentActiveTab==='home')renderHomeTab();
+ else if(currentActiveTab==='courses')renderCoursesTab();
+ else if(currentActiveTab==='assignments')renderAssignmentsTab();
+ else if(currentActiveTab==='exams')renderExamsTab();
+ else if(currentActiveTab==='results')renderResultsTab();
+ else if(currentActiveTab==='password')renderPasswordTab();
+}
+
+// 1. الرئيسية والترحاب والرادار
+function renderHomeTab(){
+ const studentName=dashboard?.student?.name||'بالطالب';
+ const c=currentCourse();
+ 
+ view.innerHTML=`
+ <!-- الترحيب بالبطاقة الكبرى -->
+ <div class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+  <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-goldLogo/15 rounded-full blur-2xl pointer-events-none"></div>
+  <span class="px-3 py-1 rounded-full bg-goldLogo/15 border border-goldLogo/30 text-goldLogo text-xs font-bold">الرئيسية · رحلتك في طلب العلم</span>
+  <h2 class="text-2xl sm:text-3xl font-black text-creamBase mt-3 mb-2">مرحباً بك، ${esc(studentName)}</h2>
+  <p class="text-xs sm:text-sm text-creamMuted leading-relaxed max-w-xl">تابعي مساقاتك وتكاليفك وامتحاناتك ونتائجك من مكان واحد بكل سهولة وتنظيم.</p>
+ </div>
+
+ <!-- رادار التنبيهات (عاجل من المرصد) -->
+ <div class="glass-panel rounded-2xl p-6 relative overflow-hidden border border-creamBase/30 shadow-2xl">
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-creamBase/15 pb-4">
+   <div class="flex items-center gap-4">
+    <div class="relative flex-shrink-0">
+     <span class="absolute inline-flex h-full w-full rounded-full bg-goldLogo/40 animate-ping opacity-75"></span>
+     <div class="relative w-12 h-12 rounded-xl bg-goldLogo/20 border border-goldLogo/50 flex items-center justify-center text-goldLogo text-xl">
+      <i class="fa-solid fa-bullhorn"></i>
+     </div>
     </div>
-
-    <!-- قسم لوحة التنبيهات والمسار النجمي -->
-    <div class="space-y-6">
-        <!-- رادار التنبيهات الفلكي السحري -->
-        <div class="glass-panel rounded-2xl p-6 relative overflow-hidden border border-creamBase/30 shadow-2xl">
-            <div class="absolute -right-12 -top-12 w-48 h-48 bg-goldLogo/10 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-creamBase/15 pb-4">
-                <div class="flex items-center gap-4">
-                    <div class="relative flex-shrink-0">
-                        <span class="absolute inline-flex h-full w-full rounded-full bg-goldLogo/40 animate-ping opacity-75"></span>
-                        <span class="absolute -inset-1 rounded-full border border-goldLogo/40 animate-spin-slow"></span>
-                        <div class="relative w-12 h-12 rounded-xl bg-goldLogo/20 border border-goldLogo/50 flex items-center justify-center text-goldLogo text-xl">
-                            <i class="fa-solid fa-bullhorn"></i>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="px-2 py-0.5 rounded-full bg-goldLogo/20 border border-goldLogo/40 text-goldLogo text-[10px] font-extrabold tracking-wider">
-                                ✦ لوحة التنبيهات الدراسية
-                            </span>
-                        </div>
-                        <h2 id="radar-title" class="text-xl sm:text-2xl font-black text-creamBase">عاجل من المرصد</h2>
-                        <p class="text-xs text-creamMuted mt-0.5" id="radar-course-name">هنا تظهر الاختبارات والتكاليف التي تحتاج إلى إنجازك.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-3 bg-black/40 px-4 py-2.5 rounded-xl border border-goldLogo/40">
-                    <span class="text-2xl font-black text-goldLogo" id="radar-count-number">—</span>
-                    <span class="text-xs font-bold text-creamMuted leading-tight">مهام<br>بانتظارك</span>
-                </div>
-            </div>
-
-            <!-- قائمة التنبيهات -->
-            <div id="radar-list" class="space-y-3">
-                <div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 border border-creamBase/10 text-center">
-                    جارٍ تحميل المهام والاختبارات المرتبطة بمساقك الحالي…
-                </div>
-            </div>
-        </div>
-
-        <!-- المسار النجمي -->
-        <div class="glass-panel rounded-2xl p-6">
-            <div class="flex items-center justify-between gap-4 mb-4">
-                <div>
-                    <h3 id="path-title" class="text-lg font-bold text-creamBase">مسارك النجمي في المساق الحالي</h3>
-                    <p id="path-course-label" class="text-xs text-creamMuted mt-0.5">تقدمك محسوب من المهام والاختبارات الموجودة في النظام.</p>
-                </div>
-                <div id="path-percent" class="text-2xl font-black text-goldLogo">—٪</div>
-            </div>
-
-            <div id="star-path" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
-                    <div class="w-8 h-8 mx-auto rounded-full bg-creamBase/10 border border-creamBase/30 flex items-center justify-center text-creamBase text-xs mb-2">✦</div>
-                    <strong class="block text-xs font-bold text-creamBase">الاختبارات الأسبوعية</strong>
-                    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
-                </div>
-                <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
-                    <div class="w-8 h-8 mx-auto rounded-full bg-creamBase/10 border border-creamBase/30 flex items-center justify-center text-creamBase text-xs mb-2">✦</div>
-                    <strong class="block text-xs font-bold text-creamBase">تكاليف المواد</strong>
-                    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
-                </div>
-                <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
-                    <div class="w-8 h-8 mx-auto rounded-full bg-creamBase/10 border border-creamBase/30 flex items-center justify-center text-creamBase text-xs mb-2">✦</div>
-                    <strong class="block text-xs font-bold text-creamBase">الاختبارات النهائية</strong>
-                    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
-                </div>
-            </div>
-
-            <p class="text-[11px] text-mutedText mt-4">المراحل تلخص إنجازك الفعلي في المساق الحالي، ولا تُحتسب المساقات القادمة أو المكتملة ضمن هذا المسار.</p>
-        </div>
+    <div>
+     <h2 class="text-xl font-bold text-creamBase">عاجل من المرصد — التنبيهات والإعلانات</h2>
+     <p class="text-xs text-creamMuted mt-0.5">${c?'المساق الحالي: '+esc(c.name):'لا يوجد مساق حالي متاح.'}</p>
     </div>
+   </div>
+   <div class="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-xl border border-goldLogo/40">
+    <span class="text-2xl font-black text-goldLogo" id="home-radar-count">—</span>
+    <span class="text-xs font-bold text-creamMuted">مهام بانتظارك</span>
+   </div>
+  </div>
+  <div id="home-radar-list" class="space-y-3">
+   <div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 border border-creamBase/10 text-center">جارٍ التحميل…</div>
+  </div>
+ </div>
 
-    <!-- شريط الرسائل العامة وأزرار التحكم -->
-    <div class="flex items-center justify-between gap-4">
-        <span id="app-message" role="status" aria-live="polite" class="text-xs font-bold"></span>
-        <button type="button" id="logout-button" class="px-4 py-2 rounded-xl bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold hover:bg-creamBase/10 transition-all">
-            تسجيل الخروج
-        </button>
+ <!-- المسار النجمي -->
+ <div class="glass-panel rounded-2xl p-6">
+  <div class="flex items-center justify-between gap-4 mb-4">
+   <div>
+    <h3 class="text-lg font-bold text-creamBase">المسار النجمي ودراستك في المساق الحالي</h3>
+    <p class="text-xs text-creamMuted mt-0.5">متابعة إنجازك الأكاديمي خطوة بخطوة.</p>
+   </div>
+   <div id="home-path-percent" class="text-2xl font-black text-goldLogo">—٪</div>
+  </div>
+  <div id="home-star-path" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+   <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
+    <strong class="block text-xs font-bold text-creamBase">الاختبارات الأسبوعية</strong>
+    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
+   </div>
+   <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
+    <strong class="block text-xs font-bold text-creamBase">تكاليف المواد</strong>
+    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
+   </div>
+   <div class="p-4 rounded-xl bg-black/30 border border-creamBase/15 text-center">
+    <strong class="block text-xs font-bold text-creamBase">الاختبارات النهائية</strong>
+    <span class="text-[10px] text-creamMuted">جارٍ الحساب</span>
+   </div>
+  </div>
+ </div>`;
+
+ populateHomeData(c);
+}
+
+function populateHomeData(c){
+ const radar=$('home-radar-list'),count=$('home-radar-count');
+ const path=$('home-star-path'),pct=$('home-path-percent');
+ if(!radar||!count)return;
+
+ if(!c){
+  count.textContent='0';
+  radar.innerHTML='<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 text-center">لا توجد مهام أو اختبارات عاجلة حالياً.</div>';
+  return;
+ }
+
+ const items=[],weekly=c.weekly_exams||[],subjects=c.subjects||[];
+ weekly.forEach(e=>{
+  if(!hasExamResult(e)){
+   const st=deadlineState(e.close_at);
+   items.push({title:e.title||'اختبار أسبوعي',subtitle:'اختبار أسبوعي',state:st,action:`portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)`,icon:'fa-solid fa-scroll'});
+  }
+ });
+ subjects.forEach(s=>{
+  (s.assignments||[]).forEach(a=>{
+   if(!isSubmittedAssignment(a)){
+    const st=deadlineState(a.close_at);
+    items.push({title:a.title||'تكليف',subtitle:'مادة: '+(s.name||''),state:st,action:`portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})`,icon:'fa-solid fa-pen-nib'});
+   }
+  });
+  if(s.final_exam&&!hasExamResult(s.final_exam)){
+   const e=s.final_exam,st=deadlineState(e.close_at);
+   items.push({title:e.title||'الامتحان النهائي',subtitle:'مادة: '+(s.name||''),state:st,action:`portalOpenExam(${Number(e.id)},'subject',${Number(c.id)},${Number(s.id)})`,icon:'fa-solid fa-award'});
+  }
+ });
+
+ count.textContent=String(items.length);
+ if(!items.length){
+  radar.innerHTML='<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 text-center">لا توجد إشعارات أو اختبارات غير منجزة في مساقك الحالي.</div>';
+ }else{
+  radar.innerHTML=items.map(it=>`
+   <article class="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-creamBase/20">
+    <div class="flex items-center gap-3">
+     <div class="w-10 h-10 rounded-xl bg-goldLogo/10 border border-goldLogo/30 flex items-center justify-center text-goldLogo"><i class="${it.icon}"></i></div>
+     <div>
+      <span class="px-2 py-0.5 rounded-full ${it.state.overdue?'bg-red-500/20 text-red-300':'bg-goldLogo/20 text-goldLogo'} text-[10px] font-bold">${esc(it.state.label)}</span>
+      <h3 class="text-sm font-bold text-creamBase mt-0.5">${esc(it.title)}</h3>
+      <p class="text-xs text-creamMuted">${esc(it.subtitle)}</p>
+     </div>
     </div>
+    <button type="button" onclick="${it.action}" class="px-4 py-2 cream-gradient text-navyDark font-bold rounded-lg text-xs shadow-md">فتح</button>
+   </article>`).join('');
+ }
 
-    <!-- منطقة عرض المحتوى الديناميكية (المساقات/المواد/الاختبارات) -->
-    <div id="view" class="space-y-6"></div>
+ const stages=[
+  {title:'الاختبارات الأسبوعية',icon:'fa-solid fa-calendar-check',items:weekly,done:e=>hasExamResult(e)},
+  {title:'تكاليف المواد',icon:'fa-solid fa-file-signature',items:subjects.flatMap(s=>s.assignments||[]),done:a=>isSubmittedAssignment(a)},
+  {title:'الاختبارات النهائية',icon:'fa-solid fa-graduation-cap',items:subjects.map(s=>s.final_exam).filter(Boolean),done:e=>hasExamResult(e)}
+ ];
+ let total=0,done=0;
+ const stageHtml=stages.map(s=>{
+  const n=s.items.length,d=s.items.filter(s.done).length;
+  total+=n;done+=d;
+  const complete=n>0&&d===n;
+  return`<div class="p-4 rounded-xl ${complete?'bg-emerald-950/30 border-emerald-500/30':'bg-black/30 border-creamBase/15'} border text-center">
+   <strong class="block text-xs font-bold text-creamBase">${esc(s.title)}</strong>
+   <span class="text-[10px] text-creamMuted mt-1 block">${n?d+' من '+n+' مكتمل':'لم يُضف بعد'}</span>
+  </div>`;
+ }).join('');
+ if(pct)pct.textContent=total?Math.round(done/total*100)+'%':'—%';
+ if(path)path.innerHTML=stageHtml;
+}
 
-    <!-- تغيير كلمة المرور -->
-    <details class="glass-panel rounded-2xl p-5 border border-creamBase/20 group">
-        <summary class="cursor-pointer text-sm font-bold text-creamBase flex items-center justify-between">
-            <span><i class="fa-solid fa-key text-goldLogo ml-2"></i> تغيير كلمة المرور</span>
-            <i class="fa-solid fa-chevron-down text-xs text-creamMuted group-open:rotate-180 transition-transform"></i>
-        </summary>
-        <form id="password-form" class="space-y-4 mt-4 pt-4 border-t border-creamBase/15 max-w-md">
-            <div>
-                <label for="new-password" class="block text-xs font-bold text-creamBase mb-1">كلمة المرور الجديدة (8 أحرف على الأقل)</label>
-                <input id="new-password" type="password" minlength="8" autocomplete="new-password" required
-                    class="w-full px-4 py-2.5 bg-black/40 border border-creamBase/30 rounded-xl text-creamLight text-sm focus:outline-none focus:border-creamBase">
-            </div>
-            <div>
-                <label for="confirm-password" class="block text-xs font-bold text-creamBase mb-1">تأكيد كلمة المر
+// 2. مساقاتي (المكتملة، ثم الحالية، ثم القادمة)
+function renderCoursesTab(){
+ const courses=dashboard?.courses||[];
+ // الترتيب المطلوب: المكتملة، ثم الحالية، ثم القادمة
+ const orderedCourses=[
+  ...courses.filter(c=>c.status==='completed'),
+  ...courses.filter(c=>c.status==='current'),
+  ...courses.filter(c=>c.status==='locked')
+ ];
+
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="border-b border-creamBase/15 pb-4">
+   <h2 class="text-xl font-bold text-creamBase">مساقاتي الأكاديمية</h2>
+   <p class="text-xs text-creamMuted mt-0.5">عرض المساقات مرتبة حسب (المكتملة، الحالية، ثم القادمة).</p>
+  </div>
+  ${orderedCourses.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${orderedCourses.map(c=>`
+   <article class="p-5 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+    <div>
+     <span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold mb-3 ${c.status==='current'?'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40':c.status==='completed'?'bg-blue-500/20 text-blue-300 border border-blue-500/40':'bg-gray-500/20 text-gray-400 border border-gray-500/40'}">
+      ${esc(prettyStatus(c.status))}
+     </span>
+     <h3 class="text-base font-bold text-creamBase mb-1">${esc(c.name)}</h3>
+     ${c.description?`<p class="text-xs text-creamMuted leading-relaxed mb-3">${esc(c.description)}</p>`:''}
+     ${c.course_result?`<div class="p-3 rounded-lg bg-goldLogo/10 border border-goldLogo/30 text-xs text-creamBase mb-4">نتيجة المساق: مجموع <strong>${esc(c.course_result.total_score??'—')}</strong> (${esc(c.course_result.percentage??'—')}٪)</div>`:''}
+    </div>
+    <button class="w-full py-2.5 rounded-xl text-xs font-bold transition-all ${c.status==='locked'?'bg-black/20 text-mutedText border border-creamBase/10 cursor-not-allowed':'cream-gradient text-navyDark shadow-md'}" type="button" ${c.status==='locked'?'disabled':''} onclick="portalOpenCourse(${Number(c.id)})">
+     ${c.status==='locked'?'غير متاح حالياً':'فتح المساق'}
+    </button>
+   </article>`).join('')}</div>`:'<div class="text-xs text-creamMuted p-6 text-center">لا توجد مساقات مسجلة حالياً.</div>'}
+ </div>`;
+}
+
+// 3. التكاليف (التكاليف المطلوبة وحالة التسليم)
+function renderAssignmentsTab(){
+ const courses=dashboard?.courses||[];
+ let allAssignments=[];
+ courses.forEach(c=>{
+  (c.subjects||[]).forEach(s=>{
+   (s.assignments||[]).forEach(a=>{
+    allAssignments.push({courseName:c.name,subjectName:s.name,courseId:c.id,subjectId:s.id,assignment:a});
+   });
+  });
+ });
+
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="border-b border-creamBase/15 pb-4">
+   <h2 class="text-xl font-bold text-creamBase">التكاليف المطلوبة وحالات التسليم</h2>
+   <p class="text-xs text-creamMuted mt-0.5">متابعة جميع التكاليف الدراسية عبر المواد والمساقات.</p>
+  </div>
+  ${allAssignments.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${allAssignments.map(item=>{
+   const a=item.assignment, submitted=isSubmittedAssignment(a);
+   return `
+   <article class="p-5 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+    <div>
+     <div class="flex items-center justify-between mb-2">
+      <span class="text-[10px] text-goldLogo font-bold">${esc(item.courseName)} — ${esc(item.subjectName)}</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${submitted?'bg-emerald-500/20 text-emerald-300':'bg-goldLogo/20 text-goldLogo'}">
+       ${submitted?'تم التسليم':'مطلوب الإنجاز'}
+      </span>
+     </div>
+     <h3 class="text-sm font-bold text-creamBase mb-1">${esc(a.title)}</h3>
+     ${a.description?`<p class="text-xs text-creamMuted mb-2">${esc(a.description)}</p>`:''}
+     ${a.submission?.grade!=null?`<p class="text-xs font-bold text-emerald-400">الدرجة: ${esc(a.submission.grade)}</p>`:''}
+     ${a.close_at?`<p class="text-[11px] text-mutedText mt-1">آخر موعد: ${esc(dateLabel(a.close_at))}</p>`:''}
+    </div>
+    <button class="w-full mt-4 py-2 cream-gradient text-navyDark font-bold rounded-lg text-xs shadow-md" onclick="portalOpenAssignment(${Number(item.courseId)},${Number(item.subjectId)},${Number(a.id)})">
+     ${submitted?'عرض التسليم':'فتح التكليف للإجابة'}
+    </button>
+   </article>`;
+  }).join('')}</div>`:'<div class="text-xs text-creamMuted p-6 text-center">لا توجد تكاليف مضافة حتى الآن.</div>'}
+ </div>`;
+}
+
+// 4. الاختبارات (الاختبارات المتاحة والتي لم تُنجز)
+function renderExamsTab(){
+ const courses=dashboard?.courses||[];
+ let allExams=[];
+ courses.forEach(c=>{
+  (c.weekly_exams||[]).forEach(e=>{
+   allExams.push({courseName:c.name,type:'course',courseId:c.id,exam:e,titleTag:'اختبار أسبوعي'});
+  });
+  (c.subjects||[]).forEach(s=>{
+   if(s.final_exam){
+    allExams.push({courseName:c.name,subjectName:s.name,type:'subject',courseId:c.id,subjectId:s.id,exam:s.final_exam,titleTag:'امتحان نهائي للمادة'});
+   }
+  });
+ });
+
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="border-b border-creamBase/15 pb-4">
+   <h2 class="text-xl font-bold text-creamBase">الاختبارات الأسبوعية والنهائية</h2>
+   <p class="text-xs text-creamMuted mt-0.5">الاختبارات المتاحة والتي تنتظر إنجازك.</p>
+  </div>
+  ${allExams.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${allExams.map(item=>{
+   const e=item.exam, done=hasExamResult(e);
+   return `
+   <article class="p-5 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+    <div>
+     <div class="flex items-center justify-between mb-2">
+      <span class="text-[10px] text-goldLogo font-bold">${esc(item.courseName)} ${item.subjectName?('— '+esc(item.subjectName)):''}</span>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${done?'bg-emerald-500/20 text-emerald-300':'bg-goldLogo/20 text-goldLogo'}">
+       ${done?'تم إنجازه':'متاح للإجابة'}
+      </span>
+     </div>
+     <h3 class="text-sm font-bold text-creamBase mb-1">${esc(e.title)}</h3>
+     <p class="text-xs text-creamMuted mb-2">${esc(item.titleTag)} ${e.week_number!=null?('· الأسبوع '+e.week_number):''}</p>
+     ${e.result?`<p class="text-xs font-bold text-emerald-400">النتيجة: ${esc(e.result.score)} /${esc(e.result.total)}</p>`:''}
+     ${e.close_at?`<p class="text-[11px] text-mutedText mt-1">آخر موعد: ${esc(dateLabel(e.close_at))}</p>`:''}
+    </div>
+    <button class="w-full mt-4 py-2 ${done?'bg-navyDark border border-creamBase/30 text-creamBase':'cream-gradient text-navyDark'} font-bold rounded-lg text-xs shadow-md" onclick="portalOpenExam(${Number(e.id)},'${item.type}',${Number(item.courseId)},${item.subjectId||null})">
+     ${done?'عرض النتيجة / التفاصيل':'بدء الامتحان الآن'}
+    </button>
+   </article>`;
+  }).join('')}</div>`:'<div class="text-xs text-creamMuted p-6 text-center">لا توجد اختبارات متاحة حالياً.</div>'}
+ </div>`;
+}
+
+// 5. النتائج (درجات الطالب ونتائجه المعلنة)
+function renderResultsTab(){
+ const courses=dashboard?.courses||[];
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="border-b border-creamBase/15 pb-4">
+   <h2 class="text-xl font-bold text-creamBase">سجل النتائج والدرجات</h2>
+   <p class="text-xs text-creamMuted mt-0.5">درجاتك ونتائجه المعلنة في المساقات والاختبارات.</p>
+  </div>
+  ${courses.map(c=>{
+   const hasRes=c.course_result;
+   const weekly=(c.weekly_exams||[]).filter(e=>hasExamResult(e));
+   const subjects=(c.subjects||[]).flatMap(s=>[
+    ...(s.assignments||[]).filter(a=>a.submission?.grade!=null).map(a=>({title:'تكليف: '+a.title,score:a.submission.grade})),
+    ...(s.final_exam&&hasExamResult(s.final_exam)?[{title:'نهائي: '+s.final_exam.title,score:s.final_exam.result.score+' / '+s.final_exam.result.total}]:[])
+   ]);
+   if(!hasRes&&!weekly.length&&!subjects.length)return'';
+   return `
+   <div class="p-5 rounded-xl bg-black/40 border border-creamBase/20 space-y-3">
+    <h3 class="text-base font-bold text-goldLogo">${esc(c.name)}</h3>${hasRes?`<div class="p-3 rounded-lg bg-goldLogo/10 border border-goldLogo/30 text-xs font-bold text-creamBase">نتيجة المساق الكلية: المجموع (${esc(c.course_result.total_score)}) — النسبة (${esc(c.course_result.percentage)}٪)</div>`:''}
+    <div class="space-y-1.5 pt-2">
+     ${weekly.map(e=>`<div class="flex justify-between text-xs p-2 rounded bg-black/30"><span class="text-creamLight">${esc(e.title)}</span><span class="font-bold text-emerald-400">${e.result.score} / ${e.result.total}</span></div>`).join('')}
+     ${subjects.map(sub=>`<div class="flex justify-between text-xs p-2 rounded bg-black/30"><span class="text-creamLight">${esc(sub.title)}</span><span class="font-bold text-emerald-400">${sub.score}</span></div>`).join('')}
+    </div>
+   </div>`;
+  }).join('') || '<div class="text-xs text-creamMuted p-6 text-center">لا توجد نتائج معلنة حتى الآن.</div>'}
+ </div>`;
+}
+
+// 6. كلمة المرور
+function renderPasswordTab(){
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 max-w-xl mx-auto space-y-4">
+  <div class="border-b border-creamBase/15 pb-4">
+   <h2 class="text-xl font-bold text-creamBase">تغيير كلمة المرور</h2>
+   <p class="text-xs text-creamMuted mt-0.5">تحديث بيانات الأمان الخاصة بحسابك.</p>
+  </div>
+  <form id="password-form" class="space-y-4">
+   <div>
+    <label for="new-password" class="block text-xs font-bold text-creamBase mb-1">كلمة المرور الجديدة (8 أحرف على الأقل)</label>
+    <input id="new-password" type="password" minlength="8" autocomplete="new-password" required
+     class="w-full px-4 py-3 bg-black/40 border border-creamBase/30 rounded-xl text-creamLight text-sm focus:outline-none focus:border-creamBase">
+   </div>
+   <div>
+    <label for="confirm-password" class="block text-xs font-bold text-creamBase mb-1">تأكيد كلمة المرور الجديدة</label>
+    <input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required
+     class="w-full px-4 py-3 bg-black/40 border border-creamBase/30 rounded-xl text-creamLight text-sm focus:outline-none focus:border-creamBase">
+   </div>
+   <button class="w-full py-3 cream-gradient text-navyDark font-bold rounded-xl text-xs shadow-md" type="submit">
+    تحديث كلمة المرور
+   </button>
+  </form>
+  <p id="password-message" role="status" aria-live="polite" class="mt-2 text-xs font-bold"></p>
+ </div>`;
+
+ $('password-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const p=$('new-password').value,c=$('confirm-password').value;
+  if(p.length<8){message('password-message','كلمة المرور يجب ألا تقل عن 8 أحرف.','error');return;}
+  if(p!==c){message('password-message','كلمتا المرور غير متطابقتين.','error');return;}
+  const{error}=await client.auth.updateUser({password:p});
+  if(error){message('password-message',friendlyError(error),'error');return;}
+  $('password-form').reset();
+  message('password-message','تم تغيير كلمة المرور بنجاح.','success');
+ });
+}
+
+// الدوال التفصيلية لفتح المساق والمادة والتكليف والامتحان
+function openCourse(courseId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ if(!c)return renderCoursesTab();
+ if(c.status==='locked'){message('app-message','هذا المساق قادم ولا يمكن الدخول إليه الآن.','error');return;}
+ const weekly=c.weekly_exams||[],subjects=c.subjects||[];
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="flex items-center gap-4 border-b border-creamBase/15 pb-4">
+   <button class="px-3 py-1.5 rounded-lg bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold" onclick="switchTab('courses')">
+    <i class="fa-solid fa-arrow-right ml-1"></i> رجوع لمساقاتي
+   </button>
+   <h2 class="text-xl font-bold text-creamBase">${esc(c.name)}</h2>
+  </div>
+  ${c.description?`<p class="text-xs text-creamMuted leading-relaxed">${esc(c.description)}</p>`:''}
+  
+  <section>
+   <h3 class="text-base font-bold text-creamBase mb-3">الامتحانات الأسبوعية</h3>
+   ${weekly.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${weekly.map(e=>`
+    <article class="p-4 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+     <div>
+      <h3 class="text-sm font-bold text-creamBase">${esc(e.title)}</h3>
+      ${e.week_number!=null?`<p class="text-xs text-creamMuted mt-1">الأسبوع: ${esc(e.week_number)}</p>`:''}
+      ${e.result?`<p class="text-xs font-bold text-emerald-400 mt-2">النتيجة: ${esc(e.result.score)} /${esc(e.result.total)}</p>`:''}
+     </div>
+     <button class="w-full mt-4 py-2 cream-gradient text-navyDark font-bold rounded-lg text-xs" onclick="portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)">فتح الامتحان</button>
+    </article>`).join('')}</div>`:'<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/20 text-center">لا توجد امتحانات أسبوعية.</div>'}
+  </section>
+
+  <section>
+   <h3 class="text-base font-bold text-creamBase mb-3">مواد المساق</h3>
+   ${subjects.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${subjects.map(s=>`
+    <article class="p-4 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+     <div>
+      <h3 class="text-sm font-bold text-creamBase">${esc(s.name)}</h3>
+      ${s.description?`<p class="text-xs text-creamMuted mt-1">${esc(s.description)}</p>`:''}
+     </div>
+     <button class="w-full mt-4 py-2 bg-navyDark border border-creamBase/30 text-creamBase font-bold rounded-lg text-xs" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">فتح المادة</button>
+    </article>`).join('')}</div>`:'<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/20 text-center">لا توجد مواد.</div>'}
+  </section>
+ </div>`;
+}
+
+function openSubject(courseId,subjectId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
+ if(!c||!s)return renderCoursesTab();
+ const assignments=s.assignments||[],f=s.final_exam;
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="flex items-center gap-4 border-b border-creamBase/15 pb-4">
+   <button class="px-3 py-1.5 rounded-lg bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold" onclick="portalOpenCourse(${Number(c.id)})">
+    <i class="fa-solid fa-arrow-right ml-1"></i> رجوع للمساق
+   </button>
+   <h2 class="text-xl font-bold text-creamBase">${esc(s.name)}</h2>
+  </div>
+  <section>
+   <h3 class="text-base font-bold text-creamBase mb-3">تكاليف المادة</h3>
+   ${assignments.length?`<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${assignments.map(a=>`
+    <article class="p-4 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+     <div>
+      <h3 class="text-sm font-bold text-creamBase">${esc(a.title)}</h3>
+      <p class="text-xs font-bold ${a.submission?.submitted_at||a.submission?.submitted?'text-emerald-400':'text-goldLogo'} mt-2">الحالة: ${a.submission?.submitted_at||a.submission?.submitted?'تم التسليم':'لم يتم التسليم'}</p>
+     </div>
+     <button class="w-full mt-4 py-2 cream-gradient text-navyDark font-bold rounded-lg text-xs" onclick="portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})">عرض التكليف</button>
+    </article>`).join('')}</div>`:'<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/20 text-center">لا توجد تكاليف.</div>'}
+  </section>
+  <section>
+   <h3 class="text-base font-bold text-creamBase mb-3">الامتحان النهائي للمادة</h3>
+   ${f?`<article class="p-4 rounded-xl bg-black/40 border border-creamBase/20 flex flex-col justify-between">
+    <div><h3 class="text-sm font-bold text-creamBase">${esc(f.title)}</h3>${f.result?`<p class="text-xs font-bold text-emerald-400 mt-2">النتيجة: ${esc(f.result.score)} / ${esc(f.result.total)}</p>`:''}</div>
+    <button class="w-full mt-4 py-2 bg-navyDark border border-creamBase/30 text-creamBase font-bold rounded-lg text-xs" onclick="portalOpenExam(${Number(f.id)},'subject',${Number(c.id)},${Number(s.id)})">فتح الامتحان</button>
+   </article>`:'<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/20 text-center">لا يوجد امتحان نهائي مضاف.</div>'}
+  </section>
+ </div>`;
+}
+
+function openAssignment(courseId,subjectId,assignmentId){
+ const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
+ const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
+ const a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));
+ if(!c||!s||!a)return;
+ 
+ const submitted=isSubmittedAssignment(a);
+ view.innerHTML=`
+ <div class="glass-panel rounded-2xl p-6 space-y-4">
+  <div class="flex items-center gap-4 border-b border-creamBase/15 pb-4">
+   <button class="px-3 py-1.5 rounded-lg bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">
+    <i class="fa-solid fa-arrow-right ml-1"></i> رجوع للمادة
+   </button>
+   <h2 class="text-xl font-bold text-creamBase">${esc(a.title)}</h2>
+  </div>
+  ${a.description?`<p class="text-xs text-creamMuted">${esc(a.description)}</p>`:''}
+  ${a.question_text?`<div class="p-4 rounded-xl bg-black/40 border border-creamBase/20"><h3 class="text-xs font-bold text-goldLogo mb-2">السؤال</h3><p class="text-xs text-creamLight whitespace-pre-wrap">${esc(a.question_text)}</p></div>`:''}
+  
+  ${submitted?`
+   <div class="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30">
+    <h3 class="text-sm font-bold text-emerald-400">تم تسليم التكليف بنجاح</h3>
+    ${a.submission.grade!=null?`<p class="text-xs font-bold text-emerald-300 mt-1">الدرجة: ${esc(a.submission.grade)}</p>`:''}
+   </div>`:
+   `<form id="assignment-form" class="space-y-4 pt-2">
+    <div>
+     <label for="assignment-answer" class="block text-xs font-bold text-creamBase mb-1.5">إجابتك</label>
+     <textarea id="assignment-answer" rows="8" maxlength="20000" required class="w-full p-4 bg-black/40 border border-creamBase/30 rounded-xl text-creamLight text-sm focus:outline-none"></textarea>
+    </div>
+    <button class="px-6 py-3 cream-gradient text-navyDark font-bold rounded-xl text-xs shadow-md" type="submit">تسليم التكليف نهائياً</button>
+   </form>
+   <p id="assignment-message" role="status" aria-live="polite"></p>`}
+ </div>`;
+
+ if(!submitted){
+  $('assignment-form').addEventListener('submit',async ev=>{
+   ev.preventDefault();
+   const button=$('assignment-form').querySelector('button');
+   button.disabled=true;
+   message('assignment-message','جارٍ تسليم التكليف…');
+   const{error}=await client.rpc('submit_student_assignment',{p_assignment_id:Number(assignmentId),p_submission_text:$('assignment-answer').value});
+   if(error){message('assignment-message',friendlyError(error),'error');button.disabled=false;return;}
+   message('assignment-message','تم التسليم بنجاح.','success');
+   try{await refreshDashboard({render:false});openSubject(courseId,subjectId);}catch(e){}
+  });
+ }
+}
+
+async function openExam(examId,parentType,courseId,subjectId){
+ examParent=parentType==='subject'?{type:'subject',courseId:Number(courseId),subjectId:Number(subjectId)}:{type:'course',courseId:Number(courseId)};
+ view.innerHTML=`<div class="glass-panel rounded-2xl p-6 text-center text-xs text-creamMuted">جارٍ تحميل الامتحان…</div>`;
+ const{data,error}=await client.rpc('get_student_exam',{p_exam_id:Number(examId)});
+ if(error){view.innerHTML=`<div class="glass-panel rounded-2xl p-6 text-center text-xs text-red-400">${esc(friendlyError(error))}</div>`;return;}
+ renderExam(data);
+}
+
+function renderExam(data){
+ const exam=data.exam||{},state=data.state;
+ let content=`
+ <div class="glass-panel rounded-2xl p-6 space-y-6">
+  <div class="flex items-center gap-4 border-b border-creamBase/15 pb-4">
+   <button class="px-3 py-1.5 rounded-lg bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold" onclick="portalBackFromExam()">
+    <i class="fa-solid fa-arrow-right ml-1"></i> رجوع
+   </button>
+   <h2 class="text-xl font-bold text-creamBase">${esc(exam.title||'الامتحان')}</h2>
+  </div>`;
+ 
+ if(state==='submitted'){
+  const pending=Number(data.result?.pending_manual_count||0);
+  content+=`<div class="p-6 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-center">
+   <h3 class="text-lg font-bold text-emerald-400 mb-2">تم تسليم الامتحان</h3>
+   <p class="text-base font-extrabold text-creamBase">${pending?'توجد إجابات مقالية بانتظار التصحيح.':`النتيجة: ${esc(data.result?.score??'—')} / ${esc(data.result?.total??'—')}`}</p>
+  </div></div>`;
+  view.innerHTML=content;return;
+ }
+ if(state==='upcoming'||state==='closed'||state==='course_completed'){
+  content+=`<div class="p-6 rounded-xl bg-black/40 border border-creamBase/20 text-center text-xs font-bold text-creamMuted">${state==='upcoming'?'الامتحان لم يفتح بعد.':state==='closed'?'انتهى موعد الامتحان.':'المساق مكتمل.'}</div></div>`;
+  view.innerHTML=content;return;
+ }
+ const questions=data.questions||[];
+ content+=`<form id="exam-form" class="space-y-6">`;
+ content+=questions.map((q,i)=>{
+  const opts=normalizeOptions(q.options),multi=q.question_type==='multiple_select',type=q.question_type||'';
+  const body=opts.length?opts.map(o=>`
+   <label class="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-creamBase/20 cursor-pointer">
+    <input type="${multi?'checkbox':'radio'}" name="question-${Number(q.id)}" value="${esc(o.value)}" class="accent-goldLogo">
+    <span class="text-xs font-medium text-creamLight">${esc(o.label)}</span>
+   </label>`).join(''):`
+   <div class="mt-2">
+    <textarea id="answer-${Number(q.id)}" name="question-${Number(q.id)}" ${type==='essay'?'rows="4"':''} class="w-full p-3 bg-black/40 border border-creamBase/30 rounded-xl text-xs text-creamLight focus:outline-none"></textarea>
+   </div>`;
+  return`<div class="p-5 rounded-xl bg-black/30 border border-creamBase/20 space-y-3">
+   <h3 class="text-sm font-bold text-creamBase">السؤال ${i+1}</h3>
+   <p class="text-xs text-creamLight whitespace-pre-wrap">${esc(q.question_text||'')}</p>
+   <div class="space-y-2 pt-2">${body}</div>
+  </div>`;
+ }).join('');
+ content+=`<button class="w-full py-3 cream-gradient text-navyDark font-black rounded-xl text-sm shadow-lg" type="submit">إنهاء وتسليم الامتحان</button></form></form>`;
+ view.innerHTML=content;
+
+ $('exam-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(!confirm('هل تريدين تسليم الامتحان؟'))return;
+  const answers=questions.map(q=>{
+   const opts=normalizeOptions(q.options);
+   let answer;
+   if(q.question_type==='multiple_select'){
+    answer=JSON.stringify(Array.from(view.querySelectorAll(`input[name="question-${Number(q.id)}"]:checked`)).map(x=>x.value));
+   }else if(opts.length){
+    answer=view.querySelector(`input[name="question-${Number(q.id)}"]:checked`)?.value||'';
+   }else{
+    answer=$(`answer-${Number(q.id)}`)?.value||'';
+   }
+   return{question_id:Number(q.id),answer};
+  }).filter(x=>x.answer!=='');
+
+  const{data:result,error}=await client.rpc('submit_student_exam',{p_exam_id:Number(exam.id),p_answers:answers});
+  if(error){alert(friendlyError(error));return;}
+  renderExam({state:'submitted',exam,result});
+  try{await refreshDashboard({render:false});}catch(_){}
+ });
+}
+
+function portalBackFromExam(){
+ if(examParent.type==='subject')openSubject(examParent.courseId,examParent.subjectId);
+ else if(examParent.type==='course')openCourse(examParent.courseId);
+ else switchTab('exams');
+}
+
+// تسجيل الدخول والخروج
+$('login-form').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ const code=$('student-code').value.trim(),password=$('student-password').value;
+ if(!code||!password)return;
+ const b=$('login-button');
+ b.disabled=true;
+ message('login-message','جارٍ تسجيل الدخول…');
+ const{error}=await client.auth.signInWithPassword({email:`student.${code.toLowerCase()}@login.invalid`,password});
+ b.disabled=false;
+ if(error){message('login-message',friendlyError(error),'error');return;}
+ try{
+  await refreshDashboard();
+  showSignedIn();
+  switchTab('home');
+ }catch(e){
+  await client.auth.signOut();
+  showSignedOut();
+  message('login-message',friendlyError(e),'error');
+ }
+});
+
+async function logout(){
+ try{
+  const{error}=await client.auth.signOut();
+  if(error)throw error;
+  window.location.replace('index.html');
+ }catch(e){
+  alert('تعذر تسجيل الخروج: '+friendlyError(e));
+ }
+}
+document.querySelectorAll('#logout-button, #header-logout').forEach(b=>b.addEventListener('click',logout));
+
+window.portalOpenCourse=openCourse;
+window.portalOpenSubject=openSubject;
+window.portalOpenAssignment=openAssignment;
+window.portalOpenExam=openExam;
+window.switchTab=switchTab;
+
+(async()=>{
+ const{data}=await client.auth.getSession();
+ if(!data?.session)return;
+ try{await refreshDashboard();showSignedIn();switchTab('home');}
+ catch(_){await client.auth.signOut();showSignedOut();}
+})();
+})();
+</script>
+</body>
+</html>
