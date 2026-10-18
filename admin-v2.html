@@ -307,7 +307,75 @@ function dt(v){return v?new Date(v).toLocaleString('ar-EG'):'—'}
 async function getRows(table,select='*',order='id'){const {data,error}=await db.from(table).select(select).order(order,{ascending:true});if(error)throw error;return data||[]}
 async function loadCourses(){cache.courses=await getRows('courses','*','id');fillSelect('studentCourse',cache.courses,'بدون مساق الآن',x=>x.name);fillSelect('subjectCourse',cache.courses,'اختاري المساق',x=>x.name);fillSelect('examCourse',cache.courses,'اختاري المساق',x=>x.name);fillSelect('assignmentCourse',cache.courses,'اختاري المساق',x=>x.name);let counts={};try{const subs=await getRows('course_subjects','id,course_id','id');subs.forEach(x=>counts[x.course_id]=(counts[x.course_id]||0)+1)}catch(e){}let studentCounts={};try{const links=await getRows('student_courses','student_id,course_id','student_id');links.forEach(x=>studentCounts[x.course_id]=(studentCounts[x.course_id]||0)+1)}catch(e){}$('coursesTable').innerHTML=cache.courses.length?cache.courses.map(x=>`<article class="course-card"><div class="course-cover">${x.image_url?`<img src="${esc(x.image_url)}" alt="صورة ${esc(x.name)}">`:'✦'}</div><div class="course-body"><h3>${esc(x.name)}</h3><p class="sub">${esc(x.description||'لا توجد نبذة عن المساق')}</p><div class="course-meta"><span>${counts[x.id]||0} مادة</span><span>${studentCounts[x.id]||0} طالب</span><span>${x.active!==false?'نشط':'مكتمل / غير نشط'}</span></div><div class="row-actions"><button class="btn" data-course-details="${x.id}">عرض التفاصيل</button><button class="btn secondary" data-edit-course="${x.id}">✎ تعديل</button><button class="btn secondary" data-delete-course="${x.id}" data-name="${esc(x.name)}">حذف</button></div></div></article>`).join(''):'<div class="empty">لا توجد مساقات بعد. أضيفي أول مساق من الزر أعلاه.</div>';$('statCourses').textContent=cache.courses.length} 
 async function loadSubjects(){cache.subjects=await getRows('course_subjects','id,course_id,name,description,display_order,active','id');const names=Object.fromEntries(cache.courses.map(x=>[x.id,x.name]));$('subjectsTable').innerHTML=tableHTML(['المادة','الحالة','المساق','إجراء'],cache.subjects.map(x=>`<tr><td><strong>${esc(x.name)}</strong><div class="muted">${esc(x.description||'')}</div></td><td><span class="status-pill">${x.active?'نشطة':'مكتملة / غير نشطة'}</span></td><td>${esc(names[x.course_id]||('مساق #'+x.course_id))}</td><td><div class="row-actions"><button class="btn secondary" data-edit-subject="${x.id}">تعديل</button><button class="btn secondary" data-toggle-subject="${x.id}" data-active="${x.active}">${x.active?'إيقاف':'تفعيل'}</button></div></td></tr>`));fillSelect('examSubject',cache.subjects,'لا توجد مادة محددة / اختبار أسبوعي',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);fillSelect('assignmentSubject',cache.subjects,'اختاري المادة',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);$('statSubjects').textContent=cache.subjects.length} 
-async function loadStudents(){cache.students=await getRows('Students','id,name,code,auth_user_id','id');let links=[];try{links=await getRows('student_courses','student_id,course_id','student_id')}catch(e){console.warn('تعذر قراءة روابط المساقات الحالية',e)}const courseNames=Object.fromEntries(cache.courses.map(c=>[String(c.id),c.name]));const linksByStudent={};for(const link of links){(linksByStudent[String(link.student_id)] ||= []).push(courseNames[String(link.course_id)]||('مساق #'+link.course_id))}$('studentsTable').innerHTML=tableHTML(['اسم الطالب','كود الدخول','المساق الحالي','إجراء'],cache.students.map(x=>`<tr><td>${esc(x.name)}</td><td><strong>${esc(x.code||'—')}</strong></td><td>${esc((linksByStudent[String(x.id)]||[]).join('، ')||'لا يوجد مساق حاليًا')}</td><td><button class="btn secondary" data-delete-student="${x.id}" data-name="${esc(x.name)}">حذف</button></td></tr>`));$('statStudents').textContent=cache.students.length}
+
+async function loadStudents() {
+  cache.students = await getRows(
+    'Students',
+    'id,name,code,auth_user_id',
+    'id'
+  );
+
+  let links = [];
+
+  try {
+    links = await getRows(
+      'student_courses',
+      'student_id,course_id,active',
+      'student_id'
+    );
+  } catch (e) {
+    console.warn('تعذر تحميل المساقات المرتبطة بالطلاب', e);
+  }
+
+  const courseNames = Object.fromEntries(
+    cache.courses.map(c => [String(c.id), c.name])
+  );
+
+  const linksByStudent = {};
+
+  for (const link of links) {
+    if (link.active === false) continue;
+
+    (linksByStudent[String(link.student_id)] ||= []).push(
+      courseNames[String(link.course_id)] ||
+      ('مساق #' + link.course_id)
+    );
+  }
+
+  $('studentsTable').innerHTML = tableHTML(
+    ['اسم الطالب', 'كود الدخول', 'المساق الحالي', 'إجراء'],
+    cache.students.map(student => `
+      <tr>
+        <td>${esc(student.name)}</td>
+        <td><strong>${esc(student.code || '—')}</strong></td>
+        <td>${esc(
+          (linksByStudent[String(student.id)] || []).join('، ') ||
+          'لا يوجد مساق حاليًا'
+        )}</td>
+        <td>
+          <div class="row-actions">
+            <button
+              type="button"
+              class="btn secondary"
+              data-edit-student="${student.id}">
+              ✎ تعديل
+            </button>
+            <button
+              type="button"
+              class="btn secondary"
+              data-delete-student="${student.id}"
+              data-name="${esc(student.name)}">
+              حذف
+            </button>
+          </div>
+        </td>
+      </tr>
+    `)
+  );
+
+  $('statStudents').textContent = cache.students.length;
+}
+
 async function loadExams(){try{cache.exams=await getRows('exams','id,title,type,open_at,close_at,course_id,course_subject_id,week_number,active','id')}catch(e){if(!/active|column|schema cache/i.test(e.message||''))throw e;cache.exams=await getRows('exams','id,title,type,open_at,close_at,course_id,course_subject_id,week_number','id')}const courses=Object.fromEntries(cache.courses.map(x=>[x.id,x.name])),subjects=Object.fromEntries(cache.subjects.map(x=>[x.id,x.name]));$('examsTable').innerHTML=tableHTML(['الاختبار','الحالة','النوع','المساق','المادة','الأسبوع','الفتح / الإغلاق','إجراء'],cache.exams.map(x=>{const enabled=x.active!==false;const schedule=x.close_at&&new Date(x.close_at)<new Date()?'انتهى موعده':x.open_at&&new Date(x.open_at)>new Date()?'لم يحن موعده':'ضمن الموعد';return `<tr><td><strong>${esc(x.title)}</strong><div class="muted">#${x.id}</div></td><td><span class="status-pill">${enabled?'نشط':'متوقف'}</span><div class="muted">${esc(schedule)}</div></td><td>${esc(x.type||'—')}</td><td>${esc(courses[x.course_id]||'—')}</td><td>${esc(subjects[x.course_subject_id]||'—')}</td><td>${esc(x.week_number||'—')}</td><td>${esc(dt(x.open_at))}<br>${esc(dt(x.close_at))}</td><td><div class="row-actions"><button class="btn secondary" data-edit-exam="${x.id}">تعديل</button><button class="btn secondary" data-toggle-exam="${x.id}" data-active="${enabled}">${enabled?'إيقاف الاختبار':'تفعيل الاختبار'}</button><button class="btn secondary" data-delete-exam="${x.id}" data-name="${esc(x.title)}">حذف</button></div></td></tr>`}));fillSelect('questionExam',cache.exams,'اختاري الاختبار',x=>x.title);$('statExams').textContent=cache.exams.length}
 async function loadAssignments(){const data=await getRows('assignments','id,title,question_text,max_grade,description,open_at,close_at,course_id,course_subject_id','id');const courses=Object.fromEntries(cache.courses.map(x=>[x.id,x.name])),subjects=Object.fromEntries(cache.subjects.map(x=>[x.id,x.name]));$('assignmentsTable').innerHTML=tableHTML(['التكليف والسؤال','المساق','المادة','الدرجة','المواعيد','إجراء'],data.map(x=>`<tr><td><strong>${esc(x.title||'—')}</strong><div class="muted">${esc(x.question_text||x.description||'—')}</div></td><td>${esc(courses[x.course_id]||'—')}</td><td>${esc(subjects[x.course_subject_id]||'—')}</td><td>${esc(x.max_grade??'—')}</td><td><div>الفتح: ${esc(dt(x.open_at))}</div><div>الإغلاق: ${esc(dt(x.close_at))}</div></td><td><div class="row-actions"><button class="btn secondary" data-edit-assignment="${x.id}">تعديل</button><button class="btn secondary" data-delete-assignment="${x.id}" data-name="${esc(x.title||'التكليف')}">حذف</button></div></td></tr>`))}
 async function loadResults(){const er=await getRows('exam_results','id,score,total,submitted_at,student_id,exam_id','id');const students=Object.fromEntries(cache.students.map(x=>[x.id,x.name])),exams=Object.fromEntries(cache.exams.map(x=>[x.id,x.title]));$('examResultsTable').innerHTML=tableHTML(['الطالب','الاختبار','الدرجة','تاريخ التسليم'],er.map(x=>`<tr><td>${esc(students[x.student_id]||('طالب #'+x.student_id))}</td><td>${esc(exams[x.exam_id]||('اختبار #'+x.exam_id))}</td><td>${esc(x.score??'—')} / ${esc(x.total??'—')}</td><td>${esc(dt(x.submitted_at))}</td></tr>`));const cr=await getRows('course_results','id,student_id,course_id,total_score,percentage,status,announced_at','id');const courses=Object.fromEntries(cache.courses.map(x=>[x.id,x.name]));$('courseResultsTable').innerHTML=tableHTML(['الطالب','المساق','المجموع','النسبة','الحالة','تاريخ الإعلان'],cr.map(x=>`<tr><td>${esc(students[x.student_id]||('طالب #'+x.student_id))}</td><td>${esc(courses[x.course_id]||('مساق #'+x.course_id))}</td><td>${esc(x.total_score??'—')}</td><td>${esc(x.percentage==null?'—':x.percentage+'%')}</td><td>${esc(x.status||'—')}</td><td>${esc(dt(x.announced_at))}</td></tr>`))}
