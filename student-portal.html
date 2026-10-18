@@ -1,4 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navyDark: '#070E17',
+                        navyCard: 'rgba(10, 20, 32, 0.85)',
+                        navyBorder: 'rgba(232, 216, 200, 0.18)',
+                        creamLight: '#FAF0E6',
+                        creamBase: '#F5E6D3',
+                        creamSoft: '#E8D8C8',
+                        creamMuted: '#C8B8A5',
+                        goldLogo: '#D4AF37',
+                        goldDark: '#8A701E',
+                        mutedText: '#9AA8B8'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    },
+                    animation: {
+                        'spin-slow': 'spin 12s linear infinite',
+                        'ping-slow': 'ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #070E17;
+            color: #F5E6D3;
+            overflow-x: hidden;
+        }
 
+        /* خلفية مزخرفة زجاجية */
+        .page-bg {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 230, 211, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(7, 14, 23, 0.95) 0%, #070E17 100%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(12, 24, 38, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(245, 230, 211, 0.18);
+        }
+
+        .glass-panel-active {
+            background: rgba(16, 30, 48, 0.88);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .gold-gradient-btn {
+            background: linear-gradient(135deg, #FAF0E6 0%, #E8D8C8 40%, #D4AF37 100%);
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+        }
+
+        /* المدار الفلكي للرادار */
+        .orbit-ring {
+            border: 1px dashed rgba(212, 175, 55, 0.35);
+            border-radius: 50%;
+        }
+
+        /* خطوط الرادار التفاعلية */
+        .radar-sweep {
+            background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(212, 175, 55, 0.3) 360deg);
+            border-radius: 50%;
+        }
+
+        /* تأثير ختم الشمع المذهب */
+        .wax-seal {
+            background: radial-gradient(circle, #D4AF37 0%, #8A701E 70%, #4A3A0B 100%);
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(7, 14, 23, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+ <body class="page-bg min-h-screen py-8 px-4 sm:px-6 lg:px-12 flex flex-col items-center">
+
+    <!-- العروة العلوية والمقدمة التوضيحية -->
+    <header class="max-w-5xl w-full text-center mb-10">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border-goldLogo/30 text-goldLogo text-xs font-bold mb-4">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>معرض الأفكار الإبداعية - لواجهات منصة مرصد</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-creamBase mb-3">
+            تصورات بصريّة غير مألوفة <span class="text-goldLogo">لتنبيهات الطالب</span>
+        </h1>
+        <p class="text-sm sm:text-base text-creamMuted max-w-2xl mx-auto leading-relaxed">
+            نماذج تفاعلية حية بديلة للقوائم التقليدية، مصممة بهوية إسلامية وفاخرة تمنح الطالب تجربة فريدة عند إطلاق اختبار أو تكليف جديد.
+        </p>
+       <!-- أزرار تبديل التصورات الثلاثة -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <button onclick="switchConcept('concept-1')" id="btn-concept-1" 
+                class="concept-btn px-5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2.5 glass-panel-active text-goldLogo">
+                <i class="fa-solid fa-radar text-lg"></i>
+                <span>١. رادار المرصد الفلكي</span>
+            </button>
+            <button onclick="switchConcept('concept-2')" id="btn-concept-2" 
+                class="concept-btn px-5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2.5 glass-panel text-creamMuted hover:text-creamBase">
+                <i class="fa-solid fa-diagram-project text-lg"></i>
+                <span>٢. المشكاة وسلسلة النجوم</span>
+            </button>
+            <button onclick="switchConcept('concept-3')" id="btn-concept-3" 
+                class="concept-btn px-5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2.5 glass-panel text-creamMuted hover:text-creamBase">
+                <i class="fa-solid fa-scroll text-lg"></i>
+                <span>٣. المخطوطة الملكية العاجلة</span>
+            </button>
+        </div>
+    </header>
+<!-- الحاوية الرئيسية للبطاقات التفاعلية -->
+    <main class="max-w-5xl w-full">
+
+        <!-- ========================================== -->
+        <!-- التصور الأول: رادار المرصد الفلكي -->
+        <!-- ========================================== -->
+        <section id="concept-1" class="concept-container space-y-6">
+            
+            <div class="text-right mb-2 flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-creamBase flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-goldLogo animate-ping"></span>
+                        مفهوم: "رادار التقاط النوازل والأحداث العلمية"
+                    </h2>
+                    <p class="text-xs text-mutedText">يعتمد على ماسح راداري فلكي دائري يضيء فور إضافة مستجدات إكاديمية.</p>
+                </div>
+                <span class="text-xs text-goldLogo bg-goldLogo/10 px-3 py-1 rounded-lg border border-goldLogo/20">تفاعلي بالكامل</span>
+            </div>
+
+            <!-- بطاقة التنبيه الراداري الرئيسية -->
+            <div class="relative glass-panel rounded-3xl p-6 sm:p-8 border border-goldLogo/30 overflow-hidden shadow-2xl transition-all duration-500 hover:border-goldLogo/60">
+                
+                <!-- إضاءة خلفية تسبح -->
+                <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-goldLogo/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+                    
+                    <!-- الجزء الأيمن: ماسح الرادار الفلكي الفاخر -->
+                    <div class="flex items-center gap-6 w-full lg:w-auto">
+                        
+                        <!-- مكون الرادار البصري الحركي -->
+                        <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 flex items-center justify-center">
+                            <!-- مدار خارجي أول -->
+                            <div class="absolute inset-0 orbit-ring animate-spin-slow"></div>
+                            <!-- مدار خارجي ثان عكسي -->
+                            <div class="absolute inset-2 border border-creamBase/20 rounded-full"></div>
+                            <!-- ماسح الرادار الضوئي -->
+                            <div class="absolute inset-1 radar-sweep animate-spin"></div>
+                            <!-- نقطة النبض التفاعلية (حدث جديد) -->
+                            <div class="absolute top-4 right-5 w-3 h-3 bg-goldLogo rounded-full animate-ping"></div>
+                            <div class="absolute top-4 right-5 w-3 h-3 bg-goldLogo rounded-full border-2 border-navyDark"></div>
+                            <!-- اللب المركزي -->
+                            <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-goldLogo to-goldDark flex items-center justify-center text-navyDark text-xl shadow-lg border border-creamBase/50">
+                                <i class="fa-solid fa-compass animate-pulse"></i>
+                            </div>
+                        </div>
+
+                        <!-- المحتوى النصي للإشعار -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-3 py-0.5 rounded-full bg-goldLogo/20 border border-goldLogo/40 text-goldLogo text-xs font-black tracking-wider">
+                                    ✦ رصد حديث في المنصة
+                                </span>
+                                <span class="text-xs text-mutedText flex items-center gap-1">
+                                    <i class="fa-regular fa-clock"></i> منذ 12 دقيقة
+                                </span>
+                            </div>
+
+                            <h3 class="text-xl font-black text-creamBase leading-snug">
+                                اختبار جديد: <span class="text-goldLogo">«تطبيقات العقيدة في النوازل المعاصرة»</span>
+                            </h3>
+
+                            <p class="text-xs text-creamMuted max-w-md leading-relaxed">
+                                قام د. عبد الرحمن السلمي بإطلاق الاختبار التقييمي للوحدة الثانية. يرجى البدء قبل انتهاء المهلة المحددة.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- الجزء الأيسر: عداد الوقت التنازلي الحقيقي وزر البدء -->
+                    <div class="flex flex-row lg:flex-col items-center lg:items-end justify-between w-full lg:w-auto gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-creamBase/10">
+                        
+                        <!-- العداد التنازلي بتصميم نيون قديم -->
+                        <div class="bg-black/50 border border-creamBase/15 rounded-2xl p-3 px-4 text-center">
+                            <span class="block text-[10px] text-mutedText font-extrabold uppercase tracking-widest mb-1">المتبقي على الإغلاق</span>
+                            <div class="flex items-center gap-1.5 text-creamBase font-mono text-base font-bold dir-ltr" id="countdown-timer">
+                                <span class="bg-navyDark px-2 py-1 rounded border border-goldLogo/30 text-goldLogo">02d</span> :
+                                <span class="bg-navyDark px-2 py-1 rounded border border-creamBase/20">14h</span> :
+                                <span class="bg-navyDark px-2 py-1 rounded border border-creamBase/20" id="timer-sec">45s</span>
+                            </div>
+                        </div>
+
+                        <!-- زر الإجراء التفاعلي -->
+                        <button onclick="triggerAction('تم فتح صفحة الاختبار بنجاح!')" 
+                            class="relative group overflow-hidden px-7 py-3.5 rounded-2xl gold-gradient-btn text-navyDark font-black text-xs sm:text-sm shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-3">
+                            <span>دخول الاختبار فوراً</span>
+                            <i class="fa-solid fa-arrow-left group-hover:-translate-x-1.5 transition-transform"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- شريط الحالة السفلي المزين بموتيف إسلامي -->
+                <div class="mt-6 pt-4 border-t border-creamBase/10 flex items-center justify-between text-[11px] text-mutedText">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-goldLogo"></i>
+                        درجة الاختبار: 20 درجة أكاديمية
+                    </span>
+                    <span class="text-creamMuted">المساق: المبادئ العقودية الحديثة</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- التصور الثاني: المشكاة وسلسلة النجوم -->
+        <!-- ========================================== -->
+        <section id="concept-2" class="concept-container space-y-6 hidden">
+            
+            <div class="text-right mb-2">
+                <h2 class="text-lg font-bold text-creamBase flex items-center gap-2">
+                    <i class="fa-solid fa-star text-goldLogo"></i>
+                    مفهوم: "مسار العُقد والنجوم المضيئة (Constellation Path)"
+                </h2>
+                <p class="text-xs text-mutedText">يعرض التنبيهات كعُقد نجمية مترابطة خطياً، مع مشكاة إسلامية تتدلى وتضيء عند وجود اختبارات عاجلة.</p>
+            </div>
+
+            <!-- بطاقة المسار النجمي -->
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-creamBase/20 relative overflow-hidden">
+                
+                <!-- المشكاة المتدلية التفاعلية (Islamic Lantern Animation) -->
+                <div class="absolute top-0 left-10 sm:left-16 flex flex-col items-center animate-float">
+                    <div class="w-0.5 h-12 bg-gradient-to-b from-goldLogo/80 to-goldLogo/20"></div>
+                    <div class="relative w-10 h-14 rounded-b-xl border border-goldLogo bg-goldDark/30 flex items-center justify-center text-goldLogo gold-border-glow">
+                        <i class="fa-solid fa-lightbulb text-goldLogo animate-pulse text-lg"></i>
+                        <!-- توهج المشكاة -->
+                        <div class="absolute inset-0 bg-goldLogo/20 rounded-b-xl blur-sm"></div>
+                    </div>
+                </div>
+
+                <div class="max-w-2xl space-y-6">
+                    
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-goldLogo/10 border border-goldLogo/30 text-goldLogo text-xs font-bold">
+                        <i class="fa-solid fa-certificate"></i> تنبيه علمي هام
+                    </div>
+
+                    <h3 class="text-2xl font-black text-creamBase leading-tight">
+                        شعلة جديدة في مسارك التعليمي: <br/>
+                        <span class="text-goldLogo">اختبار التزكية وفقه النوازل</span>
+                    </h3>
+
+                    <!-- المسار النجمي الأنيق (Nodes) -->
+                    <div class="relative py-4 my-2">
+                        <!-- الخط الرابط -->
+                        <div class="absolute top-1/2 right-0 left-0 h-0.5 bg-creamBase/20 -translate-y-1/2"></div>
+                        <div class="absolute top-1/2 right-0 w-2/3 h-0.5 bg-gradient-to-l from-goldLogo to-creamBase -translate-y-1/2"></div>
+
+                        <!-- العُقد والنجوم -->
+                        <div class="relative flex justify-between items-center z-10">
+                            
+                            <!-- عقدة 1: مكتملة -->
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-goldLogo text-navyDark flex items-center justify-center text-xs font-bold border-2 border-creamLight">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <span class="text-[10px] text-creamMuted font-medium">الدرس الأول</span>
+                            </div>
+
+                            <!-- عقدة 2: مكتملة -->
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-goldLogo text-navyDark flex items-center justify-center text-xs font-bold border-2 border-creamLight">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <span class="text-[10px] text-creamMuted font-medium">الدرس الثاني</span>
+                            </div>
+
+                            <!-- عقدة 3: الاختبار الحالي (متوهجة) -->
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="relative">
+                                    <div class="absolute -inset-2 bg-goldLogo/50 rounded-full blur animate-ping"></div>
+                                    <div class="relative w-10 h-10 rounded-full bg-navyDark border-2 border-goldLogo text-goldLogo flex items-center justify-center text-sm font-black gold-border-glow">
+                                        ★
+                                    </div>
+                                </div>
+                                <span class="text-xs text-goldLogo font-black">الاختبار الحالي</span>
+                            </div>
+
+                            <!-- عقدة 4: القادمة -->
+                            <div class="flex flex-col items-center gap-2 opacity-50">
+                                <div class="w-8 h-8 rounded-full bg-black/60 border border-creamBase/30 text-creamMuted flex items-center justify-center text-xs">
+                                    4
+                                </div>
+                                <span class="text-[10px] text-mutedText font-medium">الشهادة</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- أزرار ووصف تفاعلي -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                        <p class="text-xs text-creamMuted flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-goldLogo"></i>
+                            عدد الأسئلة: 15 سؤال موضوعي • الوقت: 30 دقيقة
+                        </p>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="triggerAction('تم فتح التفاصيل!')" class="px-4 py-2.5 rounded-xl border border-creamBase/30 text-creamBase text-xs font-bold hover:bg-creamBase/10 transition-all">
+                                معاينة المنهج
+                            </button>
+                            <button onclick="triggerAction('جاري تجهيز الاختبار...')" class="px-6 py-2.5 rounded-xl gold-gradient-btn text-navyDark font-black text-xs shadow-lg hover:brightness-110 transition-all">
+                                انطلق للتقييم
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- التصور الثالث: المخطوطة الملكية العاجلة -->
+        <!-- ========================================== -->
+        <section id="concept-3" class="concept-container space-y-6 hidden">
+            
+            <div class="text-right mb-2">
+                <h2 class="text-lg font-bold text-creamBase flex items-center gap-2">
+                    <i class="fa-solid fa-scroll text-goldLogo"></i>
+                    مفهوم: "المخطوطة السحرية وختم الشمع الملكي"
+                </h2>
+                <p class="text-xs text-mutedText">يحاكي المخطوطات والرسائل العلمية القديمة بطابع Glassmorphic حديث وختم مذهب عالي الفخامة.</p>
+            </div>
+
+            <!-- بطاقة المخطوطة -->
+            <div class="relative glass-panel rounded-3xl p-6 sm:p-10 border-2 border-goldLogo/40 shadow-2xl bg-gradient-to-b from-navyCard to-black/90">
+                
+                <!-- ختم الشمع المذهب (Wax Seal Badge) -->
+                <div class="absolute -top-5 left-8 sm:left-12 wax-seal w-14 h-14 rounded-full flex items-center justify-center text-creamLight font-black text-lg border-2 border-goldLogo transform -rotate-12 hover:rotate-0 transition-transform cursor-pointer shadow-2xl" title="ختم المرصد المعتمد">
+                    <span>مرصد</span>
+                </div>
+
+                <!-- زخارف أركان المخطوطة التقليدية -->
+                <div class="absolute top-3 right-3 text-goldLogo/30 text-xl font-serif">◈</div>
+                <div class="absolute bottom-3 right-3 text-goldLogo/30 text-xl font-serif">◈</div>
+                <div class="absolute bottom-3 left-3 text-goldLogo/30 text-xl font-serif">◈</div>
+
+                <div class="space-y-5">
+                    
+                    <div class="border-b border-creamBase/15 pb-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-extrabold text-goldLogo tracking-widest uppercase">بلاغ علمي عاجل</span>
+                            <h3 class="text-2xl font-black text-creamBase mt-1">تنبيه بإطلاق التكليف البحثي الثالث</h3>
+                        </div>
+                        <span class="text-xs text-mutedText bg-black/40 px-3 py-1.5 rounded-lg border border-creamBase/10 hidden sm:inline-block">
+                            رقم التكليف: #882
+                        </span>
+                    </div>
+
+                    <p class="text-sm text-creamMuted leading-relaxed">
+                        نسترعي عناية طالب العلم الكريم إلى أنه تم فتح باب تسليم التكليف الفقهي بعنوان:
+                        <strong class="text-creamBase font-bold">«نقد الشبهات العقودية في الإعلام المعاصر»</strong>.
+                        يرجى كتابة البحث ورفعه بصيغة PDF قبل اكتمال المدة.
+                    </p>
+
+                    <!-- تفاصيل البطاقة في كروت صغيرة -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+                        <div class="p-3 rounded-xl bg-black/40 border border-creamBase/10 text-center">
+                            <span class="block text-[10px] text-mutedText font-bold mb-0.5">تاريخ الطرح</span>
+                            <span class="text-xs font-bold text-creamBase">اليوم، 09:00 صباحاً</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-black/40 border border-creamBase/10 text-center">
+                            <span class="block text-[10px] text-mutedText font-bold mb-0.5">آخر موعد للتسليم</span>
+                            <span class="text-xs font-bold text-goldLogo">الخميس القادم</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-black/40 border border-creamBase/10 text-center">
+                            <span class="block text-[10px] text-mutedText font-bold mb-0.5">صيغة الملف</span>
+                            <span class="text-xs font-bold text-creamBase">PDF (أقصى حد 10MB)</span>
+                        </div>
+                    </div>
+
+                    <!-- الأزرار التفاعلية -->
+                    <div class="pt-2 flex flex-wrap items-center justify-between gap-4">
+                        <a href="#" onclick="triggerAction('جاري تحميل خطة التكليف...')" class="text-xs text-goldLogo hover:underline flex items-center gap-1.5 font-bold">
+                            <i class="fa-solid fa-file-arrow-down"></i> تحميل نموذج كتابة التكليف (.docx)
+                        </a>
+
+                        <button onclick="triggerAction('تم فتح بوابة رفع التكليف!')" class="px-7 py-3 rounded-xl gold-gradient-btn text-navyDark font-black text-xs sm:text-sm shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-upload"></i>
+                            <span>رفع الملف والتقديم</span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- رسالة التنبيه التفاعلية عند الضغط على الأزرار -->
+        <div id="toast-message" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-panel border-goldLogo/60 text-creamBase px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-50">
+            <i class="fa-solid fa-circle-check text-goldLogo text-lg"></i>
+            <span id="toast-text" class="text-xs font-bold"></span>
+        </div>
+
+    </main>
+
+    <!-- نصائح تصميمية توضيحية للمصمم والبرمجين -->
+    <footer class="max-w-5xl w-full mt-12 pt-6 border-t border-creamBase/10 text-center sm:text-right flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-mutedText">
+        <div>
+            <span>منصة مرصد للنوازل العقدية • تصميم واجهات المستخدم الإبداعية</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-goldLogo font-bold">★ نصيحة:</span>
+            <span>يمكن دمج هذا المكون في اعلى شاشة الطالب الرئيسية بدلاً من الإشعارات التقليدية.</span>
+        </div>
+    </footer>
+
+    <!-- سكريبت التحكم والتفاعل -->
+    <script>
+        // التبديل بين المفاهيم الثلاثة
+        function switchConcept(conceptId) {
+            // إخفاء كافة الحاويات
+            document.querySelectorAll('.concept-container').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // إزالة التنسيق النشط عن جميع الأزرار
+            document.querySelectorAll('.concept-btn').forEach(btn => {
+                btn.classList.remove('glass-panel-active', 'text-goldLogo');
+                btn.classList.add('glass-panel', 'text-creamMuted');
+            });
+
+            // إظهار الحاوية المطلوبة
+            document.getElementById(conceptId).classList.remove('hidden');
+
+            // تفعيل الزر المحدد
+            const activeBtn = document.getElementById('btn-' + conceptId);
+            activeBtn.classList.remove('glass-panel', 'text-creamMuted');
+            activeBtn.classList.add('glass-panel-active', 'text-goldLogo');
+        }
+
+        // إظهار تنبيه توست تفاعلي عند النقر على الأزرار
+        function triggerAction(message) {
+            const toast = document.getElementById('toast-message');
+            const toastText = document.getElementById('toast-text');
+            
+            toastText.textContent = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // عداد ثوانٍ حقيقي للرادار (محاكاة حيّة)
+        let seconds = 45;
+        setInterval(() => {
+            seconds--;
+            if (seconds < 0) seconds = 59;
+            const secElem = document.getElementById('timer-sec');
+            if (secElem) {
+                secElem.textContent = (seconds < 10 ? '0' : '') + seconds + 's';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
