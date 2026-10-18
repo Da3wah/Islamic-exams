@@ -87,23 +87,162 @@ details.panel summary{cursor:pointer;font-weight:800;color:var(--navy)}
 
 /* رادار المرصد */
 .home-insights{margin:0 0 24px}
-.radar-panel{position:relative;overflow:hidden;border-radius:22px;background:linear-gradient(125deg,#071426 0%,#102b49 62%,#183653 100%);color:#fff;border:1px solid #c99e4e;box-shadow:0 16px 38px #08192f24;padding:22px}
-.radar-panel:before{content:"";position:absolute;width:250px;height:250px;border:1px solid #d5ab5e35;border-radius:50%;left:-92px;top:-112px;box-shadow:0 0 0 25px #d5ab5e0a,0 0 0 52px #d5ab5e08;pointer-events:none}
-.radar-head{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative;z-index:1}
-.radar-kicker{font-size:12px;font-weight:800;color:#e7c783;letter-spacing:.04em}
-.radar-title{font-size:24px;margin:2px 0;color:#fff}
-.radar-intro{color:#d9e2ec;margin:0;font-size:14px}
-.radar-count{flex-shrink:0;min-width:66px;height:66px;border-radius:50%;border:1px solid #d5ab5e;background:#d5ab5e16;display:grid;place-items:center;text-align:center;color:#f3d89f;font-weight:800;line-height:1.2}
-.radar-count strong{display:block;font-size:23px}
-.radar-list{display:grid;gap:11px;margin-top:18px;position:relative;z-index:1}
-.radar-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:13px;align-items:center;padding:14px;border:1px solid #ffffff24;border-radius:15px;background:#ffffff0b}
-.radar-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#d5ab5e1c;color:#f0d394;font-size:20px}
-.radar-item h3{font-size:16px;margin:0;color:#fff}
-.radar-item p{font-size:12px;color:#d2dce7;margin:2px 0 0}
-.radar-item .radar-state{display:inline-flex;font-size:11px;font-weight:800;color:#f4d18a;border:1px solid #d5ab5e66;border-radius:99px;padding:2px 9px;margin-bottom:5px}
-.radar-item .radar-state.overdue{color:#ffd0c8;border-color:#e77d70;background:#a12a2a30}
-.radar-action{white-space:nowrap;border:1px solid #d5ab5e;background:#d5ab5e;color:#08192f;border-radius:10px;padding:8px 12px;font-weight:800;font-size:12px}
-.radar-empty{padding:16px;border:1px dashed #d5ab5e77;border-radius:14px;color:#e2e8ef;background:#ffffff08;position:relative;z-index:1}
+
+/* رادار المرصد — النسخة الكريمية */
+.home-insights{margin:0 0 24px}
+
+.radar-panel{
+ position:relative;
+ overflow:hidden;
+ border-radius:22px;
+ background:linear-gradient(125deg,#FFFCF6 0%,#F7F3E9 62%,#EFE5D3 100%);
+ color:#17263D;
+ border:1px solid #D5AB5E;
+ box-shadow:0 16px 38px rgba(8,25,47,.10);
+ padding:22px
+}
+
+.radar-panel:before{
+ content:"";
+ position:absolute;
+ width:250px;
+ height:250px;
+ border:1px solid #D5AB5E55;
+ border-radius:50%;
+ left:-92px;
+ top:-112px;
+ box-shadow:0 0 0 25px #D5AB5E12,0 0 0 52px #D5AB5E09;
+ pointer-events:none
+}
+
+.radar-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:14px;
+ position:relative;
+ z-index:1
+}
+
+.radar-kicker{
+ font-size:12px;
+ font-weight:800;
+ color:#8A672C;
+ letter-spacing:.04em
+}
+
+.radar-title{
+ font-size:24px;
+ margin:2px 0;
+ color:#08192F
+}
+
+.radar-intro{
+ color:#6B7484;
+ margin:0;
+ font-size:14px
+}
+
+.radar-count{
+ flex-shrink:0;
+ min-width:66px;
+ height:66px;
+ border-radius:50%;
+ border:1px solid #D5AB5E;
+ background:#D5AB5E18;
+ display:grid;
+ place-items:center;
+ text-align:center;
+ color:#8A672C;
+ font-weight:800;
+ line-height:1.2
+}
+
+.radar-count strong{
+ display:block;
+ font-size:23px
+}
+
+.radar-list{
+ display:grid;
+ gap:11px;
+ margin-top:18px;
+ position:relative;
+ z-index:1
+}
+
+.radar-item{
+ display:grid;
+ grid-template-columns:auto minmax(0,1fr) auto;
+ gap:13px;
+ align-items:center;
+ padding:14px;
+ border:1px solid #E4D9C5;
+ border-radius:15px;
+ background:rgba(255,255,255,.72)
+}
+
+.radar-mark{
+ width:42px;
+ height:42px;
+ display:grid;
+ place-items:center;
+ border-radius:12px;
+ background:#D5AB5E22;
+ color:#8A672C;
+ font-size:20px
+}
+
+.radar-item h3{
+ font-size:16px;
+ margin:0;
+ color:#08192F
+}
+
+.radar-item p{
+ font-size:12px;
+ color:#6B7484;
+ margin:2px 0 0
+}
+
+.radar-item .radar-state{
+ display:inline-flex;
+ font-size:11px;
+ font-weight:800;
+ color:#8A672C;
+ border:1px solid #D5AB5E99;
+ border-radius:99px;
+ padding:2px 9px;
+ margin-bottom:5px;
+ background:#FBF3E2
+}
+
+.radar-item .radar-state.overdue{
+ color:#A12A2A;
+ border-color:#E7A49B;
+ background:#FFF0EE
+}
+
+.radar-action{
+ white-space:nowrap;
+ border:1px solid #C39A48;
+ background:linear-gradient(135deg,#E8C979,#D5AB5E);
+ color:#08192F;
+ border-radius:10px;
+ padding:8px 12px;
+ font-weight:800;
+ font-size:12px
+}
+
+.radar-empty{
+ padding:16px;
+ border:1px dashed #D5AB5E99;
+ border-radius:14px;
+ color:#6B7484;
+ background:rgba(255,255,255,.65);
+ position:relative;
+ z-index:1
+}
 
 /* المسار النجمي */
 .path-panel{margin-top:16px;border-radius:20px;background:#fff;border:1px solid var(--line);padding:20px;box-shadow:var(--shadow)}
