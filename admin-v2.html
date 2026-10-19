@@ -496,7 +496,117 @@ let importedCredentials=[];
 $('importStudentsBtn').addEventListener('click',async()=>{const btn=$('importStudentsBtn'),file=$('studentsCsvFile').files[0];if(!file){msg('importStudentsMsg','اختاري ملف CSV أولًا.','error');return}btn.disabled=true;importedCredentials=[];$('importCredentialsWrap').classList.add('hidden');try{await adminCheck();const parsed=parseCSV(await file.text());if(!parsed.length)throw Error('الملف لا يحتوي على أسماء طلاب.');const courseLookup=new Map(cache.courses.map(c=>[c.name.trim().toLowerCase(),c.id]));const existingCodes=new Set(cache.students.map(s=>String(s.code||'')));let successes=0,failures=[];msg('importStudentsMsg',`تم العثور على ${parsed.length} طالبًا. جارٍ إنشاء الحسابات واحدًا تلو الآخر...`);for(let i=0;i<parsed.length;i++){const r=parsed[i];let code=r.code||randomCode();while(existingCodes.has(code)){if(r.code){break}else code=randomCode()}const password=randomPassword();const courseName=r.course.trim().toLowerCase();const courseId=courseName?courseLookup.get(courseName):null;if(r.course&&!courseId){failures.push(`${r.name}: اسم المساق «${r.course}» غير مطابق لمساق موجود.`);continue}try{const {data,error}=await db.functions.invoke('create-student',{body:{name:r.name,code,password,course_id:courseId?Number(courseId):null}});if(error){let detail=error.message||String(error);try{if(error.context?.json){const b=await error.context.json();detail=b.details||b.error||detail}}catch(_){}throw Error(detail)}if(!data||data.success!==true)throw Error(data?.details||data?.error||'لم يؤكد الخادم نجاح الإنشاء.');const finalCode=String(data.code||code);existingCodes.add(finalCode);importedCredentials.push({name:r.name,code:finalCode,password,course:r.course||'—'});successes++;}catch(err){failures.push(`${r.name} (${code}): ${err.message||String(err)}`)}msg('importStudentsMsg',`تم إنشاء ${successes} من ${parsed.length}؛ جارٍ المتابعة...`)}await loadStudents();if(importedCredentials.length){$('importCredentialsTable').innerHTML=tableHTML(['الطالب','كود الدخول','كلمة المرور','المساق'],importedCredentials.map(c=>`<tr><td>${esc(c.name)}</td><td><strong>${esc(c.code)}</strong></td><td>${esc(c.password)}</td><td>${esc(c.course)}</td></tr>`));$('importCredentialsWrap').classList.remove('hidden')}const report=`اكتمل الاستيراد: نجاح ${successes} من ${parsed.length}.`+(failures.length?`\nتعذّر إنشاء ${failures.length}:\n• ${failures.join('\n• ')}`:'');msg('importStudentsMsg',report,failures.length?'error':'success');}catch(err){msg('importStudentsMsg','تعذر استيراد الملف: '+(err.message||String(err)),'error')}finally{btn.disabled=false}});
 $('downloadCredentials').addEventListener('click',()=>{if(!importedCredentials.length)return;const csv=[['name','code','password','course'],...importedCredentials.map(c=>[c.name,c.code,c.password,c.course])].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='student-login-credentials.csv';a.click();URL.revokeObjectURL(url)});
 $('courseImageFile').addEventListener('change',()=>{const f=$('courseImageFile').files[0],box=$('courseImagePreview');if(!f){box.style.backgroundImage='';box.textContent='معاينة صورة المساق';return}if(!f.type.startsWith('image/')){msg('courseMsg','اختاري ملف صورة صالحًا.','error');return}const reader=new FileReader();reader.onload=()=>{box.style.backgroundImage=`url("${reader.result}")`;box.textContent=''};reader.readAsDataURL(f)});
-$('courseForm').addEventListener('submit',async e=>{e.preventDefault();try{await adminCheck();const payload={name:$('courseName').value.trim(),description:$('courseDescription').value.trim()||null,active:$('courseActive').value==='true'};const id=$('courseEditId').value;if($('courseImageFile').files[0])throw Error('معاينة الصورة تعمل، لكن حفظ الصورة الدائم لم يُربط بعد بمساحة تخزين Supabase؛ لم يتم حفظ بيانات المساق حتى لا تفقدي الصورة أو بياناتك.');const result=id?await db.from('courses').update(payload).eq('id',Number(id)):await db.from('courses').insert(payload);if(result.error)throw result.error;msg('courseMsg',id?'تم تعديل المساق.':'تم إنشاء المساق.','success');$('courseForm').reset();$('courseEditId').value='';$('courseImageFile').value='';$('courseImagePreview').style.backgroundImage='';$('courseImagePreview').textContent='معاينة صورة المساق';$('courseFormHeading').textContent='إضافة مساق';await loadCourses();closeManagementForm('courseFormCard')}catch(x){msg('courseMsg','تعذر إنشاء المساق: '+x.message,'error')}});
+
+async function uploadCourseImage(file, courseId) {
+    if (!file) return null;
+
+    const allowedTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif'
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        throw new Error('اختاري صورة بصيغة JPG أو PNG أو WebP أو GIF.');
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        throw new Error('حجم الصورة يجب ألا يتجاوز 5 ميجابايت.');
+    }
+
+    const safeName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, '-')
+        .slice(-100) || 'course-image';
+
+    const path =
+        `courses/${courseId || 'new'}-${Date.now()}-${safeName}`;
+
+    const { error } = await db.storage
+        .from('course-images')
+        .upload(path, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.type
+        });
+
+    if (error) {
+        throw new Error('تعذر رفع الصورة: ' + error.message);
+    }
+
+    const { data } = db.storage
+        .from('course-images')
+        .getPublicUrl(path);
+
+    if (!data?.publicUrl) {
+        throw new Error('تعذر الحصول على رابط الصورة.');
+    }
+
+    return data.publicUrl;
+}
+
+$('courseForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const btn = $('courseForm').querySelector(
+        'button[type="submit"], button:not([type])'
+    );
+
+    if (btn) btn.disabled = true;
+
+    try {
+        await adminCheck();
+
+        const payload = {
+            name: $('courseName').value.trim(),
+            description:
+                $('courseDescription').value.trim() || null,
+            active: $('courseActive').value === 'true'
+        };
+
+        const id = $('courseEditId').value;
+        const file = $('courseImageFile').files[0];
+
+        if (file) {
+            payload.image_url =
+                await uploadCourseImage(file, id || 'new');
+        }
+
+        const result = id
+            ? await db.from('courses')
+                .update(payload)
+                .eq('id', Number(id))
+            : await db.from('courses').insert(payload);
+
+        if (result.error) throw result.error;
+
+        msg(
+            'courseMsg',
+            id ? 'تم تعديل المساق بنجاح.' : 'تم إنشاء المساق بنجاح.',
+            'success'
+        );
+
+        $('courseForm').reset();
+        $('courseEditId').value = '';
+        $('courseImageFile').value = '';
+        $('courseImagePreview').style.backgroundImage = '';
+        $('courseImagePreview').textContent = 'معاينة صورة المساق';
+        $('courseFormHeading').textContent = 'إضافة مساق';
+
+        await loadCourses();
+        closeManagementForm('courseFormCard');
+
+    } catch (error) {
+        msg(
+            'courseMsg',
+            'تعذر حفظ المساق: ' + (error.message || String(error)),
+            'error'
+        );
+    } finally {
+        if (btn) btn.disabled = false;
+    }
+});
+
 $('subjectForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const submitButton=$('subjectForm').querySelector('button[type=submit],button:not([type])');
