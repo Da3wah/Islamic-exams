@@ -306,7 +306,7 @@ function fillSelect(id,items,placeholder,labelFn){const el=$(id);if(!el)return;c
 function dt(v){return v?new Date(v).toLocaleString('ar-EG'):'—'}
 async function getRows(table,select='*',order='id'){const {data,error}=await db.from(table).select(select).order(order,{ascending:true});if(error)throw error;return data||[]}
 async function loadCourses(){cache.courses=await getRows('courses','*','id');fillSelect('studentCourse',cache.courses,'بدون مساق الآن',x=>x.name);fillSelect('subjectCourse',cache.courses,'اختاري المساق',x=>x.name);fillSelect('examCourse',cache.courses,'اختاري المساق',x=>x.name);fillSelect('assignmentCourse',cache.courses,'اختاري المساق',x=>x.name);let counts={};try{const subs=await getRows('course_subjects','id,course_id','id');subs.forEach(x=>counts[x.course_id]=(counts[x.course_id]||0)+1)}catch(e){}let studentCounts={};try{const links=await getRows('student_courses','student_id,course_id','student_id');links.forEach(x=>studentCounts[x.course_id]=(studentCounts[x.course_id]||0)+1)}catch(e){}$('coursesTable').innerHTML=cache.courses.length?cache.courses.map(x=>`<article class="course-card"><div class="course-cover">${x.image_url?`<img src="${esc(x.image_url)}" alt="صورة ${esc(x.name)}">`:'✦'}</div><div class="course-body"><h3>${esc(x.name)}</h3><p class="sub">${esc(x.description||'لا توجد نبذة عن المساق')}</p><div class="course-meta"><span>${counts[x.id]||0} مادة</span><span>${studentCounts[x.id]||0} طالب</span><span>${x.active!==false?'نشط':'مكتمل / غير نشط'}</span></div><div class="row-actions"><button class="btn" data-course-details="${x.id}">عرض التفاصيل</button><button class="btn secondary" data-edit-course="${x.id}">✎ تعديل</button><button class="btn secondary" data-delete-course="${x.id}" data-name="${esc(x.name)}">حذف</button></div></div></article>`).join(''):'<div class="empty">لا توجد مساقات بعد. أضيفي أول مساق من الزر أعلاه.</div>';$('statCourses').textContent=cache.courses.length} 
-async function loadSubjects(){cache.subjects=await getRows('course_subjects','id,course_id,name,description,display_order,active','id');const names=Object.fromEntries(cache.courses.map(x=>[x.id,x.name]));$('subjectsTable').innerHTML=tableHTML(['المادة','الحالة','المساق','إجراء'],cache.subjects.map(x=>`<tr><td><strong>${esc(x.name)}</strong><div class="muted">${esc(x.description||'')}</div></td><td><span class="status-pill">${x.active?'نشطة':'مكتملة / غير نشطة'}</span></td><td>${esc(names[x.course_id]||('مساق #'+x.course_id))}</td><td><div class="row-actions"><button class="btn secondary" data-edit-subject="${x.id}">تعديل</button><button class="btn secondary" data-toggle-subject="${x.id}" data-active="${x.active}">${x.active?'إيقاف':'تفعيل'}</button></div></td></tr>`));fillSelect('examSubject',cache.subjects,'لا توجد مادة محددة / اختبار أسبوعي',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);fillSelect('assignmentSubject',cache.subjects,'اختاري المادة',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);$('statSubjects').textContent=cache.subjects.length} 
+async function loadSubjects(){cache.subjects=await getRows('course_subjects','id,course_id,name,description,display_order,active','id');const names=Object.fromEntries(cache.courses.map(x=>[x.id,x.name]));$('subjectsTable').innerHTML=tableHTML(['المادة','الحالة','المساق','إجراء'],cache.subjects.map(x=>`<tr><td><strong>${esc(x.name)}</strong><div class="muted">${esc(x.description||'')}</div></td><td><span class="status-pill">${x.active?'نشطة':'مكتملة / غير نشطة'}</span></td><td>${esc(names[x.course_id]||('مساق #'+x.course_id))}</td><td><div class="row-actions"><button class="btn secondary" data-edit-subject="${x.id}">تعديل</button><button class="btn secondary" data-toggle-subject="${x.id}" data-active="${x.active}">${x.active?'إيقاف':'تفعيل'}</button><button class="btn secondary" data-delete-subject="${x.id}" data-name="${esc(x.name)}">حذف</button></div></td></tr>`));fillSelect('examSubject',cache.subjects,'لا توجد مادة محددة / اختبار أسبوعي',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);fillSelect('assignmentSubject',cache.subjects,'اختاري المادة',x=>`${names[x.course_id]||'مساق'} — ${x.name}`);$('statSubjects').textContent=cache.subjects.length} 
 
 async function loadStudents() {
   cache.students = await getRows(
@@ -613,37 +613,29 @@ const cd=e.target.closest('[data-course-details]');if(cd){const x=cache.courses.
 const ee=e.target.closest('[data-edit-exam]');if(ee){openExamRoute('edit',ee.dataset.editExam);return;}
 const ea=e.target.closest('[data-edit-assignment]');if(ea){const {data,error}=await db.from('assignments').select('id,title,question_text,max_grade,description,open_at,close_at,course_id,course_subject_id').eq('id',Number(ea.dataset.editAssignment)).single();if(error){alert('تعذر تحميل التكليف: '+error.message);return;}$('assignmentEditId').value=data.id;$('assignmentTitle').value=data.title||'';$('assignmentDescription').value=data.question_text||data.description||'';$('assignmentMaxGrade').value=data.max_grade??10;$('assignmentCourse').value=String(data.course_id||'');$('assignmentCourse').dispatchEvent(new Event('change'));$('assignmentSubject').value=String(data.course_subject_id||'');$('assignmentOpen').value=data.open_at?new Date(data.open_at).toISOString().slice(0,16):'';$('assignmentClose').value=data.close_at?new Date(data.close_at).toISOString().slice(0,16):'';$('assignmentFormHeading').textContent='تعديل التكليف';openManagementForm('assignmentFormCard');return;}
 if(e.target.closest('#closeCourseDetails')){$('courseDetailsView').classList.remove('open');$('coursesListView').classList.remove('hidden-view');return;}const addSub=e.target.closest('#addSubjectToCourse');if(addSub){subjectReturnCourseId=String(addSub.dataset.courseId);$('subjectForm').reset();$('subjectEditId').value='';$('subjectOrder').value='0';$('subjectActive').value='true';$('subjectCourse').value=addSub.dataset.courseId;$('subjectFormHeading').textContent='إضافة مادة جديدة';go('subjects');openManagementForm('subjectFormCard');return;}
-const delCourse=e.target.closest('[data-delete-course]');const delStudent=e.target.closest('[data-delete-student]');const delExam=e.target.closest('[data-delete-exam]');const delAssignment=e.target.closest('[data-delete-assignment]');
-if(delCourse||delStudent||delExam||delAssignment){
-  const button=delCourse||delStudent||delExam||delAssignment;
+const delCourse=e.target.closest('[data-delete-course]');const delStudent=e.target.closest('[data-delete-student]');const delExam=e.target.closest('[data-delete-exam]');const delAssignment=e.target.closest('[data-delete-assignment]');const delSubject=e.target.closest('[data-delete-subject]');
+if(delCourse||delStudent||delExam||delAssignment||delSubject){
+  const button=delCourse||delStudent||delExam||delAssignment||delSubject;
   const name=button.dataset.name||'هذا العنصر';
-  const kind=delCourse?'المساق':delStudent?'الطالب':delExam?'الاختبار':'التكليف';
-  if(!confirm(`هل أنتِ متأكدة من حذف ${kind} «${name}»؟\n\nلن يتم الحذف إذا كانت هناك نتائج أو تسليمات أو سجلات مرتبطة به.`))return;
+  const kind=delCourse?'المساق':delStudent?'الطالب':delExam?'الاختبار':delAssignment?'التكليف':'المادة';
+  const kindKey=delCourse?'course':delStudent?'student':delExam?'exam':delAssignment?'assignment':'subject';
+  if(!confirm(`تأكيد حذف ${kind} «${name}» نهائيًا؟\n\nسيحذف النظام السجلات التابعة المعروفة مثل الأسئلة والنتائج والتسليمات والارتباطات. حذف الطالب يشمل حساب دخوله المرتبط به. هذا الإجراء نهائي.`))return;
   button.disabled=true;
   try{
     await adminCheck();
-    const id=Number(button.dataset.deleteCourse||button.dataset.deleteStudent||button.dataset.deleteExam||button.dataset.deleteAssignment);
+    const rawId=button.dataset.deleteCourse||button.dataset.deleteStudent||button.dataset.deleteExam||button.dataset.deleteAssignment||button.dataset.deleteSubject;
+    const id=Number(rawId);
     if(!Number.isFinite(id)||id<=0)throw Error('معرّف العنصر غير صالح.');
-    if(delCourse){
-      const checks=[['course_subjects','course_id','مواد مرتبطة'],['student_courses','course_id','طلاب مرتبطون'],['exams','course_id','اختبارات مرتبطة'],['assignments','course_id','تكاليف مرتبطة'],['course_results','course_id','نتائج مساق']];
-      for(const [table,col,label] of checks){const r=await db.from(table).select('id').eq(col,id).limit(1);if(r.error)throw Error(`تعذر التحقق من ${label} (${table}): ${r.error.message}`);if(r.data?.length)throw Error(`لا يمكن حذف المساق لأن به ${label}. احذفي/عالجي العناصر المرتبطة أولًا، حتى لا تضيع البيانات.`)}
-      const r=await db.from('courses').delete().eq('id',id);if(r.error)throw r.error;await loadCourses();await loadSubjects();
-    }else if(delExam){
-      const q=await db.from('questions').select('id').eq('exam_id',id).limit(1);if(q.error)throw Error('تعذر التحقق من أسئلة الاختبار: '+q.error.message);if(q.data?.length)throw Error('لا يمكن حذف الاختبار لأنه يحتوي على أسئلة. احذفي أسئلته أولًا أو أوقفي الاختبار بدلًا من حذف بياناته.');
-      const rr=await db.from('exam_results').select('id').eq('exam_id',id).limit(1);if(rr.error)throw Error('تعذر التحقق من نتائج الاختبار: '+rr.error.message);if(rr.data?.length)throw Error('لا يمكن حذف الاختبار لوجود نتائج طلاب مرتبطة به. أوقفي الاختبار بدلًا من فقدان النتائج.');
-      const r=await db.from('exams').delete().eq('id',id);if(r.error)throw r.error;await loadExams();
-    }else if(delAssignment){
-      const subs=await db.from('assignment_submissions').select('id').eq('assignment_id',id).limit(1);if(subs.error)throw Error('تعذر التحقق من تسليمات التكليف: '+subs.error.message);if(subs.data?.length)throw Error('لا يمكن حذف التكليف لوجود تسليمات طلاب مرتبطة به. احتفظي به أو أوقفي استخدامه حتى لا تضيع التسليمات والدرجات.');
-      const r=await db.from('assignments').delete().eq('id',id);if(r.error)throw r.error;await loadAssignments();
-    }else if(delStudent){
-      const {data:student,error:studentError}=await db.from('Students').select('id,name,auth_user_id').eq('id',id).single();if(studentError)throw studentError;
-      const checks=[['student_courses','student_id','مساقات مرتبطة'],['exam_results','student_id','نتائج اختبارات'],['course_results','student_id','نتائج مساقات'],['assignment_submissions','student_id','تسليمات تكاليف']];
-      for(const [table,col,label] of checks){const r=await db.from(table).select('id').eq(col,id).limit(1);if(r.error)throw Error(`تعذر التحقق من ${label} (${table}): ${r.error.message}`);if(r.data?.length)throw Error(`لا يمكن حذف الطالب لوجود ${label} مرتبطة به. الحفاظ على السجلات أهم من الحذف المباشر.`)}
-      if(student.auth_user_id)throw Error('هذا الطالب مرتبط بحساب تسجيل دخول في Supabase. حذف صفه وحده سيترك حساب الدخول قائمًا؛ يلزم إجراء حذف آمن من جهة الخادم، لذلك لم يتم حذف أي شيء.');
-      const r=await db.from('Students').delete().eq('id',id);if(r.error)throw r.error;await loadStudents();
-    }
-    alert(`تم حذف ${kind} «${name}» بنجاح.`);
-  }catch(err){alert('لم يتم الحذف.\n'+(err.message||String(err)))}finally{button.disabled=false}
+    const {data,error}=await db.rpc('admin_delete_entity',{p_kind:kindKey,p_id:id});
+    if(error)throw Error(error.message||'تعذر حذف العنصر.');
+    if(data&&data.ok===false)throw Error(data.message||'رفضت قاعدة البيانات عملية الحذف.');
+    if(delCourse){await loadCourses();await loadSubjects();await loadExams();await loadAssignments();await loadStudents();await loadResults();await loadTeachers();}
+    else if(delSubject){await loadSubjects();await loadExams();await loadAssignments();await loadResults();}
+    else if(delExam){await loadExams();await loadResults();}
+    else if(delAssignment){await loadAssignments();}
+    else if(delStudent){await loadStudents();await loadResults();}
+    alert(`تم حذف ${kind} «${name}» والسجلات التابعة له بنجاح.`);
+  }catch(err){alert('لم يتم الحذف؛ لم تُحفظ عملية جزئية لأن الحذف يتم داخل معاملة واحدة.\n'+(err.message||String(err)))}finally{button.disabled=false}
   return;
 }
 const c=e.target.closest('[data-toggle-course]');const s=e.target.closest('[data-toggle-subject]');try{if(c){await adminCheck();const {error}=await db.from('courses').update({active:c.dataset.active!=='true'}).eq('id',Number(c.dataset.toggleCourse));if(error)throw error;await loadCourses()}if(s){await adminCheck();const {error}=await db.from('course_subjects').update({active:s.dataset.active!=='true'}).eq('id',Number(s.dataset.toggleSubject));if(error)throw error;await loadSubjects()}}catch(x){alert('تعذر تنفيذ العملية: '+x.message)}});
