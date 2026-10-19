@@ -7,8 +7,8 @@
 
   function start() {
     const client = window.__islamicExamsClient || window.__questionTypesDb;
-    const section = document.getElementById('students');
-    const tableRoot = document.getElementById('studentsTable');
+const section = document.getElementById('studentCoursesManagementRoot');
+     const tableRoot = document.getElementById('studentsTable');
     if (!client || !section || !tableRoot || document.getElementById('studentCourseManagementPanel')) return;
 
     const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({
@@ -44,7 +44,23 @@
       node.textContent = text || '';
       node.className = 'msg ' + (kind || '');
     }
-
+    window.__marsadLoadStudentCourseManagement = async function () {
+      try {
+        panel.classList.remove('hidden');
+        await loadStudentsAndCourses();
+        if (activeStudentId) {
+          document.getElementById('scmStudentSelect').value =
+            String(activeStudentId);
+          await loadLinks(activeStudentId);
+        }
+      } catch (error) {
+        say(
+          'تعذر تحميل إدارة مساقات الطلاب: ' +
+          (error.message || error),
+          'error'
+        );
+      }
+    };
     async function verifyAdmin() {
       const sessionResult = await client.auth.getSession();
       if (sessionResult.error) throw sessionResult.error;
