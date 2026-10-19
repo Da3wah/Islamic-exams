@@ -688,52 +688,185 @@ function openSubject(courseId,subjectId){
  </div>`;
 }
 
-function openAssignment(courseId,subjectId,assignmentId){
- const c=(dashboard?.courses||[]).find(x=>Number(x.id)===Number(courseId));
- const s=c?.subjects?.find(x=>Number(x.id)===Number(subjectId));
- const a=s?.assignments?.find(x=>Number(x.id)===Number(assignmentId));
- if(!c||!s||!a)return;
- 
- const submitted=isSubmittedAssignment(a);
- view.innerHTML=`
- <div class="glass-panel rounded-2xl p-6 space-y-4">
-  <div class="flex items-center gap-4 border-b border-creamBase/15 pb-4">
-   <button class="px-3 py-1.5 rounded-lg bg-black/40 border border-creamBase/30 text-creamBase text-xs font-bold" onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">
-    <i class="fa-solid fa-arrow-right ml-1"></i> رجوع للمادة
+function openAssignment(courseId, subjectId, assignmentId) {
+ const c = (dashboard?.courses || []).find(
+  x => Number(x.id) === Number(courseId)
+ );
+ const s = c?.subjects?.find(
+  x => Number(x.id) === Number(subjectId)
+ );
+ const a = s?.assignments?.find(
+  x => Number(x.id) === Number(assignmentId)
+ );
+
+ if (!c || !s || !a) return;
+
+ const submitted = isSubmittedAssignment(a);
+
+ view.innerHTML = `
+ <div class="max-w-4xl mx-auto space-y-6 pb-8">
+
+  <div class="flex items-center justify-between gap-3 flex-wrap">
+   <button
+    type="button"
+    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-creamBase/20 bg-black/20 text-creamBase hover:bg-black/40 transition"
+    onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">
+    <i class="fa-solid fa-arrow-right"></i>
+    <span class="text-sm font-bold">العودة للمادة</span>
    </button>
-   <h2 class="text-xl font-bold text-creamBase">${esc(a.title)}</h2>
+
+   <span class="text-xs text-creamMuted">
+    <i class="fa-solid fa-book-open ml-1"></i>
+    ${esc(c.name || c.title || 'المساق')}
+   </span>
   </div>
-  ${a.description?`<p class="text-xs text-creamMuted">${esc(a.description)}</p>`:''}
-  ${a.question_text?`<div class="p-4 rounded-xl bg-black/40 border border-creamBase/20"><h3 class="text-xs font-bold text-goldLogo mb-2">السؤال</h3><p class="text-xs text-creamLight whitespace-pre-wrap">${esc(a.question_text)}</p></div>`:''}
-  
-  ${submitted?`
-   <div class="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30">
-    <h3 class="text-sm font-bold text-emerald-400">تم تسليم التكليف بنجاح</h3>
-    ${a.submission.grade!=null?`<p class="text-xs font-bold text-emerald-300 mt-1">الدرجة: ${esc(a.submission.grade)}</p>`:''}
-   </div>`:
-   `<form id="assignment-form" class="space-y-4 pt-2">
-    <div>
-     <label for="assignment-answer" class="block text-xs font-bold text-creamBase mb-1.5">إجابتك</label>
-     <textarea id="assignment-answer" rows="8" maxlength="20000" required class="w-full p-4 bg-black/40 border border-creamBase/30 rounded-xl text-creamLight text-sm focus:outline-none"></textarea>
+
+  <section class="glass-panel rounded-2xl p-5 md:p-8 space-y-6">
+
+   <header class="border-b border-creamBase/15 pb-5">
+    <div class="flex items-start gap-4">
+     <div class="shrink-0 w-12 h-12 rounded-2xl bg-goldLogo/10 border border-goldLogo/30 flex items-center justify-center">
+      <i class="fa-solid fa-clipboard-list text-goldLogo text-xl"></i>
+     </div>
+
+     <div class="flex-1 min-w-0">
+      <p class="text-xs font-bold text-goldLogo mb-2">التكليف الدراسي</p>
+      <h2 class="text-xl md:text-2xl font-bold text-creamBase leading-relaxed">
+       ${esc(a.title)}
+      </h2>
+      <p class="text-sm text-creamMuted mt-2">
+       ${esc(s.name || s.title || 'المادة')}
+      </p>
+     </div>
     </div>
-    <button class="px-6 py-3 cream-gradient text-navyDark font-bold rounded-xl text-xs shadow-md" type="submit">تسليم التكليف نهائياً</button>
-   </form>
-   <p id="assignment-message" role="status" aria-live="polite"></p>`}
+   </header>
+
+   ${a.description ? `
+    <section class="rounded-xl p-4 md:p-5 bg-black/20 border border-creamBase/10">
+     <h3 class="text-sm font-bold text-goldLogo mb-3">
+      <i class="fa-solid fa-circle-info ml-2"></i>
+      تعليمات التكليف
+     </h3>
+     <p class="text-sm md:text-base text-creamLight leading-8 whitespace-pre-wrap">
+      ${esc(a.description)}
+     </p>
+    </section>
+   ` : ''}
+
+   ${a.question_text ? `
+    <section class="rounded-xl p-4 md:p-6 bg-black/25 border border-goldLogo/25">
+     <div class="flex items-center gap-2 mb-4">
+      <span class="w-8 h-8 rounded-lg bg-goldLogo/15 flex items-center justify-center">
+       <i class="fa-solid fa-circle-question text-goldLogo"></i>
+      </span>
+      <h3 class="text-base font-bold text-goldLogo">السؤال المطلوب</h3>
+     </div>
+
+     <div class="text-sm md:text-base text-creamLight leading-8 whitespace-pre-wrap break-words">
+      ${esc(a.question_text)}
+     </div>
+    </section>
+   ` : ''}
+
+   ${submitted ? `
+    <section class="rounded-xl p-5 bg-emerald-950/25 border border-emerald-500/30">
+     <div class="flex items-start gap-3">
+      <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mt-1"></i>
+      <div class="space-y-2">
+       <h3 class="text-base font-bold text-emerald-400">
+        تم تسليم التكليف بنجاح
+       </h3>
+       <p class="text-sm text-creamLight leading-7">
+        تم تسجيل إجابتك. يمكنك العودة إلى صفحة المادة.
+       </p>
+       ${a.submission.grade != null ? `
+        <p class="text-sm font-bold text-emerald-300">
+         الدرجة: ${esc(a.submission.grade)}
+        </p>
+       ` : ''}
+      </div>
+     </div>
+    </section>
+   ` : `
+    <section class="space-y-4">
+     <div>
+      <h3 class="text-base font-bold text-creamBase mb-2">
+       <i class="fa-solid fa-pen-to-square text-goldLogo ml-2"></i>
+       اكتبي إجابتك
+      </h3>
+      <p class="text-sm text-creamMuted leading-7">
+       راجعي السؤال والتعليمات جيدًا، ثم اكتبي إجابتك في المساحة التالية.
+      </p>
+     </div>
+
+     <form id="assignment-form" class="space-y-4">
+      <textarea
+       id="assignment-answer"
+       rows="10"
+       maxlength="20000"
+       required
+       placeholder="اكتبي إجابتك هنا..."
+       class="w-full min-h-56 p-4 md:p-5 bg-black/25 border border-creamBase/20 rounded-xl text-creamLight text-base leading-8 placeholder:text-creamMuted/60 focus:outline-none focus:border-goldLogo/70 transition resize-y"
+      ></textarea>
+
+      <div class="flex items-start gap-2 text-xs text-creamMuted leading-6">
+       <i class="fa-solid fa-circle-info mt-1 text-goldLogo"></i>
+       <p>تأكدي من مراجعة إجابتك قبل الضغط على زر التسليم.</p>
+      </div>
+
+      <button
+       class="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-7 py-3.5 cream-gradient text-navyDark font-bold rounded-xl text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+       type="submit">
+       <i class="fa-solid fa-paper-plane"></i>
+       تسليم التكليف
+      </button>
+     </form>
+
+     <p id="assignment-message" role="status" aria-live="polite"
+        class="text-sm leading-7"></p>
+    </section>
+   `}
+
+  </section>
  </div>`;
 
- if(!submitted){
-  $('assignment-form').addEventListener('submit',async ev=>{
+ if (!submitted) {
+  $('assignment-form').addEventListener('submit', async ev => {
    ev.preventDefault();
-   const button=$('assignment-form').querySelector('button');
-   button.disabled=true;
-   message('assignment-message','جارٍ تسليم التكليف…');
-   const{error}=await client.rpc('submit_student_assignment',{p_assignment_id:Number(assignmentId),p_submission_text:$('assignment-answer').value});
-   if(error){message('assignment-message',friendlyError(error),'error');button.disabled=false;return;}
-   message('assignment-message','تم التسليم بنجاح.','success');
-   try{await refreshDashboard({render:false});openSubject(courseId,subjectId);}catch(e){}
+
+   const form = $('assignment-form');
+   const button = form.querySelector('button');
+   const answer = $('assignment-answer').value.trim();
+
+   if (!answer) {
+    message('assignment-message', 'من فضلك اكتبي إجابتك أولًا.', 'error');
+    return;
+   }
+
+   button.disabled = true;
+   message('assignment-message', 'جارٍ تسليم التكليف…');
+
+   const { error } = await client.rpc('submit_student_assignment', {
+    p_assignment_id: Number(assignmentId),
+    p_submission_text: $('assignment-answer').value
+   });
+
+   if (error) {
+    message('assignment-message', friendlyError(error), 'error');
+    button.disabled = false;
+    return;
+   }
+
+   message('assignment-message', 'تم التسليم بنجاح.', 'success');
+
+   try {
+    await refreshDashboard({ render: false });
+    openSubject(courseId, subjectId);
+   } catch (e) {}
   });
  }
 }
+
 
 async function openExam(examId,parentType,courseId,subjectId){
  examParent=parentType==='subject'?{type:'subject',courseId:Number(courseId),subjectId:Number(subjectId)}:{type:'course',courseId:Number(courseId)};
@@ -856,6 +989,7 @@ window.portalOpenCourse=openCourse;
 window.portalOpenSubject=openSubject;
 window.portalOpenAssignment=openAssignment;
 window.portalOpenExam=openExam;
+window.portalBackFromExam=portalBackFromExam;
 window.switchTab=switchTab;
 
 (async()=>{
