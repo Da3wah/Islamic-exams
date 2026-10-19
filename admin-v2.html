@@ -165,8 +165,15 @@ tr:hover td{background:rgba(212,175,55,.035)}
 .management-form-view.open{display:block!important}
 .list-view.hidden-view{display:none!important}
 .course-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.course-card{overflow:hidden;border-radius:14px;border:1px solid rgba(212,175,55,.25);background:#111D2D}
-.course-card .course-cover{height:105px;background:linear-gradient(135deg,#20364a,#b89b54);display:flex;align-items:center;justify-content:center;color:#f9efd8;font-size:28px}
+.course-card {
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(212,175,55,.25);
+    background: #111D2D;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}.course-card .course-cover{height:105px;background:linear-gradient(135deg,#20364a,#b89b54);display:flex;align-items:center;justify-content:center;color:#f9efd8;font-size:28px}
 .course-card .course-body{padding:14px}.course-image-preview{min-height:120px;border:1px dashed #b89b54;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f5ebdd;color:#344054;margin-top:8px;background-size:cover;background-position:center}.
 .course-card .course-cover img {
     width: 100%;
