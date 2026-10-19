@@ -328,7 +328,44 @@ function go(p){if(p==='students'&&$('studentsListView'))showStudentsList();docum
 async function verifyAdmin(session){if(!session)throw Error('انتهت الجلسة. سجّلي الدخول مرة أخرى.');const {data,error}=await db.from('profiles').select('role').eq('id',session.user.id).maybeSingle();if(error)throw Error('تعذر التحقق من صلاحية الإدارة: '+error.message);if(!data||data.role!=='admin')throw Error('هذا الحساب لا يملك صلاحية الإدارة.')}
 async function adminCheck(){const {data}=await db.auth.getSession();await verifyAdmin(data.session)}
 function tableHTML(headers,rows){if(!rows.length)return '<div class="empty">لا توجد سجلات لعرضها.</div>';return '<table><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table>'}
-function renderCourseDetails(course){if(!course)return;$('coursesListView').classList.add('hidden-view');$('courseDetailsView').classList.add('open');$('courseDetailsTitle').textContent='تفاصيل مساق: '+course.name;const subjects=cache.subjects.filter(v=>String(v.course_id)===String(course.id));$('courseDetailsContent').innerHTML='<p>'+esc(course.description||'لا توجد نبذة عن المساق')+'</p><p><span class="status-pill">'+(course.active!==false?'نشط':'مكتمل / غير نشط')+'</span></p><h4>مواد المساق</h4>'+tableHTML(['المادة','الحالة','إجراء'],subjects.map(v=>'<tr><td>'+esc(v.name)+'</td><td>'+(v.active?'نشطة':'مكتملة / غير نشطة')+'</td><td><button class="btn secondary" data-edit-subject="'+v.id+'">تعديل المادة</button></td></tr>'))+'<button type="button" class="btn" id="addSubjectToCourse" data-course-id="'+course.id+'">＋ إضافة مادة لهذا المساق</button>'; }
+
+function renderCourseDetails(course) {
+    if (!course) return;
+
+    $('coursesListView').classList.add('hidden-view');
+    $('courseDetailsView').classList.add('open');
+    $('courseDetailsView').dataset.courseId = String(course.id);
+    $('courseDetailsTitle').textContent = 'تفاصيل مساق: ' + course.name;
+
+    const subjects = cache.subjects.filter(
+        v => String(v.course_id) === String(course.id)
+    );
+
+    $('courseDetailsContent').innerHTML =
+        '<p>' + esc(course.description || 'لا توجد نبذة عن المساق') + '</p>' +
+        '<p><span class="status-pill">' +
+        (course.active !== false ? 'نشط' : 'مكتمل / غير نشط') +
+        '</span></p>' +
+        '<h4>مواد المساق</h4>' +
+        tableHTML(
+            ['المادة', 'الحالة', 'إجراء'],
+            subjects.map(v =>
+                '<tr>' +
+                '<td>' + esc(v.name) + '</td>' +
+                '<td>' + (v.active ? 'نشطة' : 'مكتملة / غير نشطة') + '</td>' +
+                '<td><div class="row-actions">' +
+                '<button class="btn secondary" data-edit-subject="' +
+                v.id + '">تعديل المادة</button>' +
+                '<button class="btn secondary" data-delete-subject="' +
+                v.id + '" data-name="' + esc(v.name) +
+                '">حذف المادة</button>' +
+                '</div></td>' +
+                '</tr>'
+            )
+        ) +
+        '<button type="button" class="btn" id="addSubjectToCourse" data-course-id="' +
+        course.id + '">＋ إضافة مادة لهذا المساق</button>';
+}
 function optList(items,labelFn){return items.map(x=>`<option value="${esc(x.id)}">${esc(labelFn(x))}</option>`).join('')}
 function fillSelect(id,items,placeholder,labelFn){const el=$(id);if(!el)return;const old=el.value;el.innerHTML=(placeholder!==null?`<option value="">${esc(placeholder)}</option>`:'')+optList(items,labelFn);if(items.some(x=>String(x.id)===old))el.value=old}
 function dt(v){return v?new Date(v).toLocaleString('ar-EG'):'—'}
@@ -746,7 +783,33 @@ if (editStudentButton) {
 }
 
 const ec=e.target.closest('[data-edit-course]');if(ec){const x=cache.courses.find(v=>String(v.id)===ec.dataset.editCourse);if(!x)return;$('courseEditId').value=x.id;$('courseName').value=x.name||'';$('courseDescription').value=x.description||'';$('courseActive').value=String(x.active!==false);$('courseImageFile').value='';$('courseImagePreview').style.backgroundImage=x.image_url?`url("${x.image_url}")`:'';$('courseImagePreview').textContent=x.image_url?'':'معاينة صورة المساق';$('courseFormHeading').textContent='تعديل المساق';openManagementForm('courseFormCard');return;}
-const sj=e.target.closest('[data-edit-subject]');if(sj){const x=cache.subjects.find(v=>String(v.id)===sj.dataset.editSubject);if(!x)return;subjectReturnCourseId=$('courseDetailsView').classList.contains('open')?String(x.course_id):null;$('subjectEditId').value=x.id;$('subjectCourse').value=String(x.course_id);$('subjectName').value=x.name||'';$('subjectOrder').value=x.display_order||0;$('subjectActive').value=String(x.active!==false);$('subjectDescription').value=x.description||'';$('subjectFormHeading').textContent='تعديل المادة';openManagementForm('subjectFormCard');return;}
+
+const sj = e.target.closest('[data-edit-subject]');
+
+if (sj) {
+    const x = cache.subjects.find(
+        v => String(v.id) === sj.dataset.editSubject
+    );
+
+    if (!x) return;
+
+    subjectReturnCourseId =
+        $('courseDetailsView').classList.contains('open')
+            ? String(x.course_id)
+            : null;
+
+    $('subjectEditId').value = x.id;
+    $('subjectCourse').value = String(x.course_id);
+    $('subjectName').value = x.name || '';
+    $('subjectOrder').value = x.display_order || 0;
+    $('subjectActive').value = String(x.active !== false);
+    $('subjectDescription').value = x.description || '';
+    $('subjectFormHeading').textContent = 'تعديل المادة';
+
+    go('subjects');
+    openManagementForm('subjectFormCard');
+    return;
+}
 const cd=e.target.closest('[data-course-details]');if(cd){const x=cache.courses.find(v=>String(v.id)===cd.dataset.courseDetails);if(!x)return;renderCourseDetails(x);return;}
 const ee=e.target.closest('[data-edit-exam]');if(ee){openExamRoute('edit',ee.dataset.editExam);return;}
 const ea=e.target.closest('[data-edit-assignment]');if(ea){const {data,error}=await db.from('assignments').select('id,title,question_text,max_grade,description,open_at,close_at,course_id,course_subject_id').eq('id',Number(ea.dataset.editAssignment)).single();if(error){alert('تعذر تحميل التكليف: '+error.message);return;}$('assignmentEditId').value=data.id;$('assignmentTitle').value=data.title||'';$('assignmentDescription').value=data.question_text||data.description||'';$('assignmentMaxGrade').value=data.max_grade??10;$('assignmentCourse').value=String(data.course_id||'');$('assignmentCourse').dispatchEvent(new Event('change'));$('assignmentSubject').value=String(data.course_subject_id||'');$('assignmentOpen').value=data.open_at?new Date(data.open_at).toISOString().slice(0,16):'';$('assignmentClose').value=data.close_at?new Date(data.close_at).toISOString().slice(0,16):'';$('assignmentFormHeading').textContent='تعديل التكليف';openManagementForm('assignmentFormCard');return;}
