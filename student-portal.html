@@ -500,72 +500,86 @@ function renderHomeTab(){
  populateHomeData(c);
 }
 
-function populateHomeData(c){
- const radar=$('home-radar-list'),count=$('home-radar-count');
- const path=$('home-star-path'),pct=$('home-path-percent');
- if(!radar||!count)return;
-
- if(!c){
-  count.textContent='0';
-  radar.innerHTML='<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 text-center">لا توجد مهام أو اختبارات عاجلة حالياً.</div>';
-  return;
- }
-
- const items=[],weekly=c.weekly_exams||[],subjects=c.subjects||[];
- weekly.forEach(e=>{
-  if(!hasExamResult(e)){
-   const st=deadlineState(e.close_at);
-   items.push({title:e.title||'اختبار أسبوعي',subtitle:'اختبار أسبوعي',state:st,action:`portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)`,icon:'fa-solid fa-scroll'});
-  }
- });
- subjects.forEach(s=>{
-  (s.assignments||[]).forEach(a=>{
-   if(!isSubmittedAssignment(a)){
-    const st=deadlineState(a.close_at);
-    items.push({title:a.title||'تكليف',subtitle:'مادة: '+(s.name||''),state:st,action:`portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})`,icon:'fa-solid fa-pen-nib'});
-   }
-  });
-  if(s.final_exam&&!hasExamResult(s.final_exam)){
-   const e=s.final_exam,st=deadlineState(e.close_at);
-   items.push({title:e.title||'الامتحان النهائي',subtitle:'مادة: '+(s.name||''),state:st,action:`portalOpenExam(${Number(e.id)},'subject',${Number(c.id)},${Number(s.id)})`,icon:'fa-solid fa-award'});
-  }
- });
-
- count.textContent=String(items.length);
- if(!items.length){
-  radar.innerHTML='<div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 text-center">لا توجد إشعارات أو اختبارات غير منجزة في مساقك الحالي.</div>';
- }else{
-  radar.innerHTML=items.map(it=>`
-   <article class="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-creamBase/20">
-    <div class="flex items-center gap-3">
-     <div class="w-10 h-10 rounded-xl bg-goldLogo/10 border border-goldLogo/30 flex items-center justify-center text-goldLogo"><i class="${it.icon}"></i></div>
-     <div>
-      <span class="px-2 py-0.5 rounded-full ${it.state.overdue?'bg-red-500/20 text-red-300':'bg-goldLogo/20 text-goldLogo'} text-[10px] font-bold">${esc(it.state.label)}</span>
-      <h3 class="text-sm font-bold text-creamBase mt-0.5">${esc(it.title)}</h3>
-      <p class="text-xs text-creamMuted">${esc(it.subtitle)}</p>
-     </div>
-    </div>
-    <button type="button" onclick="${it.action}" class="px-4 py-2 cream-gradient text-navyDark font-bold rounded-lg text-xs shadow-md">فتح</button>
-   </article>`).join('');
- }
 
  const stages=[
-  {title:'الاختبارات الأسبوعية',icon:'fa-solid fa-calendar-check',items:weekly,done:e=>hasExamResult(e)},
-  {title:'تكاليف المواد',icon:'fa-solid fa-file-signature',items:subjects.flatMap(s=>s.assignments||[]),done:a=>isSubmittedAssignment(a)},
-  {title:'الاختبارات النهائية',icon:'fa-solid fa-graduation-cap',items:subjects.map(s=>s.final_exam).filter(Boolean),done:e=>hasExamResult(e)}
+  {
+   items:weekly,
+   done:e=>hasExamResult(e)
+  },
+  {
+   items:subjects.flatMap(s=>s.assignments||[]),
+   done:a=>isSubmittedAssignment(a)
+  },
+  {
+   items:subjects.map(s=>s.final_exam).filter(Boolean),
+   done:e=>hasExamResult(e)
+  }
  ];
- let total=0,done=0;
- const stageHtml=stages.map(s=>{
-  const n=s.items.length,d=s.items.filter(s.done).length;
-  total+=n;done+=d;
-  const complete=n>0&&d===n;
-  return`<div class="p-4 rounded-xl ${complete?'bg-emerald-950/30 border-emerald-500/30':'bg-black/30 border-creamBase/15'} border text-center">
-   <strong class="block text-xs font-bold text-creamBase">${esc(s.title)}</strong>
-   <span class="text-[10px] text-creamMuted mt-1 block">${n?d+' من '+n+' مكتمل':'لم يُضف بعد'}</span>
-  </div>`;
- }).join('');
- if(pct)pct.textContent=total?Math.round(done/total*100)+'%':'—%';
- if(path)path.innerHTML=stageHtml;
+
+ const allTasks=stages.flatMap(stage=>stage.items);
+ const total=allTasks.length;
+
+ const done=stages.reduce(
+  (sum,stage)=>sum+stage.items.filter(stage.done).length,
+  0
+ );
+
+ const percent=total
+  ? Math.round(done/total*100)
+  : 0;
+
+ if(pct) pct.textContent=percent+'%';
+
+ const line=$('home-path-line');
+ if(line) line.style.width=percent+'%';
+
+ for(let star=1;star<=5;star++){
+
+  const reached=total>0 && percent>=star*20;
+
+  const next=total>0 &&
+   percent<star*20 &&
+   percent>=(star-1)*20;
+
+  const icon=$(`[data-star-icon="${star}"]`);
+  const label=$(`[data-star-label="${star}"]`);
+  const ping=$(`[data-star-ping="${star}"]`);
+
+  if(icon){
+   icon.className=
+    'relative w-9 h-9 rounded-full flex items-center justify-center text-sm font-black transition-all duration-500 '+
+    (
+     reached
+      ? 'bg-[#D4AF37] text-[#070E17] border-2 border-[#F5E6D3]'
+      : next
+       ? 'bg-[#070E17] border-2 border-[#D4AF37] text-[#D4AF37] pulsing-star'
+       : 'bg-black/60 border border-[#F5E6D3]/30 text-[#9AA8B8]'
+    );
+
+   icon.textContent=reached?'✓':'★';
+  }
+
+  if(label){
+   label.className=
+    'text-[10px] sm:text-xs text-center '+
+    (reached||next
+     ? 'text-[#D4AF37] font-black'
+     : 'text-[#9AA8B8] font-medium');
+  }
+
+  if(ping){
+   ping.classList.toggle('hidden',!next);
+  }
+ }
+
+ const summary=$('home-path-summary');
+
+ if(summary){
+  summary.textContent=total
+   ? `أنجزت ${done} من ${total} مهمة مطلوبة — ${percent}٪ من المساق.`
+   : 'لا توجد اختبارات أو تكاليف مطلوبة في هذا المساق حتى الآن.';
+ }
+
 }
 
 // 2. مساقاتي (المكتملة، ثم الحالية، ثم القادمة)
