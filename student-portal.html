@@ -307,12 +307,18 @@ function renderHomeTab(){
  <div class="glass-panel rounded-2xl p-6 relative overflow-hidden border border-creamBase/30 shadow-2xl">
   <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-creamBase/15 pb-4">
    <div class="flex items-center gap-4">
-    <div class="relative flex-shrink-0">
-     <span class="absolute inline-flex h-full w-full rounded-full bg-goldLogo/40 animate-ping opacity-75"></span>
-     <div class="relative w-12 h-12 rounded-xl bg-goldLogo/20 border border-goldLogo/50 flex items-center justify-center text-goldLogo text-xl">
-      <i class="fa-solid fa-bullhorn"></i>
-     </div>
-    </div>
+    
+<div class="relative flex-shrink-0 w-16 h-16 flex items-center justify-center">
+ <div class="absolute inset-0 orbit-ring animate-spin-slow"></div>
+ <div class="absolute inset-2 border border-creamBase/20 rounded-full"></div>
+ <div class="absolute inset-1 radar-sweep animate-spin"></div>
+ <div class="absolute top-2 right-2 w-3 h-3 bg-goldLogo rounded-full animate-ping"></div>
+ <div class="absolute top-2 right-2 w-3 h-3 bg-goldLogo rounded-full border-2 border-navyDark"></div>
+ <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-goldLogo to-goldDark flex items-center justify-center text-navyDark text-xl shadow-lg border border-creamBase/50">
+  <i class="fa-solid fa-compass animate-pulse"></i>
+ </div>
+</div>
+
     <div>
      <h2 class="text-xl font-bold text-creamBase">عاجل من المرصد — التنبيهات والإعلانات</h2>
      <p class="text-xs text-creamMuted mt-0.5">${c?'المساق الحالي: '+esc(c.name):'لا يوجد مساق حالي متاح.'}</p>
