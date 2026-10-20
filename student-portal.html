@@ -497,57 +497,54 @@ function renderHomeTab(){
     </p>
 </div>
 
- populateHomeData(c);
-}
+ 
+ const weekly = c?.weekly_exams || [];
+ const subjects = c?.subjects || [];
 
-
- const stages=[
+ const stages = [
   {
-   items:weekly,
-   done:e=>hasExamResult(e)
+   items: weekly,
+   done: e => hasExamResult(e)
   },
   {
-   items:subjects.flatMap(s=>s.assignments||[]),
-   done:a=>isSubmittedAssignment(a)
+   items: subjects.flatMap(s => s.assignments || []),
+   done: a => isSubmittedAssignment(a)
   },
   {
-   items:subjects.map(s=>s.final_exam).filter(Boolean),
-   done:e=>hasExamResult(e)
+   items: subjects.map(s => s.final_exam).filter(Boolean),
+   done: e => hasExamResult(e)
   }
  ];
 
- const allTasks=stages.flatMap(stage=>stage.items);
- const total=allTasks.length;
+ const allTasks = stages.flatMap(stage => stage.items);
+ const total = allTasks.length;
 
- const done=stages.reduce(
-  (sum,stage)=>sum+stage.items.filter(stage.done).length,
+ const done = stages.reduce(
+  (sum, stage) => sum + stage.items.filter(stage.done).length,
   0
  );
 
- const percent=total
-  ? Math.round(done/total*100)
-  : 0;
+ const percent = total ? Math.round(done / total * 100) : 0;
 
- if(pct) pct.textContent=percent+'%';
+ const pct = $('home-path-percent');
+ if (pct) pct.textContent = percent + '%';
 
- const line=$('home-path-line');
- if(line) line.style.width=percent+'%';
+ const line = $('home-path-line');
+ if (line) line.style.width = percent + '%';
 
- for(let star=1;star<=5;star++){
+ for (let star = 1; star <= 5; star++) {
+  const reached = total > 0 && percent >= star * 20;
+  const next = total > 0 &&
+   percent < star * 20 &&
+   percent >= (star - 1) * 20;
 
-  const reached=total>0 && percent>=star*20;
+  const icon = $(`[data-star-icon="${star}"]`);
+  const label = $(`[data-star-label="${star}"]`);
+  const ping = $(`[data-star-ping="${star}"]`);
 
-  const next=total>0 &&
-   percent<star*20 &&
-   percent>=(star-1)*20;
-
-  const icon=$(`[data-star-icon="${star}"]`);
-  const label=$(`[data-star-label="${star}"]`);
-  const ping=$(`[data-star-ping="${star}"]`);
-
-  if(icon){
-   icon.className=
-    'relative w-9 h-9 rounded-full flex items-center justify-center text-sm font-black transition-all duration-500 '+
+  if (icon) {
+   icon.className =
+    'relative w-9 h-9 rounded-full flex items-center justify-center text-sm font-black transition-all duration-500 ' +
     (
      reached
       ? 'bg-[#D4AF37] text-[#070E17] border-2 border-[#F5E6D3]'
@@ -556,34 +553,31 @@ function renderHomeTab(){
        : 'bg-black/60 border border-[#F5E6D3]/30 text-[#9AA8B8]'
     );
 
-   icon.textContent=reached?'✓':'★';
+   icon.textContent = reached ? '✓' : '★';
   }
 
-  if(label){
-   label.className=
-    'text-[10px] sm:text-xs text-center '+
-    (reached||next
+  if (label) {
+   label.className =
+    'text-[10px] sm:text-xs text-center ' +
+    (reached || next
      ? 'text-[#D4AF37] font-black'
      : 'text-[#9AA8B8] font-medium');
   }
 
-  if(ping){
-   ping.classList.toggle('hidden',!next);
-  }
+  if (ping) ping.classList.toggle('hidden', !next);
  }
 
- const summary=$('home-path-summary');
+ const summary = $('home-path-summary');
 
- if(summary){
-  summary.textContent=total
+ if (summary) {
+  summary.textContent = total
    ? `أنجزت ${done} من ${total} مهمة مطلوبة — ${percent}٪ من المساق.`
    : 'لا توجد اختبارات أو تكاليف مطلوبة في هذا المساق حتى الآن.';
  }
 
+ populateHomeData(c);
 }
 
-// 2. مساقاتي (المكتملة، ثم الحالية، ثم القادمة)
-function renderCoursesTab(){
  const courses=dashboard?.courses||[];
  // الترتيب المطلوب: المكتملة، ثم الحالية، ثم القادمة
  const orderedCourses=[
