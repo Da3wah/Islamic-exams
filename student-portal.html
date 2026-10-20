@@ -351,6 +351,72 @@ function renderCurrentTab(){
 }
 
 // 1. الرئيسية والترحاب والرادار
+
+function populateHomeData(c) {
+ const count = $('home-radar-count');
+ const list = $('home-radar-list');
+ if (!count || !list) return;
+
+ const tasks = [];
+
+ if (c) {
+  (c.weekly_exams || []).forEach(e => {
+   if (!hasExamResult(e)) {
+    tasks.push({
+     title: e.title || 'اختبار أسبوعي',
+     detail: 'اختبار أسبوعي',
+     action: `portalOpenExam(${Number(e.id)},'course',${Number(c.id)},null)`
+    });
+   }
+  });
+
+  (c.subjects || []).forEach(s => {
+   (s.assignments || []).forEach(a => {
+    if (!isSubmittedAssignment(a)) {
+     tasks.push({
+      title: a.title || 'تكليف جديد',
+      detail: 'تكليف · ' + (s.name || 'المادة'),
+      action: `portalOpenAssignment(${Number(c.id)},${Number(s.id)},${Number(a.id)})`
+     });
+    }
+   });
+
+   const e = s.final_exam;
+   if (e && !hasExamResult(e)) {
+    tasks.push({
+     title: e.title || 'الامتحان النهائي',
+     detail: 'امتحان نهائي · ' + (s.name || 'المادة'),
+     action: `portalOpenExam(${Number(e.id)},'subject',${Number(c.id)},${Number(s.id)})`
+    });
+   }
+  });
+ }
+
+ count.textContent = tasks.length;
+
+ if (!tasks.length) {
+  list.innerHTML = `
+   <div class="text-xs text-creamMuted p-4 rounded-xl bg-black/30 border border-creamBase/10 text-center">
+    لا توجد تكاليف أو اختبارات تنتظر إنجازك حالياً.
+   </div>`;
+  return;
+ }
+
+ list.innerHTML = tasks.map(t => `
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-black/30 border border-goldLogo/30">
+   <div>
+    <div class="text-sm font-bold text-creamBase">${esc(t.title)}</div>
+    <div class="text-xs text-creamMuted mt-1">${esc(t.detail)}</div>
+   </div>
+   <button type="button"
+    onclick="${t.action}"
+    class="px-4 py-2 rounded-lg cream-gradient text-navyDark text-xs font-black">
+    فتح المهمة
+   </button>
+  </div>
+ `).join('');
+}
+
 function renderHomeTab(){
  const studentName=dashboard?.student?.name||'بالطالب';
  const c=currentCourse();
