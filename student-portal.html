@@ -45,6 +45,31 @@
 </script>
 
 <style>
+
+.orbit-ring {
+    border: 1px dashed rgba(212, 175, 55, 0.35);
+    border-radius: 50%;
+}
+
+.radar-sweep {
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 300deg,
+        rgba(212, 175, 55, 0.3) 360deg
+    );
+    border-radius: 50%;
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
     body {
         font-family: 'Cairo', sans-serif;
         background-color: #070E17;
