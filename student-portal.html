@@ -915,6 +915,7 @@ function openSubject(courseId,subjectId){
  </div>`;
 }
 
+
 function openAssignment(courseId, subjectId, assignmentId) {
  const c = (dashboard?.courses || []).find(
   x => Number(x.id) === Number(courseId)
@@ -929,14 +930,16 @@ function openAssignment(courseId, subjectId, assignmentId) {
  if (!c || !s || !a) return;
 
  const submitted = isSubmittedAssignment(a);
+ const grade = a.submission?.grade;
+ const maxGrade = a.max_grade;
+ const hasGrade = submitted && grade != null;
 
  view.innerHTML = `
- <div class="max-w-4xl mx-auto space-y-6 pb-8">
+ <div class="max-w-4xl mx-auto space-y-5 pb-10">
 
   <div class="flex items-center justify-between gap-3 flex-wrap">
-   <button
-    type="button"
-    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-creamBase/20 bg-black/20 text-creamBase hover:bg-black/40 transition"
+   <button type="button"
+    class="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-creamBase/20 bg-navyDark text-creamBase hover:border-goldLogo/60 transition"
     onclick="portalOpenSubject(${Number(c.id)},${Number(s.id)})">
     <i class="fa-solid fa-arrow-right"></i>
     <span class="text-sm font-bold">العودة للمادة</span>
@@ -948,11 +951,11 @@ function openAssignment(courseId, subjectId, assignmentId) {
    </span>
   </div>
 
-  <section class="glass-panel rounded-2xl p-5 md:p-8 space-y-6">
+  <section class="glass-panel rounded-2xl overflow-hidden">
 
-   <header class="border-b border-creamBase/15 pb-5">
+   <header class="p-5 md:p-7 bg-navyDark border-b-2 border-goldLogo/60">
     <div class="flex items-start gap-4">
-     <div class="shrink-0 w-12 h-12 rounded-2xl bg-goldLogo/10 border border-goldLogo/30 flex items-center justify-center">
+     <div class="shrink-0 w-12 h-12 rounded-xl bg-goldLogo/15 border border-goldLogo/30 flex items-center justify-center">
       <i class="fa-solid fa-clipboard-list text-goldLogo text-xl"></i>
      </div>
 
@@ -968,92 +971,133 @@ function openAssignment(courseId, subjectId, assignmentId) {
     </div>
    </header>
 
-   ${a.description ? `
-    <section class="rounded-xl p-4 md:p-5 bg-black/20 border border-creamBase/10">
-     <h3 class="text-sm font-bold text-goldLogo mb-3">
-      <i class="fa-solid fa-circle-info ml-2"></i>
-      تعليمات التكليف
-     </h3>
-     <p class="text-sm md:text-base text-creamLight leading-8 whitespace-pre-wrap">
-      ${esc(a.description)}
-     </p>
-    </section>
-   ` : ''}
+   <div class="p-4 md:p-7 space-y-5">
 
-   ${a.question_text ? `
-    <section class="rounded-xl p-4 md:p-6 bg-black/25 border border-goldLogo/25">
-     <div class="flex items-center gap-2 mb-4">
-      <span class="w-8 h-8 rounded-lg bg-goldLogo/15 flex items-center justify-center">
-       <i class="fa-solid fa-circle-question text-goldLogo"></i>
-      </span>
-      <h3 class="text-base font-bold text-goldLogo">السؤال المطلوب</h3>
-     </div>
+    ${submitted ? `
+     <section class="rounded-2xl border border-emerald-700/30 overflow-hidden">
 
-     <div class="text-sm md:text-base text-creamLight leading-8 whitespace-pre-wrap break-words">
-      ${esc(a.question_text)}
-     </div>
-    </section>
-   ` : ''}
-
-   ${submitted ? `
-    <section class="rounded-xl p-5 bg-emerald-950/25 border border-emerald-500/30">
-     <div class="flex items-start gap-3">
-      <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mt-1"></i>
-      <div class="space-y-2">
-       <h3 class="text-base font-bold text-emerald-400">
-        تم تسليم التكليف بنجاح
-       </h3>
-       <p class="text-sm text-creamLight leading-7">
-        تم تسجيل إجابتك. يمكنك العودة إلى صفحة المادة.
-       </p>
-       ${a.submission.grade != null ? `
-        <p class="text-sm font-bold text-emerald-300">
-         الدرجة: ${esc(a.submission.grade)}
-        </p>
-       ` : ''}
+      <div class="flex items-center gap-3 p-4 bg-emerald-50">
+       <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+        <i class="fa-solid fa-circle-check text-emerald-700 text-xl"></i>
+       </div>
+       <div>
+        <h3 class="font-bold text-emerald-800">تم تسليم التكليف</h3>
+        <p class="text-xs text-emerald-700 mt-1">تم حفظ إجابتك بنجاح</p>
+       </div>
       </div>
-     </div>
-    </section>
-   ` : `
-    <section class="space-y-4">
-     <div>
-      <h3 class="text-base font-bold text-creamBase mb-2">
-       <i class="fa-solid fa-pen-to-square text-goldLogo ml-2"></i>
-       اكتبي إجابتك
+
+      ${hasGrade ? `
+       <div class="p-5 md:p-7 text-center bg-white">
+        <p class="text-sm font-bold text-slate-600 mb-3">الدرجة المستحقة</p>
+
+        <div class="text-4xl md:text-5xl font-extrabold text-emerald-800 leading-tight">
+         ${esc(grade)}
+         <span class="text-xl md:text-2xl text-slate-500">
+          / ${esc(maxGrade ?? '—')}
+         </span>
+        </div>
+
+        ${Number(maxGrade) > 0 ? `
+         <div class="mt-5 h-2 rounded-full bg-emerald-100 overflow-hidden">
+          <div class="h-full rounded-full bg-emerald-600"
+           style="width:${Math.max(0, Math.min(100, Number(grade) / Number(maxGrade) * 100))}%">
+          </div>
+         </div>
+        ` : ''}
+
+        ${maxGrade != null && Number(grade) >= Number(maxGrade) ? `
+         <p class="text-sm font-bold text-emerald-800 mt-4">
+          أحسنتِ! حصلتِ على الدرجة الكاملة
+         </p>
+        ` : ''}
+       </div>
+      ` : `
+       <div class="p-4 bg-white text-sm text-slate-600 leading-7">
+        تم استلام إجابتك، وستظهر الدرجة هنا بعد اعتمادها.
+       </div>
+      `}
+
+     </section>
+    ` : ''}
+
+    ${a.question_text ? `
+     <section class="rounded-xl p-4 md:p-5 bg-white/70 border border-creamBase/30">
+      <h3 class="text-sm font-bold text-navyDark mb-3">
+       <i class="fa-solid fa-circle-question text-goldLogo ml-2"></i>
+       سؤال التكليف
       </h3>
-      <p class="text-sm text-creamMuted leading-7">
-       راجعي السؤال والتعليمات جيدًا، ثم اكتبي إجابتك في المساحة التالية.
+      <div class="text-sm md:text-base text-navyDark leading-8 whitespace-pre-wrap break-words">
+       ${esc(a.question_text)}
+      </div>
+     </section>
+    ` : ''}
+
+    ${a.description ? `
+     <section class="rounded-xl p-4 md:p-5 bg-white/70 border border-creamBase/30">
+      <h3 class="text-sm font-bold text-navyDark mb-3">
+       <i class="fa-solid fa-circle-info text-goldLogo ml-2"></i>
+       تعليمات إضافية
+      </h3>
+      <p class="text-sm md:text-base text-navyDark leading-8 whitespace-pre-wrap">
+       ${esc(a.description)}
       </p>
-     </div>
+     </section>
+    ` : ''}
 
-     <form id="assignment-form" class="space-y-4">
-      <textarea
-       id="assignment-answer"
-       rows="10"
-       maxlength="20000"
-       required
-       placeholder="اكتبي إجابتك هنا..."
-       class="w-full min-h-56 p-4 md:p-5 bg-black/25 border border-creamBase/20 rounded-xl text-creamLight text-base leading-8 placeholder:text-creamMuted/60 focus:outline-none focus:border-goldLogo/70 transition resize-y"
-      ></textarea>
+    ${submitted ? `
+     <section class="rounded-xl p-4 md:p-5 border border-creamBase/30 bg-white/70">
+      <h3 class="text-sm font-bold text-navyDark mb-3">
+       <i class="fa-solid fa-file-lines text-goldLogo ml-2"></i>
+       إجابتك المرسلة
+       <span class="text-xs font-normal text-creamMuted">(للقراءة فقط)</span>
+      </h3>
 
-      <div class="flex items-start gap-2 text-xs text-creamMuted leading-6">
-       <i class="fa-solid fa-circle-info mt-1 text-goldLogo"></i>
-       <p>تأكدي من مراجعة إجابتك قبل الضغط على زر التسليم.</p>
+      <div class="rounded-lg bg-[#F7F3E9] border border-creamBase/30 p-4 text-sm text-navyDark leading-8 whitespace-pre-wrap break-words">
+       ${esc(
+        a.submission?.submission_text ??
+        a.submission?.answer_text ??
+        a.submission?.text ??
+        'تم تسجيل إجابتك.'
+       )}
+      </div>
+     </section>
+    ` : `
+     <section class="space-y-4">
+      <div>
+       <h3 class="text-base font-bold text-navyDark mb-2">
+        <i class="fa-solid fa-pen-to-square text-goldLogo ml-2"></i>
+        اكتبي إجابتك
+       </h3>
+       <p class="text-sm text-creamMuted leading-7">
+        راجعي السؤال والتعليمات جيدًا، ثم اكتبي إجابتك في المساحة التالية.
+       </p>
       </div>
 
-      <button
-       class="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-7 py-3.5 cream-gradient text-navyDark font-bold rounded-xl text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition"
-       type="submit">
-       <i class="fa-solid fa-paper-plane"></i>
-       تسليم التكليف
-      </button>
-     </form>
+      <form id="assignment-form" class="space-y-4">
+       <textarea id="assignment-answer"
+        rows="10" maxlength="20000" required
+        placeholder="اكتبي إجابتك هنا..."
+        class="w-full min-h-56 p-4 md:p-5 bg-white border border-creamBase/30 rounded-xl text-navyDark text-base leading-8 placeholder:text-creamMuted focus:outline-none focus:border-goldLogo transition resize-y"></textarea>
 
-     <p id="assignment-message" role="status" aria-live="polite"
-        class="text-sm leading-7"></p>
-    </section>
-   `}
+       <div class="flex items-start gap-2 text-xs text-creamMuted leading-6">
+        <i class="fa-solid fa-circle-info mt-1 text-goldLogo"></i>
+        <p>تأكدي من مراجعة إجابتك قبل الضغط على زر التسليم.</p>
+       </div>
 
+       <button
+        class="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-7 py-3.5 cream-gradient text-navyDark font-bold rounded-xl text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+        type="submit">
+        <i class="fa-solid fa-paper-plane"></i>
+        تسليم التكليف
+       </button>
+      </form>
+
+      <p id="assignment-message" role="status" aria-live="polite"
+       class="text-sm leading-7"></p>
+     </section>
+    `}
+
+   </div>
   </section>
  </div>`;
 
