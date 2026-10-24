@@ -163,8 +163,8 @@ body.student-dashboard-bg #student-bg-overlay {
 <body class="page-bg relative min-h-screen flex">
 
 <!-- طبقة تظليل للخلفية -->
-<div class="fixed inset-0 bg-black/60 pointer-events-none z-0"></div>
-
+<div id="student-bg-overlay" class="fixed inset-0 bg-black/60 pointer-events-none z-0"></div>
+    
 <!-- شاشة تسجيل الدخول -->
 <main id="login-section" class="relative z-10 w-full min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 cream-card-glow text-center">
@@ -305,9 +305,8 @@ function normalizeOptions(raw){
  return[];
 }
 
-function showSignedIn(){loginSection.classList.add('hidden');appSection.classList.remove('hidden');}
-function showSignedOut(){loginSection.classList.remove('hidden');appSection.classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
-
+function showSignedIn(){document.body.classList.add('student-dashboard-bg');loginSection.classList.add('hidden');appSection.classList.remove('hidden');}
+function showSignedOut(){document.body.classList.remove('student-dashboard-bg');loginSection.classList.remove('hidden');appSection.classList.add('hidden');dashboard=null;activeExam=null;view.innerHTML='';}
 async function refreshDashboard({render=true}={}){
  const{data,error}=await client.rpc('get_student_dashboard');
  if(error)throw error;
